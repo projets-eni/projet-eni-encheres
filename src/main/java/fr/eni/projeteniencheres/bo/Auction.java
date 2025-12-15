@@ -1,9 +1,13 @@
 package fr.eni.projeteniencheres.bo;
 
+import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class Auction {
+public class Auction  implements Serializable {
+
+    private static final long serialVersionUID = 1L ;
     private Sale sale ;
     private Person seller ;
 

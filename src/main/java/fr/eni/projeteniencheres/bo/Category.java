@@ -1,8 +1,11 @@
 package fr.eni.projeteniencheres.bo;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Category {
+public class Category implements Serializable {
+
+    private static final long serialVersionUID = 1L ;
     private long id ;
     private String label ;
 
@@ -10,6 +13,9 @@ public class Category {
     }
     public Category(long id, String label) {
         this.id = id;
+        this.label = label;
+    }
+    public Category(String label) {
         this.label = label;
     }
 

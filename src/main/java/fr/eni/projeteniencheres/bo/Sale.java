@@ -1,10 +1,12 @@
 package fr.eni.projeteniencheres.bo;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class Sale {
+public class Sale implements Serializable {
 
+    private static final long serialVersionUID = 1L ;
     private long id;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
@@ -18,6 +20,15 @@ public class Sale {
     }
     public Sale(long id, LocalDateTime startDate, LocalDateTime endDate, float startPrice, float endPrice, boolean status, Address addressWithdrawal, Article article) {
         this.id = id;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.startPrice = startPrice;
+        this.endPrice = endPrice;
+        this.status = status;
+        this.addressWithdrawal = addressWithdrawal;
+        this.article = article;
+    }
+    public Sale(LocalDateTime startDate, LocalDateTime endDate, float startPrice, float endPrice, boolean status, Address addressWithdrawal, Article article) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.startPrice = startPrice;

@@ -1,9 +1,11 @@
 package fr.eni.projeteniencheres.bo;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Article {
+public class Article implements Serializable {
 
+    private static final long serialVersionUID = 1L ;
     private long id;
     private String name ;
     private String description ;
@@ -13,6 +15,11 @@ public class Article {
     }
     public Article(long id, String name, String description, Category category) {
         this.id = id;
+        this.name = name;
+        this.description = description;
+        this.category = category;
+    }
+    public Article(String name, String description, Category category) {
         this.name = name;
         this.description = description;
         this.category = category;
