@@ -32,13 +32,15 @@ CREATE TABLE Utilisateurs (
                               nom              NVARCHAR(30) NOT NULL,
                               prenom           NVARCHAR(30) NOT NULL,
                               email            NVARCHAR(50) NOT NULL CONSTRAINT UN_Utilisateurs_email UNIQUE,
-                              telephone        NVARCHAR(15) NOT NULL,
-                              rue              NVARCHAR(30) NOT NULL,
-                              code_postal      INTEGER NOT NULL CONSTRAINT CK_Utilisateurs_codePostal CHECK(code_postal BETWEEN 1000 AND 99000),
-                              ville            NVARCHAR(50) NOT NULL,
-                              mot_de_passe     NVARCHAR(30) NOT NULL,
-                              credit           INTEGER NOT NULL CONSTRAINT DF_Utilisateurs_credit DEFAULT 100
-                                  CONSTRAINT CK_Utilisateurs_credit CHECK(credit>=0),
+                              telephone    NVARCHAR(15) NOT NULL,
+                              rue          NVARCHAR(30) NOT NULL,
+                              code_postal  INTEGER      NOT NULL
+                                  CONSTRAINT CK_Utilisateurs_codePostal CHECK (code_postal BETWEEN 1000 AND 99000),
+                              ville        NVARCHAR(50) NOT NULL,
+                              mot_de_passe NVARCHAR(30) NOT NULL,
+                              credit       INTEGER      NOT NULL
+                                  CONSTRAINT DF_Utilisateurs_credit DEFAULT 100
+                                  CONSTRAINT CK_Utilisateurs_credit CHECK (credit >= 0),
                               administrateur   bit NOT NULL CONSTRAINT DF_Utilisateurs_admin DEFAULT 0
 );
 GO
@@ -137,3 +139,9 @@ CREATE INDEX IN_ArticlesVendus_descriptionArticle  ON ArticlesVendus(description
 CREATE INDEX IN_ArticlesVendus_etatVente		   ON ArticlesVendus(etat_vente);
 
 
+-- format code postal pour FR
+ALTER TABLE Utilisateurs
+    DROP CONSTRAINT CK_Utilisateurs_codePostal;
+
+alter table Utilisateurs
+    alter column code_postal varchar(5);
