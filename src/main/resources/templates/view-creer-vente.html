@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ENI-Enchères</title>
+</head>
+<body>
+<h1>Nouvelle vente</h1>
+
+<div>
+        <span>
+            <img src="">
+        </span>
+    <span>
+            <form action="/vente/nouvelle">
+                <ul class="flex-outer">
+                    <li>
+                        <label for="article">Article</label>
+                        <input type="text" id="article" field="">
+                    </li>
+                    <li>
+                        <label for="description">Description</label>
+                        <input type="text" id="description" field="">
+                    </li>
+                    <li>
+                        <label for="idCategory">Catégorie</label>
+                        <select field="" name="idCategory" id="idCategory">
+                            <option value=-1>-- Sélectionner une catégorie --</option>
+                        </select>
+                    </li>
+                    <li>
+                      <label for="getimg">Photo de l'article</label>
+                      <input type="button" id="getimg" value="UPLOADER">
+                    </li>
+                    <li>
+                        <label for="prixDepart">Mise à prix</label>
+                        <input type="text" id="prixDepart" field="">
+                    </li>
+                    <li>
+                        <label for="dateDebEnchere">Début de l'enchère</label>
+                        <input type="datetime-local" id="dateDebEnchere" field="">
+                    </li>
+                    <li>
+                        <label for="dateFinEnchere">Fin de l'enchère</label>
+                        <input type="datetime-local" id="dateFinEnchere" field="">
+                    </li>
+                    <li>
+                        <li>
+                            <label for="rue">Rue</label>
+                            <input type="text" id="rue" field="">
+                        </li>
+                        <li>
+                            <label for="codePostal">Code Postal</label>
+                            <input type="text" id="codePostal" field="">
+                        </li>
+                        <li>
+                            <label for="ville">Ville</label>
+                            <input type="text" id="ville" field="">
+                        </li>
+                    </li>
+                    <li>
+                        <input type="submit" value="Enregistrer">
+                        <a href="/encheres">Annuler</a>
+                    </li>
+                </ul>
+            </form>
+        </span>
+</div>
+
+</body>
+</html>
