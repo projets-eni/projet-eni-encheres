@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>ENI-Enchères</title>
@@ -7,62 +7,113 @@
 <body>
 <h1>Nouvelle vente</h1>
 
-<th:block th:object="${nouvelleVente}">
-
     <div>
-    <!--    <span class="image-container">-->
-    <!--        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSI+AjIwMHgxMjA8L3RleHQ+PC9zdmc+"-->
-    <!--             alt="Aucune image sélectionnée"-->
-    <!--             class="preview-image">-->
-    <!--        <input type="file" id="imageInput" accept="image/*" style="display: none;">-->
-    <!--        <label for="imageInput" class="upload-label">📁 Choisir une image</label>-->
-    <!--    </span>-->
+<!--            <span class="image-container">-->
+<!--                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSI+AjIwMHgxMjA8L3RleHQ+PC9zdmc+"-->
+<!--                     alt="Aucune image sélectionnée"-->
+<!--                     class="preview-image">-->
+<!--                <input type="file" id="imageInput" accept="image/*" style="display: none;">-->
+<!--                <label for="imageInput" class="upload-label">📁 Choisir une image</label>-->
+<!--            </span>-->
         <span>
+            <th:block th:object="${nouvelleVente}">
                 <form th:action="@{/nouvelle-vente}" method="POST">
                     <ul class="flex-outer">
                         <li>
-                            <label for="article">Article</label>
-                            <input type="text" id="article" th:field="*{nomArticle}">
+                            <label for="nomArticle">Article</label>
+                            <input type="text" id="nomArticle" th:field="*{nomArticle}" required placeholder="Nom de l'article">
+                            <span style="color: red;" th:if="${#fields.hasErrors('nomArticle')}">
+                                <ul>
+                                    <li th:each="erreur: ${#fields.errors('nomArticle')}" th:text="${erreur}"></li>
+                                </ul>
+                            </span>
                         </li>
                         <li>
                             <label for="description">Description</label>
                             <input type="text" id="description" th:field="*{description}">
+                            <span style="color: red;" th:if="${#fields.hasErrors('description')}">
+                                <ul>
+                                    <li th:each="erreur: ${#fields.errors('description')}" th:text="${erreur}"></li>
+                                </ul>
+                            </span>
                         </li>
                         <li>
-                            <label for="idCategory">Catégorie</label>
-                            <select th:field="*{idCategorie}" name="idCategory" id="idCategory">
+                            <label for="categorie">Catégorie</label>
+                            <select id="categorie" th:field="*{noCategorie}">
                                 <option value=0>-- Sélectionner une catégorie --</option>
-                                <option value=1>Aménagement</option>
+                                <option th:each="cat : ${categories}"
+                                        th:value="${cat.noCategorie}"
+                                        th:text="${cat.libelle}"></option>
                             </select>
+<!--                            <span style="color: red;" th:if="${#fields.hasErrors('noCategory')}">-->
+<!--                                <ul>-->
+<!--                                    <li th:each="erreur: ${#fields.errors('noCategory')}" th:text="${erreur}"></li>-->
+<!--                                </ul>-->
+<!--                            </span>-->
                         </li>
                         <li>
                           <label for="getimg">Photo de l'article</label>
                           <input type="button" id="getimg" value="UPLOADER" th:fied="*{idImage}">
+                          <span style="color: red;" th:if="${#fields.hasErrors('idImage')}">
+                                <ul>
+                                    <li th:each="erreur: ${#fields.errors('idImage')}" th:text="${erreur}"></li>
+                                </ul>
+                            </span>
                         </li>
                         <li>
                             <label for="prixDepart">Mise à prix</label>
                             <input type="text" id="prixDepart" th:field="*{prixInitial}">
+                            <span style="color: red;" th:if="${#fields.hasErrors('prixInitial')}">
+                                <ul>
+                                    <li th:each="erreur: ${#fields.errors('prixInitial')}" th:text="${erreur}"></li>
+                                </ul>
+                            </span>
                         </li>
                         <li>
                             <label for="dateDebEnchere">Début de l'enchère</label>
                             <input type="datetime-local" id="dateDebEnchere" th:field="*{dateDebutEncheres}">
+                            <span style="color: red;" th:if="${#fields.hasErrors('dateDebutEncheres')}">
+                                <ul>
+                                    <li th:each="erreur: ${#fields.errors('dateDebutEncheres')}" th:text="${erreur}"></li>
+                                </ul>
+                            </span>
                         </li>
                         <li>
                             <label for="dateFinEnchere">Fin de l'enchère</label>
                             <input type="datetime-local" id="dateFinEnchere" th:field="*{dateFinEncheres}">
+                            <span style="color: red;" th:if="${#fields.hasErrors('dateFinEncheres')}">
+                                <ul>
+                                    <li th:each="erreur: ${#fields.errors('dateFinEncheres')}" th:text="${erreur}"></li>
+                                </ul>
+                            </span>
                         </li>
                         <li>
                             <li>
                                 <label for="rue">Rue</label>
                                 <input type="text" id="rue" th:field="*{rue}">
+                                <span style="color: red;" th:if="${#fields.hasErrors('rue')}">
+                                <ul>
+                                    <li th:each="erreur: ${#fields.errors('rue')}" th:text="${erreur}"></li>
+                                </ul>
+                            </span>
                             </li>
                             <li>
                                 <label for="codePostal">Code Postal</label>
                                 <input type="text" id="codePostal" th:field="*{codePostal}">
+                                <span style="color: red;" th:if="${#fields.hasErrors('codePostal')}">
+                                <ul>
+                                    <li th:each="erreur: ${#fields.errors('codePostal')}" th:text="${erreur}"></li>
+                                </ul>
+                            </span>
                             </li>
                             <li>
                                 <label for="ville">Ville</label>
                                 <input type="text" id="ville" th:field="*{ville}">
+                                <span style="color: red;" th:if="${#fields.hasErrors('ville')}">
+                                <ul>
+                                    <li th:each="erreur: ${#fields.errors('ville')}" th:text="${erreur}"></li>
+                                </ul>
+                            </span>
                             </li>
                         </li>
                         <li>
@@ -71,10 +122,8 @@
                         </li>
                     </ul>
                 </form>
-            </span>
+            </th:block>
+        </span>
     </div>
-
-    </th:block>
-
 </body>
 </html>

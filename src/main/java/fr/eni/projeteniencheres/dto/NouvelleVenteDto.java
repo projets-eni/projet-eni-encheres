@@ -17,7 +17,7 @@ public class NouvelleVenteDto {
     private String description;
 
     @NotEmpty(message = "La catégorie est obligatoire")
-    private int idCategorie;
+    private int noCategorie;
 
     @NotBlank(message = "L'image est obligatoire")
     private String idImage ;
@@ -61,10 +61,10 @@ public class NouvelleVenteDto {
 
     public NouvelleVenteDto() {
     }
-    public NouvelleVenteDto(String nomArticle, String description, int idCategorie, String idImage, int prixInitial, LocalDateTime dateDebutEncheres, LocalDateTime dateFinEncheres, long idVendeur, String rue, String codePostal, String ville) {
+    public NouvelleVenteDto(String nomArticle, String description, int noCategorie, String idImage, int prixInitial, LocalDateTime dateDebutEncheres, LocalDateTime dateFinEncheres, long idVendeur, String rue, String codePostal, String ville) {
         this.nomArticle = nomArticle;
         this.description = description;
-        this.idCategorie = idCategorie;
+        this.noCategorie = noCategorie;
         this.idImage = idImage;
         this.prixInitial = prixInitial;
         this.dateDebutEncheres = dateDebutEncheres;
@@ -87,11 +87,11 @@ public class NouvelleVenteDto {
     public void setDescription(String description) {
         this.description = description;
     }
-    public int getIdCategorie() {
-        return idCategorie;
+    public int getNoCategorie() {
+        return noCategorie;
     }
-    public void setIdCategorie(int idCategorie) {
-        this.idCategorie = idCategorie;
+    public void setNoCategorie(int noCategorie) {
+        this.noCategorie = noCategorie;
     }
     public String getIdImage() {
         return idImage;
@@ -147,7 +147,7 @@ public class NouvelleVenteDto {
         return "NouvelleVenteDto{" +
                 "nomArticle='" + nomArticle + '\'' +
                 ", description='" + description + '\'' +
-                ", idCategorie=" + idCategorie +
+                ", noCategorie=" + noCategorie +
                 ", idImage='" + idImage + '\'' +
                 ", prixInitial=" + prixInitial +
                 ", dateDebutEncheres=" + dateDebutEncheres +
@@ -162,12 +162,12 @@ public class NouvelleVenteDto {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof NouvelleVenteDto that)) return false;
-        return idCategorie == that.idCategorie && prixInitial == that.prixInitial && idVendeur == that.idVendeur && Objects.equals(nomArticle, that.nomArticle) && Objects.equals(description, that.description) && Objects.equals(idImage, that.idImage) && Objects.equals(dateDebutEncheres, that.dateDebutEncheres) && Objects.equals(dateFinEncheres, that.dateFinEncheres) && Objects.equals(rue, that.rue) && Objects.equals(codePostal, that.codePostal) && Objects.equals(ville, that.ville);
+        return noCategorie == that.noCategorie && prixInitial == that.prixInitial && idVendeur == that.idVendeur && Objects.equals(nomArticle, that.nomArticle) && Objects.equals(description, that.description) && Objects.equals(idImage, that.idImage) && Objects.equals(dateDebutEncheres, that.dateDebutEncheres) && Objects.equals(dateFinEncheres, that.dateFinEncheres) && Objects.equals(rue, that.rue) && Objects.equals(codePostal, that.codePostal) && Objects.equals(ville, that.ville);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(nomArticle, description, idCategorie, idImage, prixInitial, dateDebutEncheres, dateFinEncheres, idVendeur, rue, codePostal, ville);
+        return Objects.hash(nomArticle, description, noCategorie, idImage, prixInitial, dateDebutEncheres, dateFinEncheres, idVendeur, rue, codePostal, ville);
     }
 
 }
