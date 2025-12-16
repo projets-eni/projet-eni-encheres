@@ -1,6 +1,7 @@
 package fr.eni.projeteniencheres.controller;
 
 import fr.eni.projeteniencheres.bll.interfaces.UtilisateurService;
+import fr.eni.projeteniencheres.dto.UtilisateurDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,7 +21,7 @@ public UserController(UtilisateurService userService) {
 public String showRegistrationForm(Model model) {
 
     if (!model.containsAttribute("user")) {
-        model.addAttribute("user", new User());
+        model.addAttribute("user", new UtilisateurDTO());
     }
 
     return "inscription";

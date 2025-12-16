@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class Utilisateur implements Serializable {
+public class Utilisateur implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private long noUtilisateur;
@@ -57,9 +57,9 @@ public abstract class Utilisateur implements Serializable {
         this.motDePasse = motDePasse;
         this.credit = credit;
         this.administrateur = administrateur;
-        this.acquisitions = new ArrayList<>();
-        this.ventes = new ArrayList<>();
-        this.encheres = new ArrayList<>();
+        this.acquisitions = acquisitions;
+        this.ventes = ventes;
+        this.encheres = encheres;
     }
 
     public long getNoUtilisateur() {
