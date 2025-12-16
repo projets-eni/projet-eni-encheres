@@ -21,7 +21,7 @@ public class ArticleVendu implements Serializable {
     private Utilisateur vendeur;
     private List<Enchere> encheres;
     private Retrait retrait;
-    private String imageFileName;
+    private String idImage;
 
     public ArticleVendu() {
     }

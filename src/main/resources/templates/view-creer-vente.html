@@ -7,65 +7,74 @@
 <body>
 <h1>Nouvelle vente</h1>
 
-<div>
+<th:block th:object="${nouvelleVente}">
+
+    <div>
+    <!--    <span class="image-container">-->
+    <!--        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSI+AjIwMHgxMjA8L3RleHQ+PC9zdmc+"-->
+    <!--             alt="Aucune image sélectionnée"-->
+    <!--             class="preview-image">-->
+    <!--        <input type="file" id="imageInput" accept="image/*" style="display: none;">-->
+    <!--        <label for="imageInput" class="upload-label">📁 Choisir une image</label>-->
+    <!--    </span>-->
         <span>
-            <img src="">
-        </span>
-    <span>
-            <form action="/vente/nouvelle">
-                <ul class="flex-outer">
-                    <li>
-                        <label for="article">Article</label>
-                        <input type="text" id="article" field="">
-                    </li>
-                    <li>
-                        <label for="description">Description</label>
-                        <input type="text" id="description" field="">
-                    </li>
-                    <li>
-                        <label for="idCategory">Catégorie</label>
-                        <select field="" name="idCategory" id="idCategory">
-                            <option value=-1>-- Sélectionner une catégorie --</option>
-                        </select>
-                    </li>
-                    <li>
-                      <label for="getimg">Photo de l'article</label>
-                      <input type="button" id="getimg" value="UPLOADER">
-                    </li>
-                    <li>
-                        <label for="prixDepart">Mise à prix</label>
-                        <input type="text" id="prixDepart" field="">
-                    </li>
-                    <li>
-                        <label for="dateDebEnchere">Début de l'enchère</label>
-                        <input type="datetime-local" id="dateDebEnchere" field="">
-                    </li>
-                    <li>
-                        <label for="dateFinEnchere">Fin de l'enchère</label>
-                        <input type="datetime-local" id="dateFinEnchere" field="">
-                    </li>
-                    <li>
+                <form th:action="@{/nouvelle-vente}" method="POST">
+                    <ul class="flex-outer">
                         <li>
-                            <label for="rue">Rue</label>
-                            <input type="text" id="rue" field="">
+                            <label for="article">Article</label>
+                            <input type="text" id="article" th:field="*{nomArticle}">
                         </li>
                         <li>
-                            <label for="codePostal">Code Postal</label>
-                            <input type="text" id="codePostal" field="">
+                            <label for="description">Description</label>
+                            <input type="text" id="description" th:field="*{description}">
                         </li>
                         <li>
-                            <label for="ville">Ville</label>
-                            <input type="text" id="ville" field="">
+                            <label for="idCategory">Catégorie</label>
+                            <select th:field="*{idCategorie}" name="idCategory" id="idCategory">
+                                <option value=0>-- Sélectionner une catégorie --</option>
+                                <option value=1>Aménagement</option>
+                            </select>
                         </li>
-                    </li>
-                    <li>
-                        <input type="submit" value="Enregistrer">
-                        <a href="/encheres">Annuler</a>
-                    </li>
-                </ul>
-            </form>
-        </span>
-</div>
+                        <li>
+                          <label for="getimg">Photo de l'article</label>
+                          <input type="button" id="getimg" value="UPLOADER" th:fied="*{idImage}">
+                        </li>
+                        <li>
+                            <label for="prixDepart">Mise à prix</label>
+                            <input type="text" id="prixDepart" th:field="*{prixInitial}">
+                        </li>
+                        <li>
+                            <label for="dateDebEnchere">Début de l'enchère</label>
+                            <input type="datetime-local" id="dateDebEnchere" th:field="*{dateDebutEncheres}">
+                        </li>
+                        <li>
+                            <label for="dateFinEnchere">Fin de l'enchère</label>
+                            <input type="datetime-local" id="dateFinEnchere" th:field="*{dateFinEncheres}">
+                        </li>
+                        <li>
+                            <li>
+                                <label for="rue">Rue</label>
+                                <input type="text" id="rue" th:field="*{rue}">
+                            </li>
+                            <li>
+                                <label for="codePostal">Code Postal</label>
+                                <input type="text" id="codePostal" th:field="*{codePostal}">
+                            </li>
+                            <li>
+                                <label for="ville">Ville</label>
+                                <input type="text" id="ville" th:field="*{ville}">
+                            </li>
+                        </li>
+                        <li>
+                            <input type="submit" value="Enregistrer">
+                            <a href="/encheres">Annuler</a>
+                        </li>
+                    </ul>
+                </form>
+            </span>
+    </div>
+
+    </th:block>
 
 </body>
 </html>
