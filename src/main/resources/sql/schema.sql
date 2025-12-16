@@ -80,7 +80,6 @@ CREATE TABLE Retraits (
 );
 GO
 
-ALTER TABLE Retraits ADD constraint retrait_pk PRIMARY KEY  (no_article)
 ALTER TABLE Retraits
     ADD CONSTRAINT FK_Retraits_ArticlesVendus FOREIGN KEY ( no_article ) REFERENCES  ArticlesVendus (no_article)
         ON DELETE NO ACTION
