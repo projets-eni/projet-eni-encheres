@@ -145,3 +145,9 @@ ALTER TABLE Utilisateurs
 
 alter table Utilisateurs
     alter column code_postal varchar(5);
+
+ALTER TABLE Retraits
+    DROP CONSTRAINT CK_Retraits_codePostal;
+
+alter table Retraits
+    alter column code_postal varchar(5);
