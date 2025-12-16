@@ -21,7 +21,7 @@
                     <ul class="flex-outer">
                         <li>
                             <label for="nomArticle">Article</label>
-                            <input type="text" id="nomArticle" th:field="*{nomArticle}" required placeholder="Nom de l'article">
+                            <input type="text" id="nomArticle" th:field="*{nomArticle}" required placeholder="Ex. Fauteuil">
                             <span style="color: red;" th:if="${#fields.hasErrors('nomArticle')}">
                                 <ul>
                                     <li th:each="erreur: ${#fields.errors('nomArticle')}" th:text="${erreur}"></li>
@@ -30,7 +30,7 @@
                         </li>
                         <li>
                             <label for="description">Description</label>
-                            <input type="text" id="description" th:field="*{description}">
+                            <input type="text" id="description" th:field="*{description}" required placeholder="Fauteuil en cuir">
                             <span style="color: red;" th:if="${#fields.hasErrors('description')}">
                                 <ul>
                                     <li th:each="erreur: ${#fields.errors('description')}" th:text="${erreur}"></li>
@@ -45,11 +45,11 @@
                                         th:value="${cat.noCategorie}"
                                         th:text="${cat.libelle}"></option>
                             </select>
-<!--                            <span style="color: red;" th:if="${#fields.hasErrors('noCategory')}">-->
-<!--                                <ul>-->
-<!--                                    <li th:each="erreur: ${#fields.errors('noCategory')}" th:text="${erreur}"></li>-->
-<!--                                </ul>-->
-<!--                            </span>-->
+                            <span style="color: red;" th:if="${#fields.hasErrors('noCategorie')}">
+                                <ul>
+                                    <li th:each="erreur: ${#fields.errors('noCategorie')}" th:text="${erreur}"></li>
+                                </ul>
+                            </span>
                         </li>
                         <li>
                           <label for="getimg">Photo de l'article</label>
@@ -62,7 +62,7 @@
                         </li>
                         <li>
                             <label for="prixDepart">Mise à prix</label>
-                            <input type="text" id="prixDepart" th:field="*{prixInitial}">
+                            <input type="number" id="prixDepart" th:field="*{prixInitial}">
                             <span style="color: red;" th:if="${#fields.hasErrors('prixInitial')}">
                                 <ul>
                                     <li th:each="erreur: ${#fields.errors('prixInitial')}" th:text="${erreur}"></li>
@@ -71,7 +71,9 @@
                         </li>
                         <li>
                             <label for="dateDebEnchere">Début de l'enchère</label>
-                            <input type="datetime-local" id="dateDebEnchere" th:field="*{dateDebutEncheres}">
+                            <input type="datetime-local" id="dateDebEnchere"
+                                   th:field="*{dateDebutEncheres}"
+                                   th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd''T''HH:mm')}">
                             <span style="color: red;" th:if="${#fields.hasErrors('dateDebutEncheres')}">
                                 <ul>
                                     <li th:each="erreur: ${#fields.errors('dateDebutEncheres')}" th:text="${erreur}"></li>
@@ -90,7 +92,7 @@
                         <li>
                             <li>
                                 <label for="rue">Rue</label>
-                                <input type="text" id="rue" th:field="*{rue}">
+                                <input type="text" id="rue" th:field="*{rue}" required placeholder="ex. 2 rue des Pinsons">
                                 <span style="color: red;" th:if="${#fields.hasErrors('rue')}">
                                 <ul>
                                     <li th:each="erreur: ${#fields.errors('rue')}" th:text="${erreur}"></li>
@@ -99,7 +101,7 @@
                             </li>
                             <li>
                                 <label for="codePostal">Code Postal</label>
-                                <input type="text" id="codePostal" th:field="*{codePostal}">
+                                <input type="text" id="codePostal" th:field="*{codePostal}" required placeholder="44000">
                                 <span style="color: red;" th:if="${#fields.hasErrors('codePostal')}">
                                 <ul>
                                     <li th:each="erreur: ${#fields.errors('codePostal')}" th:text="${erreur}"></li>
@@ -108,7 +110,7 @@
                             </li>
                             <li>
                                 <label for="ville">Ville</label>
-                                <input type="text" id="ville" th:field="*{ville}">
+                                <input type="text" id="ville" th:field="*{ville}" required placeholder="Nantes">
                                 <span style="color: red;" th:if="${#fields.hasErrors('ville')}">
                                 <ul>
                                     <li th:each="erreur: ${#fields.errors('ville')}" th:text="${erreur}"></li>

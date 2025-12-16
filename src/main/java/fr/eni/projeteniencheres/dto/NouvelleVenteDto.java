@@ -28,13 +28,8 @@ public class NouvelleVenteDto {
     private int prixInitial;
 
     @NotNull(message = "La date de début est obligatoire")
+    @FutureOrPresent(message = "La date de début doit être postérieure ou égale à la date du jour")
     private LocalDateTime dateDebutEncheres;
-
-    @AssertTrue(message = "La date de début doit être postérieure ou égale à la date de création de l'article")
-    private boolean isDateDebutValide() {
-        return dateDebutEncheres != null &&
-                !dateDebutEncheres.isBefore(LocalDateTime.now());
-    }
 
     @NotNull(message = "La date de fin est obligatoire")
     private LocalDateTime dateFinEncheres;
