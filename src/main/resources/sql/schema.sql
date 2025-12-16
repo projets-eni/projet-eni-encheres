@@ -1,127 +1,139 @@
--- DROP SCHEMA dbo;
+-- Script de création de la base de données ENCHERES
+--   type :      SQL Server 2012
+/*
+-- Désactiver toutes les contraintes de clé étrangère
+EXEC sp_MSforeachtable 'ALTER TABLE ? NOCHECK CONSTRAINT ALL';*/
+-- Supprimer une table spécifique
+/*
+DROP TABLE Encheres ;
+DROP TABLE Retraits ;
+DROP TABLE ArticlesVendus ;
+DROP TABLE Categories ;
+DROP TABLE Utilisateurs ;
+*/
+-- Réactiver toutes les contraintes de clé étrangère
+/*
+EXEC sp_MSforeachtable 'ALTER TABLE ? CHECK CONSTRAINT ALL';
+*/
 
-CREATE SCHEMA dbo;
--- eni_encheres.dbo.address definition
 
--- Drop table
-
--- DROP TABLE eni_encheres.dbo.address;
-
-CREATE TABLE eni_encheres.dbo.address (
-                                          id bigint NOT NULL,
-                                          street varchar(255) COLLATE French_CI_AS NOT NULL,
-                                          zipcode varchar(255) COLLATE French_CI_AS NOT NULL,
-                                          city varchar(255) COLLATE French_CI_AS NOT NULL,
-                                          CONSTRAINT address_id_primary PRIMARY KEY (id)
+CREATE TABLE Categories (
+                            no_categorie   INTEGER IDENTITY(1,1) NOT NULL,
+                            libelle        NVARCHAR(30) NOT NULL UNIQUE /* CONSTRAINT CK_Categories_libelle CHECK(libelle IN('Informatique','Ameublement','Vêtement','Sport & Loisirs')) */
 );
+GO
 
+ALTER TABLE Categories ADD constraint PK_Categorie PRIMARY KEY (no_categorie);
+GO
 
--- eni_encheres.dbo.category definition
-
--- Drop table
-
--- DROP TABLE eni_encheres.dbo.category;
-
-CREATE TABLE eni_encheres.dbo.category (
-                                           id bigint NOT NULL,
-                                           label varchar(255) COLLATE French_CI_AS NOT NULL,
-                                           CONSTRAINT category_id_primary PRIMARY KEY (id)
+CREATE TABLE Utilisateurs (
+                              no_utilisateur   INTEGER IDENTITY(1,1) NOT NULL,
+                              pseudo           NVARCHAR(30) NOT NULL CONSTRAINT UN_Utilisateurs_pseudo UNIQUE,
+                              nom              NVARCHAR(30) NOT NULL,
+                              prenom           NVARCHAR(30) NOT NULL,
+                              email            NVARCHAR(50) NOT NULL CONSTRAINT UN_Utilisateurs_email UNIQUE,
+                              telephone        NVARCHAR(15) NOT NULL,
+                              rue              NVARCHAR(30) NOT NULL,
+                              code_postal      INTEGER NOT NULL CONSTRAINT CK_Utilisateurs_codePostal CHECK(code_postal BETWEEN 1000 AND 99000),
+                              ville            NVARCHAR(50) NOT NULL,
+                              mot_de_passe     NVARCHAR(30) NOT NULL,
+                              credit           INTEGER NOT NULL CONSTRAINT DF_Utilisateurs_credit DEFAULT 100
+                                  CONSTRAINT CK_Utilisateurs_credit CHECK(credit>=0),
+                              administrateur   bit NOT NULL CONSTRAINT DF_Utilisateurs_admin DEFAULT 0
 );
+GO
+
+ALTER TABLE Utilisateurs ADD constraint PK_Utilisateurs PRIMARY KEY (no_utilisateur);
+GO
 
 
--- eni_encheres.dbo.article definition
-
--- Drop table
-
--- DROP TABLE eni_encheres.dbo.article;
-
-CREATE TABLE eni_encheres.dbo.article (
-                                          id bigint NOT NULL,
-                                          name varchar(255) COLLATE French_CI_AS NOT NULL,
-                                          description varchar(255) COLLATE French_CI_AS NOT NULL,
-                                          idCategory bigint NOT NULL,
-                                          CONSTRAINT article_id_primary PRIMARY KEY (id),
-                                          CONSTRAINT article_idcategory_foreign FOREIGN KEY (idCategory) REFERENCES eni_encheres.dbo.category(id)
+CREATE TABLE ArticlesVendus (
+                                no_article                    INTEGER IDENTITY(1,1) NOT NULL,
+                                nom_article                   NVARCHAR(30) NOT NULL,
+                                description                   NVARCHAR(300) NOT NULL,
+                                date_debut_encheres           DATETIME2 NOT NULL CONSTRAINT DF_ArticlesVendus_DateDebutEnchere DEFAULT GETDATE()
+                                    CONSTRAINT CK_ArticlesVendus_DateDebutEnchere CHECK(date_debut_encheres>=GETDATE()),
+                                date_fin_encheres             DATETIME2 NOT NULL,
+                                prix_initial                  INTEGER NOT NULL CONSTRAINT CK_ArticlesVendus_prixInitial CHECK(prix_initial>0),
+                                prix_vente                    INTEGER ,
+                                etat_vente					  NVARCHAR(30) NOT NULL CONSTRAINT CK_ArticlensVendus_etatVente CHECK(etat_vente IN('Non commencée','En cours','Terminée')),
+                                no_utilisateur                INTEGER NOT NULL,
+                                no_categorie                  INTEGER NOT NULL,
+                                CONSTRAINT CK_ArticlesVendus_DateFinEnchere CHECK(date_fin_encheres>=date_debut_encheres),
+                                CONSTRAINT CK_ArticlesVendus_prixVente CHECK(prix_vente>=prix_initial)
 );
+GO
 
 
--- eni_encheres.dbo.person definition
+ALTER TABLE ArticlesVendus ADD constraint PK_ArticlesVendus PRIMARY KEY (no_article);
+GO
 
--- Drop table
 
--- DROP TABLE eni_encheres.dbo.person;
-
-CREATE TABLE eni_encheres.dbo.person (
-                                         idUser bigint NOT NULL,
-                                         firstname varchar(255) COLLATE French_CI_AS NOT NULL,
-                                         lastname varchar(255) COLLATE French_CI_AS NOT NULL,
-                                         phone varchar(255) COLLATE French_CI_AS NOT NULL,
-                                         credit int NOT NULL,
-                                         idAddress bigint NOT NULL,
-                                         CONSTRAINT person_iduser_primary PRIMARY KEY (idUser),
-                                         CONSTRAINT person_idaddress_foreign FOREIGN KEY (idAddress) REFERENCES eni_encheres.dbo.address(id)
+CREATE TABLE Retraits (
+                          no_article     INTEGER NOT NULL,
+                          rue            NVARCHAR(30) NOT NULL,
+                          code_postal    NVARCHAR(15) NOT NULL CONSTRAINT CK_Retraits_codePostal CHECK(code_postal BETWEEN 1000 AND 99000),
+                          ville          NVARCHAR(30) NOT NULL,
+                          est_retire	   BIT NOT NULL CONSTRAINT DF_Retraits_estRetire DEFAULT 0
 );
+GO
+
+ALTER TABLE Retraits ADD constraint retrait_pk PRIMARY KEY  (no_article)
+ALTER TABLE Retraits
+    ADD CONSTRAINT FK_Retraits_ArticlesVendus FOREIGN KEY ( no_article ) REFERENCES  ArticlesVendus (no_article)
+        ON DELETE NO ACTION
+        ON UPDATE no action;
+GO
 
 
--- eni_encheres.dbo.sale definition
-
--- Drop table
-
--- DROP TABLE eni_encheres.dbo.sale;
-
-CREATE TABLE eni_encheres.dbo.sale (
-                                       id bigint NOT NULL,
-                                       idArticle bigint NOT NULL,
-                                       idPersonSeller bigint NOT NULL,
-                                       startDate datetime2 NOT NULL,
-                                       endDate datetime2 NOT NULL,
-                                       startPrice float NOT NULL,
-                                       endPrice float NOT NULL,
-                                       status bigint NOT NULL,
-                                       idAddressWithdrawal bigint NULL,
-                                       CONSTRAINT sale_id_primary PRIMARY KEY (id),
-                                       CONSTRAINT sale_idaddresswithdrawal_foreign FOREIGN KEY (idAddressWithdrawal) REFERENCES eni_encheres.dbo.address(id),
-                                       CONSTRAINT sale_idarticle_foreign FOREIGN KEY (idArticle) REFERENCES eni_encheres.dbo.article(id),
-                                       CONSTRAINT sale_idpersonseller_foreign FOREIGN KEY (idPersonSeller) REFERENCES eni_encheres.dbo.person(idUser)
+CREATE TABLE Encheres(
+                         no_enchere  INTEGER IDENTITY(1,1) NOT NULL,
+                         date_enchere DATETIME2 NOT NULL CONSTRAINT DF_Encheres_dateEnchere DEFAULT GETDATE(),
+                         montant_enchere INTEGER NOT NULL CONSTRAINT CK_Encheres_montantEnchere CHECK(montant_enchere>0),
+                         no_article INTEGER NOT NULL,
+                         no_utilisateur INTEGER NOT NULL
 );
+GO
+
+ALTER TABLE Encheres ADD constraint PK_Encheres PRIMARY KEY ( no_enchere);
+GO
+
+ALTER TABLE Encheres
+    ADD CONSTRAINT FK_Encheres_Utilisateurs FOREIGN KEY ( no_utilisateur ) REFERENCES Utilisateurs ( no_utilisateur )
+        ON DELETE NO ACTION
+        ON UPDATE no action;
+GO
+
+ALTER TABLE Encheres
+    ADD CONSTRAINT FK_Encheres_ArticlesVendus FOREIGN KEY ( no_article ) REFERENCES ArticlesVendus ( no_article )
+        ON DELETE NO ACTION
+        ON UPDATE no action;
+GO
 
 
--- eni_encheres.dbo.[user] definition
+ALTER TABLE ArticlesVendus
+    ADD CONSTRAINT FK_ArticlesVendus_Categories FOREIGN KEY ( no_categorie )
+        REFERENCES Categories ( no_categorie )
+        ON DELETE NO ACTION
+        ON UPDATE no action;
+GO
 
--- Drop table
-
--- DROP TABLE eni_encheres.dbo.[user];
-
-CREATE TABLE eni_encheres.dbo.[user] (
-                                         id bigint NOT NULL,
-                                         email varchar(255) COLLATE French_CI_AS NOT NULL,
-    username varchar(255) COLLATE French_CI_AS NOT NULL,
-    password varchar(255) COLLATE French_CI_AS NOT NULL,
-    admin bit NOT NULL,
-    active bit NOT NULL,
-    CONSTRAINT user_id_primary PRIMARY KEY (id),
-    CONSTRAINT user_id_foreign FOREIGN KEY (id) REFERENCES eni_encheres.dbo.person(idUser)
-    );
-CREATE UNIQUE NONCLUSTERED INDEX user_email_unique ON eni_encheres.dbo.user (  email ASC  )
-	 WITH (  PAD_INDEX = OFF ,FILLFACTOR = 100  ,SORT_IN_TEMPDB = OFF , IGNORE_DUP_KEY = OFF , STATISTICS_NORECOMPUTE = OFF , ONLINE = OFF , ALLOW_ROW_LOCKS = ON , ALLOW_PAGE_LOCKS = ON  )
-	 ON [PRIMARY ] ;
- CREATE UNIQUE NONCLUSTERED INDEX user_username_unique ON eni_encheres.dbo.user (  username ASC  )
-	 WITH (  PAD_INDEX = OFF ,FILLFACTOR = 100  ,SORT_IN_TEMPDB = OFF , IGNORE_DUP_KEY = OFF , STATISTICS_NORECOMPUTE = OFF , ONLINE = OFF , ALLOW_ROW_LOCKS = ON , ALLOW_PAGE_LOCKS = ON  )
-	 ON [PRIMARY ] ;
+ALTER TABLE ArticlesVendus
+    ADD CONSTRAINT FK_ArticlesVendus_Utilisateurs FOREIGN KEY ( no_utilisateur )
+        REFERENCES Utilisateurs ( no_utilisateur )
+        ON DELETE NO ACTION
+        ON UPDATE no action ;
+GO
 
 
--- eni_encheres.dbo.auction definition
+CREATE INDEX FK_Retraits_ArticlesVendus		 ON Retraits(no_article);
+CREATE INDEX FK_Encheres_Utilisateurs		 ON Encheres(no_utilisateur);
+CREATE INDEX FK_Encheres_ArticlesVendus		 ON Encheres(no_article);
+CREATE INDEX FK_ArticlesVendus_Categories    ON ArticlesVendus(no_categorie);
+CREATE INDEX FK_ArticlesVendus_Utilisateurs  ON ArticlesVendus(no_utilisateur);
 
--- Drop table
+CREATE INDEX IN_ArticlesVendus_nomArticle		   ON ArticlesVendus(nom_article);
+CREATE INDEX IN_ArticlesVendus_descriptionArticle  ON ArticlesVendus(description);
+CREATE INDEX IN_ArticlesVendus_etatVente		   ON ArticlesVendus(etat_vente);
 
--- DROP TABLE eni_encheres.dbo.auction;
 
-CREATE TABLE eni_encheres.dbo.auction (
-                                          idSale bigint NOT NULL,
-                                          idBuyer bigint NOT NULL,
-    [date] datetime2 NOT NULL,
-                                          amount float NOT NULL,
-                                          CONSTRAINT auction_pk PRIMARY KEY (idSale,idBuyer),
-                                          CONSTRAINT auction_idbuyer_foreign FOREIGN KEY (idBuyer) REFERENCES eni_encheres.dbo.person(idUser),
-                                          CONSTRAINT auction_idsale_foreign FOREIGN KEY (idSale) REFERENCES eni_encheres.dbo.sale(id)
-);
