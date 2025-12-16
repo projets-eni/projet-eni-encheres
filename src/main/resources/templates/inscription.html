@@ -7,12 +7,12 @@
 <body>
 <h1>Formulaire d'inscription</h1>
 
-<form th:action="@{/inscription}" th:object="${utilisateur}" method="post">
+<form th:action="@{/inscription}" th:object="${utilisateurDTO}" method="post">
 
 <!--    <div style="color: red;" th:if="${#fields.hasErrors('*')}" >-->
 <!--        <p th:text="#{index.erreurs}">Message d'erreur</p>-->
 <!--    </div>-->
-    <div class="groupLabel groupeLabel1">
+    <div class="groupeLabel groupeLabel1">
         <div>
             <label for="pseudo">Pseudo :</label>
             <input type="text" id="pseudo" th:field="*{pseudo}"/>
@@ -41,8 +41,8 @@
 
     <div class="groupLabel groupeLabel2">
         <div>
-            <label for="prenom">Nom :</label>
-            <input type="text" id="prenom" th:field="*{prenom}"/>
+            <label for="nom">Nom :</label>
+            <input type="text" id="nom" th:field="*{nom}"/>
         </div>
 
         <div>
