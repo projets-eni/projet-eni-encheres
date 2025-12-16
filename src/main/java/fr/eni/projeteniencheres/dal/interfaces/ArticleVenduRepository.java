@@ -1,17 +1,15 @@
 package fr.eni.projeteniencheres.dal.interfaces;
 
-import fr.eni.projeteniencheres.bo.*;
+import fr.eni.projeteniencheres.bo.ArticleVendu;
+import fr.eni.projeteniencheres.bo.EtatAchat;
+import fr.eni.projeteniencheres.bo.EtatVente;
+import fr.eni.projeteniencheres.bo.Utilisateur;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ArticleVenduRepository {
 
     public List<ArticleVendu> findAll();
-
-    public List<ArticleVendu> findEnCours();
-
-    public List<ArticleVendu> findTermines();
 
     /**
      * Liste des ventes pour un état ou un utilisateur
@@ -21,9 +19,15 @@ public interface ArticleVenduRepository {
      */
     public List<ArticleVendu> findByEtatEtVendeur(EtatVente etat, Utilisateur utilisateur);
 
+    /**
+     * Liste des articles remportés pour un urilisateur
+     * @param etat          EtatAchat
+     * @param utilisateur   Utilisateur ou null
+     * @return
+     */
+    public List<ArticleVendu> findByAcquereur(EtatAchat etat, Utilisateur utilisateur);
 
     public ArticleVendu findById(int id);
-    public List<ArticleVendu> findById(List<Integer> id);
 
     public ArticleVendu save(ArticleVendu vente);
 
