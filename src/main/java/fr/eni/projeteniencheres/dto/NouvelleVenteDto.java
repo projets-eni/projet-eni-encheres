@@ -16,10 +16,10 @@ public class NouvelleVenteDto {
     @Size(min = 1, max = 300)
     private String description;
 
-    @NotEmpty(message = "La catégorie est obligatoire")
+    @NotNull(message = "La catégorie est obligatoire")
     private int noCategorie;
 
-    @NotBlank(message = "L'image est obligatoire")
+//    @NotBlank(message = "L'image est obligatoire")
     private String idImage ;
 
     @NotNull(message = "Le prix initial est obligatoire")
@@ -35,13 +35,9 @@ public class NouvelleVenteDto {
     private LocalDateTime dateFinEncheres;
 
     @AssertTrue(message = "La date de fin doit être postérieure à la date de début")
-    private boolean isDateFinValide() {
-        return dateFinEncheres != null &&
-                !dateFinEncheres.isAfter(dateDebutEncheres);
+    public boolean isDateFinValide() {
+        return dateFinEncheres == null || dateFinEncheres.isAfter(dateDebutEncheres);
     }
-
-    @NotNull(message = "Le vendeur est obligatoire")
-    private long idVendeur;
 
     @NotBlank(message = "La rue est obligatoire")
     private String rue ;
@@ -56,7 +52,7 @@ public class NouvelleVenteDto {
 
     public NouvelleVenteDto() {
     }
-    public NouvelleVenteDto(String nomArticle, String description, int noCategorie, String idImage, int prixInitial, LocalDateTime dateDebutEncheres, LocalDateTime dateFinEncheres, long idVendeur, String rue, String codePostal, String ville) {
+    public NouvelleVenteDto(String nomArticle, String description, int noCategorie, String idImage, int prixInitial, LocalDateTime dateDebutEncheres, LocalDateTime dateFinEncheres, String rue, String codePostal, String ville) {
         this.nomArticle = nomArticle;
         this.description = description;
         this.noCategorie = noCategorie;
@@ -64,7 +60,6 @@ public class NouvelleVenteDto {
         this.prixInitial = prixInitial;
         this.dateDebutEncheres = dateDebutEncheres;
         this.dateFinEncheres = dateFinEncheres;
-        this.idVendeur = idVendeur;
         this.rue = rue;
         this.codePostal = codePostal;
         this.ville = ville;
@@ -112,12 +107,6 @@ public class NouvelleVenteDto {
     public void setDateFinEncheres(LocalDateTime dateFinEncheres) {
         this.dateFinEncheres = dateFinEncheres;
     }
-    public long getIdVendeur() {
-        return idVendeur;
-    }
-    public void setIdVendeur(long idVendeur) {
-        this.idVendeur = idVendeur;
-    }
     public String getRue() {
         return rue;
     }
@@ -147,7 +136,6 @@ public class NouvelleVenteDto {
                 ", prixInitial=" + prixInitial +
                 ", dateDebutEncheres=" + dateDebutEncheres +
                 ", dateFinEncheres=" + dateFinEncheres +
-                ", idVendeur=" + idVendeur +
                 ", rue='" + rue + '\'' +
                 ", codePostal='" + codePostal + '\'' +
                 ", ville='" + ville + '\'' +
@@ -157,12 +145,12 @@ public class NouvelleVenteDto {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof NouvelleVenteDto that)) return false;
-        return noCategorie == that.noCategorie && prixInitial == that.prixInitial && idVendeur == that.idVendeur && Objects.equals(nomArticle, that.nomArticle) && Objects.equals(description, that.description) && Objects.equals(idImage, that.idImage) && Objects.equals(dateDebutEncheres, that.dateDebutEncheres) && Objects.equals(dateFinEncheres, that.dateFinEncheres) && Objects.equals(rue, that.rue) && Objects.equals(codePostal, that.codePostal) && Objects.equals(ville, that.ville);
+        return noCategorie == that.noCategorie && prixInitial == that.prixInitial && Objects.equals(nomArticle, that.nomArticle) && Objects.equals(description, that.description) && Objects.equals(idImage, that.idImage) && Objects.equals(dateDebutEncheres, that.dateDebutEncheres) && Objects.equals(dateFinEncheres, that.dateFinEncheres) && Objects.equals(rue, that.rue) && Objects.equals(codePostal, that.codePostal) && Objects.equals(ville, that.ville);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(nomArticle, description, noCategorie, idImage, prixInitial, dateDebutEncheres, dateFinEncheres, idVendeur, rue, codePostal, ville);
+        return Objects.hash(nomArticle, description, noCategorie, idImage, prixInitial, dateDebutEncheres, dateFinEncheres, rue, codePostal, ville);
     }
 
 }

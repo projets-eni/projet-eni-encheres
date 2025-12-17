@@ -15,6 +15,17 @@ public class RetraitServiceImpl implements RetraitService {
 
     @Override
     public Retrait ajoutRetrait(Retrait retrait) {
+        // Par défaut, si non renseigné, le retrait se fait à l'adresse du vendeur
+        if (retrait.getVille() == null ){
+            String rueVendeur = retrait.getRue();
+            String cpVendeur = retrait.getCodePostal();
+            String villeVendeur = retrait.getVille();
+            Retrait retraitALAdresseDuVendeur = new Retrait();
+            retraitALAdresseDuVendeur.setRue(rueVendeur);
+            retraitALAdresseDuVendeur.setCodePostal(cpVendeur);
+            retraitALAdresseDuVendeur.setVille(villeVendeur);
+        }
+        retrait.setEstRetire(false);
         return retraitRepository.ajoutRetrait(retrait);
     }
 }

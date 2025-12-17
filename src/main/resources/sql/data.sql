@@ -19,3 +19,10 @@ VALUES (1, 'Informatique'),
        (3, 'Vêtement'),
        (4, 'Sport&Loisirs');
 SET IDENTITY_INSERT Categories OFF;
+
+/* Table Utilisateurs */
+SET IDENTITY_INSERT Utilisateurs ON;
+INSERT INTO Utilisateurs(no_utilisateur, pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur)
+VALUES (1, 'mdupond', 'Dupond', 'Martin', 'martin.dupond@yahoo.fr', '0607080910',
+        '2 rue de la Boétie', '33000', 'Bordeaux', '$2a$10$QX0vCM8/EHw9tQ8vnJTzqujfxdPG574A1YAfdMXQ5jjuHWWVYZfka', 100, 1);
+SET IDENTITY_INSERT Utilisateurs OFF;

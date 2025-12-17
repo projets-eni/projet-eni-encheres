@@ -8,124 +8,161 @@
 <h1>Nouvelle vente</h1>
 
     <div>
-<!--            <span class="image-container">-->
-<!--                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSI+AjIwMHgxMjA8L3RleHQ+PC9zdmc+"-->
-<!--                     alt="Aucune image sélectionnée"-->
-<!--                     class="preview-image">-->
-<!--                <input type="file" id="imageInput" accept="image/*" style="display: none;">-->
-<!--                <label for="imageInput" class="upload-label">📁 Choisir une image</label>-->
-<!--            </span>-->
-        <span>
-            <th:block th:object="${nouvelleVente}">
-                <form th:action="@{/nouvelle-vente}" method="POST">
-                    <ul class="flex-outer">
-                        <li>
-                            <label for="nomArticle">Article</label>
-                            <input type="text" id="nomArticle" th:field="*{nomArticle}" required placeholder="Ex. Fauteuil">
-                            <span style="color: red;" th:if="${#fields.hasErrors('nomArticle')}">
-                                <ul>
-                                    <li th:each="erreur: ${#fields.errors('nomArticle')}" th:text="${erreur}"></li>
-                                </ul>
-                            </span>
-                        </li>
-                        <li>
-                            <label for="description">Description</label>
-                            <input type="text" id="description" th:field="*{description}" required placeholder="Fauteuil en cuir">
-                            <span style="color: red;" th:if="${#fields.hasErrors('description')}">
-                                <ul>
-                                    <li th:each="erreur: ${#fields.errors('description')}" th:text="${erreur}"></li>
-                                </ul>
-                            </span>
-                        </li>
-                        <li>
-                            <label for="categorie">Catégorie</label>
-                            <select id="categorie" th:field="*{noCategorie}">
-                                <option value=0>-- Sélectionner une catégorie --</option>
-                                <option th:each="cat : ${categories}"
-                                        th:value="${cat.noCategorie}"
-                                        th:text="${cat.libelle}"></option>
-                            </select>
-                            <span style="color: red;" th:if="${#fields.hasErrors('noCategorie')}">
-                                <ul>
-                                    <li th:each="erreur: ${#fields.errors('noCategorie')}" th:text="${erreur}"></li>
-                                </ul>
-                            </span>
-                        </li>
-                        <li>
-                          <label for="getimg">Photo de l'article</label>
-                          <input type="button" id="getimg" value="UPLOADER" th:fied="*{idImage}">
-                          <span style="color: red;" th:if="${#fields.hasErrors('idImage')}">
-                                <ul>
-                                    <li th:each="erreur: ${#fields.errors('idImage')}" th:text="${erreur}"></li>
-                                </ul>
-                            </span>
-                        </li>
-                        <li>
-                            <label for="prixDepart">Mise à prix</label>
-                            <input type="number" id="prixDepart" th:field="*{prixInitial}">
-                            <span style="color: red;" th:if="${#fields.hasErrors('prixInitial')}">
-                                <ul>
-                                    <li th:each="erreur: ${#fields.errors('prixInitial')}" th:text="${erreur}"></li>
-                                </ul>
-                            </span>
-                        </li>
-                        <li>
-                            <label for="dateDebEnchere">Début de l'enchère</label>
-                            <input type="datetime-local" id="dateDebEnchere"
-                                   th:field="*{dateDebutEncheres}"
-                                   th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd''T''HH:mm')}">
-                            <span style="color: red;" th:if="${#fields.hasErrors('dateDebutEncheres')}">
-                                <ul>
-                                    <li th:each="erreur: ${#fields.errors('dateDebutEncheres')}" th:text="${erreur}"></li>
-                                </ul>
-                            </span>
-                        </li>
-                        <li>
-                            <label for="dateFinEnchere">Fin de l'enchère</label>
-                            <input type="datetime-local" id="dateFinEnchere" th:field="*{dateFinEncheres}">
-                            <span style="color: red;" th:if="${#fields.hasErrors('dateFinEncheres')}">
-                                <ul>
-                                    <li th:each="erreur: ${#fields.errors('dateFinEncheres')}" th:text="${erreur}"></li>
-                                </ul>
-                            </span>
-                        </li>
-                        <li>
-                            <li>
-                                <label for="rue">Rue</label>
-                                <input type="text" id="rue" th:field="*{rue}" required placeholder="ex. 2 rue des Pinsons">
-                                <span style="color: red;" th:if="${#fields.hasErrors('rue')}">
-                                <ul>
-                                    <li th:each="erreur: ${#fields.errors('rue')}" th:text="${erreur}"></li>
-                                </ul>
-                            </span>
-                            </li>
-                            <li>
-                                <label for="codePostal">Code Postal</label>
-                                <input type="text" id="codePostal" th:field="*{codePostal}" required placeholder="44000">
-                                <span style="color: red;" th:if="${#fields.hasErrors('codePostal')}">
-                                <ul>
-                                    <li th:each="erreur: ${#fields.errors('codePostal')}" th:text="${erreur}"></li>
-                                </ul>
-                            </span>
-                            </li>
-                            <li>
-                                <label for="ville">Ville</label>
-                                <input type="text" id="ville" th:field="*{ville}" required placeholder="Nantes">
-                                <span style="color: red;" th:if="${#fields.hasErrors('ville')}">
-                                <ul>
-                                    <li th:each="erreur: ${#fields.errors('ville')}" th:text="${erreur}"></li>
-                                </ul>
-                            </span>
-                            </li>
-                        </li>
-                        <li>
-                            <input type="submit" value="Enregistrer">
-                            <a href="/encheres">Annuler</a>
-                        </li>
-                    </ul>
-                </form>
-            </th:block>
-        </span>
+        <th:block th:object="${nouvelleVente}">
+            <span>
+                <img th:src="*{idImage}" alt="Aucune image sélectionnée">
+            </span>
+            <form th:action="@{/nouvelle-vente}" method="POST">
+                <ul class="flex-outer">
+<!--                        <li>-->
+<!--                            <span style="color: red;" th:if="${#fields.hasErrors()}">-->
+<!--                                <ul>-->
+<!--                                    <li th:each="erreur: ${#fields.errors('all')}" th:text="${erreur}"></li>-->
+<!--                                </ul>-->
+<!--                            </span>-->
+<!--                        </li>-->
+                    <li>
+                        <label for="nomArticle">Article</label>
+                        <input type="text" id="nomArticle" th:field="*{nomArticle}" required placeholder="Ex. Fauteuil">
+                        <span style="color: red;" th:if="${#fields.hasErrors('nomArticle')}">
+                            <ul>
+                                <li th:each="erreur: ${#fields.errors('nomArticle')}" th:text="${erreur}"></li>
+                            </ul>
+                        </span>
+                    </li>
+                    <li>
+                        <label for="description">Description</label>
+                        <input type="text" id="description" th:field="*{description}" required placeholder="Fauteuil en cuir">
+                        <span style="color: red;" th:if="${#fields.hasErrors('description')}">
+                            <ul>
+                                <li th:each="erreur: ${#fields.errors('description')}" th:text="${erreur}"></li>
+                            </ul>
+                        </span>
+                    </li>
+                    <li>
+                        <label for="categorie">Catégorie</label>
+                        <select id="categorie" th:field="*{noCategorie}">
+                            <option value=0>-- Sélectionner une catégorie --</option>
+                            <option th:each="cat : ${@categoryService.afficherCategories()}"
+                                    th:value="${cat.noCategorie}"
+                                    th:text="${cat.libelle}"></option>
+                        </select>
+                        <span style="color: red;" th:if="${#fields.hasErrors('noCategorie')}">
+                            <ul>
+                                <li th:each="erreur: ${#fields.errors('noCategorie')}" th:text="${erreur}"></li>
+                            </ul>
+                        </span>
+                    </li>
+                    <li>
+<!--                            REPRENDRE ICI POUR UPLOADER L'IMAGE !!!-->
+                        <label for="getimg">Photo de l'article</label>
+                        <button type="button" id="getimg" class="btn btn-primary">UPLOADER</button>
+
+                        <!-- Input file caché -->
+                        <input type="file" id="fileInput" accept="image/*" style="display: none;">
+
+                        <!-- Champ qui recevra l'image -->
+                        <input type="text" th:field="*{idImage}" id="idImageField" class="form-control" readonly
+                               placeholder="Aucune image sélectionnée">
+
+                        <span style="color: red;" th:if="${#fields.hasErrors('idImage')}">
+                           <ul>
+                             <li th:each="erreur: ${#fields.errors('idImage')}" th:text="${erreur}"></li>
+                           </ul>
+                        </span>
+                    </li>
+                    <li>
+                        <label for="prixDepart">Mise à prix</label>
+                        <input type="number" id="prixDepart" th:field="*{prixInitial}">
+                        <span style="color: red;" th:if="${#fields.hasErrors('prixInitial')}">
+                            <ul>
+                                <li th:each="erreur: ${#fields.errors('prixInitial')}" th:text="${erreur}"></li>
+                            </ul>
+                        </span>
+                    </li>
+                    <li>
+                        <label for="dateDebEnchere">Début de l'enchère</label>
+                        <input type="datetime-local" id="dateDebEnchere"
+                               th:field="*{dateDebutEncheres}"
+                               th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd''T''HH:mm')}">
+                        <span style="color: red;" th:if="${#fields.hasErrors('dateDebutEncheres')}">
+                            <ul>
+                                <li th:each="erreur: ${#fields.errors('dateDebutEncheres')}" th:text="${erreur}"></li>
+                            </ul>
+                        </span>
+                    </li>
+                    <li>
+                        <label for="dateFinEnchere">Fin de l'enchère</label>
+                        <input type="datetime-local" id="dateFinEnchere" th:field="*{dateFinEncheres}">
+                        <span style="color: red;" th:if="${#fields.hasErrors('dateFinEncheres')}">
+                            <ul>
+                                <li th:each="erreur: ${#fields.errors('dateFinEncheres')}" th:text="${erreur}"></li>
+                            </ul>
+                        </span>
+                        <!-- Erreurs de champ @AssertTrue -->
+                        <span style="color: red;" th:if="${#fields.hasErrors('dateFinValide')}">
+                            <ul>
+                                <li th:each="erreur: ${#fields.errors('dateFinValide')}" th:text="${erreur}"></li>
+                            </ul>
+                        </span>
+                    </li>
+                </ul>
+            </form>
+        </th:block>
+
+        <th:block th:object="${adresseVendeur}">
+            <form th:action="" method="POST">
+                <!--                        REPRENDRE ICI : par défaut, l'adresse du vendeur -->
+                <li>
+                    <label for="rue">Rue</label>
+                    <input type="text" id="rue" th:value="#{}" th:field="*{rue}" required>
+                    <span style="color: red;" th:if="${#fields.hasErrors('rue')}">
+                                        <ul>
+                                            <li th:each="erreur: ${#fields.errors('rue')}" th:text="${erreur}"></li>
+                                        </ul>
+                                    </span>
+                </li>
+                <li>
+                    <label for="codePostal">Code Postal</label>
+                    <input type="text" id="codePostal" th:field="*{codePostal}" required>
+                    <span style="color: red;" th:if="${#fields.hasErrors('codePostal')}">
+                                    <ul>
+                                        <li th:each="erreur: ${#fields.errors('codePostal')}" th:text="${erreur}"></li>
+                                    </ul>
+                                </span>
+                </li>
+                <li>
+                    <label for="ville">Ville</label>
+                    <input type="text" id="ville" th:field="*{ville}" required>
+                    <span style="color: red;" th:if="${#fields.hasErrors('ville')}">
+                                    <ul>
+                                        <li th:each="erreur: ${#fields.errors('ville')}" th:text="${erreur}"></li>
+                                    </ul>
+                                </span>
+                </li>
+                <li>
+                    <input type="submit" value="Enregistrer">
+                    <a href="/encheres">Annuler</a>
+                </li>
+            </form>
+        </th:block>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Bouton uploader
+            document.getElementById('getimg').addEventListener('click', function() {
+                document.getElementById('fileInput').click();
+            });
+
+            // Quand fichier sélectionné
+            document.getElementById('fileInput').addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    document.getElementById('idImageField').value = file.name;
+                    console.log('Image sélectionnée:', file.name); // Pour debug
+                }
+            });
+        });
+    </script>
 </body>
 </html>

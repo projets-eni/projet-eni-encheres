@@ -42,7 +42,7 @@ CREATE TABLE Utilisateurs
     code_postal    INTEGER                NOT NULL
         CONSTRAINT CK_Utilisateurs_codePostal CHECK (code_postal BETWEEN 1000 AND 99000),
     ville          NVARCHAR(50)           NOT NULL,
-    mot_de_passe   NVARCHAR(30)           NOT NULL,
+    mot_de_passe   NVARCHAR(100)          NOT NULL,
     credit         INTEGER                NOT NULL
         CONSTRAINT DF_Utilisateurs_credit DEFAULT 100
         CONSTRAINT CK_Utilisateurs_credit CHECK (credit >= 0),
