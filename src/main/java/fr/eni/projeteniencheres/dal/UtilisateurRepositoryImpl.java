@@ -2,11 +2,9 @@ package fr.eni.projeteniencheres.dal;
 
 import fr.eni.projeteniencheres.bo.Utilisateur;
 import fr.eni.projeteniencheres.dal.interfaces.UtilisateurRepository;
-import fr.eni.projeteniencheres.exception.UtilisateurExisteDeja;
 import fr.eni.projeteniencheres.exception.UtilisateurNotFoundByIdException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -64,57 +62,27 @@ public class UtilisateurRepositoryImpl implements UtilisateurRepository {
 
     @Override
     public void saveUtilisateur(Utilisateur utilisateur) {
+        String sql = "INSERT INTO Utilisateurs (pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur)" +
+                "VALUES (:pseudo, :nom, :prenom, :email, :telephone, :rue, :code_postal, :ville, :mot_de_passe, :credit, :administrateur)";
+
+        GeneratedKeyHolder  keyHolder = new GeneratedKeyHolder();
 
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        parameterSource.addValue("pseudo", utilisateur.getPseudo());
+        parameterSource.addValue("nom", utilisateur.getNom());
+        parameterSource.addValue("prenom", utilisateur.getPrenom());
+        parameterSource.addValue("email", utilisateur.getEmail());
+        parameterSource.addValue("telephone", utilisateur.getTelephone());
+        parameterSource.addValue("rue", utilisateur.getRue());
+        parameterSource.addValue("code_postal", utilisateur.getCodePostal());
+        parameterSource.addValue("ville", utilisateur.getVille());
+        parameterSource.addValue("mot_de_passe", utilisateur.getMotDePasse());
+        parameterSource.addValue("credit", utilisateur.getCredit());
+        parameterSource.addValue("administrateur", utilisateur.isAdministrateur() ? 1 : 0);
 
-        if (Long.valueOf(utilisateur.getNoUtilisateur()) < 1) {
-            String sql = "INSERT INTO Utilisateurs (pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur)" +
-                    "VALUES (:pseudo, :nom, :prenom, :email, :telephone, :rue, :code_postal, :ville, :mot_de_passe, :credit, :administrateur)";
+        namedParameterJdbcTemplate.update(sql, parameterSource, keyHolder, new String[]{"no_utilisateur"});
 
-            GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-
-            parameterSource.addValue("pseudo", utilisateur.getPseudo());
-            parameterSource.addValue("nom", utilisateur.getNom());
-            parameterSource.addValue("prenom", utilisateur.getPrenom());
-            parameterSource.addValue("email", utilisateur.getEmail());
-            parameterSource.addValue("telephone", utilisateur.getTelephone());
-            parameterSource.addValue("rue", utilisateur.getRue());
-            parameterSource.addValue("code_postal", utilisateur.getCodePostal());
-            parameterSource.addValue("ville", utilisateur.getVille());
-            parameterSource.addValue("mot_de_passe", utilisateur.getMotDePasse());
-            parameterSource.addValue("credit", utilisateur.getCredit());
-            parameterSource.addValue("administrateur", utilisateur.isAdministrateur() ? 1 : 0);
-
-            try {
-                namedParameterJdbcTemplate.update(sql, parameterSource, keyHolder, new String[]{"no_utilisateur"});
-            } catch (DuplicateKeyException ex) {
-                throw new UtilisateurExisteDeja("Utilisateur déjà existant");
-            }
-
-            utilisateur.setNoUtilisateur(keyHolder.getKey().longValue());
-
-        } else {
-
-            String sql = "INSERT INTO Utilisateurs (pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur)" +
-                    "VALUES (:pseudo, :nom, :prenom, :email, :telephone, :rue, :code_postal, :ville, :mot_de_passe, :credit, :administrateur)";
-
-            GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-
-            //parameterSource.addValue("pseudo", utilisateur.getPseudo());
-            parameterSource.addValue("nom", utilisateur.getNom());
-            parameterSource.addValue("prenom", utilisateur.getPrenom());
-            parameterSource.addValue("email", utilisateur.getEmail());
-            parameterSource.addValue("telephone", utilisateur.getTelephone());
-            parameterSource.addValue("rue", utilisateur.getRue());
-            parameterSource.addValue("code_postal", utilisateur.getCodePostal());
-            parameterSource.addValue("ville", utilisateur.getVille());
-            parameterSource.addValue("mot_de_passe", utilisateur.getMotDePasse());
-            parameterSource.addValue("credit", utilisateur.getCredit());
-            parameterSource.addValue("administrateur", utilisateur.isAdministrateur() ? 1 : 0);
-
-            namedParameterJdbcTemplate.update(sql, parameterSource, keyHolder, new String[]{"no_utilisateur"});
-
-        }
+        utilisateur.setNoUtilisateur(keyHolder.getKey().longValue());
     }
 
     class UtilisateurRowMapper implements RowMapper<Utilisateur> {

@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>Formulaire d'inscription</h1>
-<div class="error" th:text="${erreur}"></div>
+
 <form th:action="@{/inscription}" th:object="${utilisateurDTO}" method="post">
 
 <!--    <div style="color: red;" th:if="${#fields.hasErrors('*')}" >-->
