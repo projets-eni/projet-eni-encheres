@@ -47,7 +47,11 @@ public String inscription(@Valid @ModelAttribute("utilisateurDTO") UtilisateurDT
     Utilisateur utilisateur = new Utilisateur();
     BeanUtils.copyProperties(utilisateurDTO, utilisateur);
 
-    utilisateurService.createUtilisateur(utilisateur);
+    try {
+        utilisateurService.createUtilisateur(utilisateur);
+    } catch (RuntimeException ex) {
+        redirectAttr.addFlashAttribute("erreur", ex.getMessage());
+    }
 
     return "redirect:/inscription";
 }
