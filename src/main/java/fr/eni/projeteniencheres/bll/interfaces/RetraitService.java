@@ -5,4 +5,5 @@ import fr.eni.projeteniencheres.bo.Retrait;
 
 public interface RetraitService {
     Retrait ajoutRetrait(Retrait retrait);
+    Retrait afficherRetraitParId(int noArticle);
 }
