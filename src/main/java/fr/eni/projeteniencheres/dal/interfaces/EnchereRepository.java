@@ -14,5 +14,4 @@ public interface EnchereRepository {
 
     public List<Enchere> findByAcquereur(Utilisateur utilisateur);
 
-
 }

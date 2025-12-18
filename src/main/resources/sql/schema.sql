@@ -173,3 +173,23 @@ ALTER TABLE Retraits
 
 alter table Retraits
     alter column code_postal varchar(5);
+
+
+-- views
+create view ventes as
+select
+    no_article,
+    nom_article,
+    description,
+    date_debut_encheres,
+    date_fin_encheres,
+    prix_initial,
+    prix_vente,
+    case
+        when date_fin_encheres < GETDATE() THEN 'Terminée'
+        when date_debut_encheres > GETDATE() THEN 'Non commencée'
+        else 'En cours'
+    end as etat_vente,
+    no_utilisateur,
+    no_categorie
+from ArticlesVendus

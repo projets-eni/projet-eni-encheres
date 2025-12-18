@@ -88,6 +88,18 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
 
     }
 
+    @Override
+    public Enchere placerEnchere(Enchere enchere) {
+        try {
+            MapSqlParameterSource params = new MapSqlParameterSource();
+
+            jdbcTemplate.update("call placerEnchere(:)");
+        } catch (RuntimeException ex) {
+
+        }
+        return null;
+    }
+
     private final RowMapper<ArticleVendu> venteRowMapper = (rs, rowNum) -> {
         ArticleVendu articleVendu = new ArticleVendu();
 

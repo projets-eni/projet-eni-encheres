@@ -1,0 +1,16 @@
+package fr.eni.projeteniencheres.bll.interfaces;
+
+import fr.eni.projeteniencheres.bo.ArticleVendu;
+import fr.eni.projeteniencheres.bo.Enchere;
+
+import java.util.List;
+
+public interface EnchereService {
+
+    Enchere getById(int id);
+
+    List<Enchere> getByArticleVendu(ArticleVendu articleVendu);
+
+    Enchere placer(Enchere enchere);
+
+}
