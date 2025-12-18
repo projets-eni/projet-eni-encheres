@@ -30,7 +30,7 @@ public class VenteController {
         return "view-liste-encheres";
     }
 
-    @GetMapping({"/", "/nouvelle-vente"})
+    @GetMapping({ "/nouvelle-vente"})
     public String afficherPageNouvelleVente(Authentication authentication,
                                             Model modele) {
 

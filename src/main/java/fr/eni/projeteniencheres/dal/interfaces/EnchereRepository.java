@@ -17,6 +17,12 @@ public interface EnchereRepository {
 
     public List<Enchere> findByAcquereur(Utilisateur utilisateur);
 
+    /**
+     * Pour modifier le statut d'une vente avec la procédure stockée terminerVentes
+     * si articleVendu est null, prend toutes les ventes avec etat_vente différent de "Terminée"
+     * @param enchere
+     * @return Nombre de vente impactée
+     */
     public Integer placer(Enchere enchere) throws EnchereImpossible;
 
 }
