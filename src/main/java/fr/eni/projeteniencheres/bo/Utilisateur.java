@@ -57,9 +57,9 @@ public class Utilisateur implements Serializable {
         this.motDePasse = motDePasse;
         this.credit = credit;
         this.administrateur = administrateur;
-        this.acquisitions = new ArrayList<>();
-        this.ventes = new ArrayList<>();
-        this.encheres = new ArrayList<>();
+        this.acquisitions = acquisitions;
+        this.ventes = ventes;
+        this.encheres = encheres;
     }
 
     public long getNoUtilisateur() {

@@ -42,7 +42,7 @@ CREATE TABLE Utilisateurs
     code_postal    INTEGER                NOT NULL
         CONSTRAINT CK_Utilisateurs_codePostal CHECK (code_postal BETWEEN 1000 AND 99000),
     ville          NVARCHAR(50)           NOT NULL,
-    mot_de_passe   NVARCHAR(30)           NOT NULL,
+    mot_de_passe   NVARCHAR(100)          NOT NULL,
     credit         INTEGER                NOT NULL
         CONSTRAINT DF_Utilisateurs_credit DEFAULT 100
         CONSTRAINT CK_Utilisateurs_credit CHECK (credit >= 0),
@@ -173,3 +173,23 @@ ALTER TABLE Retraits
 
 alter table Retraits
     alter column code_postal varchar(5);
+
+
+-- views
+create view ventes as
+select
+    no_article,
+    nom_article,
+    description,
+    date_debut_encheres,
+    date_fin_encheres,
+    prix_initial,
+    prix_vente,
+    case
+        when date_fin_encheres < GETDATE() THEN 'Terminée'
+        when date_debut_encheres > GETDATE() THEN 'Non commencée'
+        else 'En cours'
+    end as etat_vente,
+    no_utilisateur,
+    no_categorie
+from ArticlesVendus

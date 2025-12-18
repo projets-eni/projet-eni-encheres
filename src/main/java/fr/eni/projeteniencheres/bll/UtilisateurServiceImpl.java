@@ -54,7 +54,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 
     @Override
     public Utilisateur findUtilisateurByEmail(String email) {
-        return null;
+        return utilisateurRepository.findUtilisateurByEmail(email);
     }
 
     @Transactional
