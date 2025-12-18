@@ -11,6 +11,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 public class VenteServiceImpl implements VenteService {
 
@@ -27,6 +32,24 @@ public class VenteServiceImpl implements VenteService {
         this.articleVenduService = articleVenduService;
     }
 
+    public NouvelleVenteDto initFormulaireNouvelleVente(String email) {
+
+        Utilisateur vendeur = utilisateurService.findUtilisateurByEmail(email);
+
+        // Par défaut, si non renseigné, le retrait se fait à l'adresse du vendeur
+        // Par défaut, la date de début d'enchère = maintenant et durée de l'enchère = 7 jours
+
+        NouvelleVenteDto dto = new NouvelleVenteDto();
+        dto.setRue(vendeur.getRue());
+        dto.setCodePostal(vendeur.getCodePostal());
+        dto.setVille(vendeur.getVille());
+        LocalDateTime maintenant = LocalDateTime.now().withSecond(0).withNano(0);
+        dto.setDateDebutEncheres(maintenant);
+        dto.setDateFinEncheres(maintenant.plusDays(7));
+
+        return dto;
+    }
+
     @Transactional
     @Override
     public ArticleVendu creerNouvelleVente(NouvelleVenteDto dto, String email) {
@@ -37,7 +60,6 @@ public class VenteServiceImpl implements VenteService {
 
         // récupération des attributs issus de relations FK
         Utilisateur vendeur = utilisateurService.findUtilisateurByEmail(email);
-        email = "martin.dupond@yahoo.fr";
         Categorie categorie = categorieService.afficherCategoryParId(dto.getNoCategorie());
         nouvelarticle.setCategorie(categorie);
         nouvelarticle.setVendeur(vendeur);
@@ -54,10 +76,18 @@ public class VenteServiceImpl implements VenteService {
             nouvelarticle.setRetrait(retraitChezVendeur);
         }
 
+//        // Par défaut, la date de début d'enchère = maintenant et durée de l'enchère = 7 jours
+//        if (dto.getDateDebutEncheres() != null && dto.getDateFinEncheres() != null) {
+//            nouvelarticle.setDateDebutEncheres(dto.getDateDebutEncheres());
+//            nouvelarticle.setDateFinEncheres(dto.getDateFinEncheres());
+//        } else {
+//            nouvelarticle.setDateDebutEncheres(LocalDateTime.now());
+//            nouvelarticle.setDateFinEncheres(LocalDateTime.now().plusDays(7));
+//        }
+
         // on appelle le service qui enregistre l'article en BDD
         ArticleVendu articleSaved = articleVenduService.ajoutArticle(nouvelarticle);
         long idArticle = articleSaved.getNoArticle();
-
 
         // on appelle le service qui enregistre le retrait associé au nouvel article en BDD
         articleSaved.getRetrait().setNoArticle(idArticle);
@@ -67,12 +97,4 @@ public class VenteServiceImpl implements VenteService {
         return articleSaved;
     }
 
-    public Retrait preparerAdresseVendeur(String email){
-        // Par défaut, si non renseigné, le retrait se fait à l'adresse du vendeur
-        Retrait adresseVendeur = new Retrait(
-                    utilisateurService.findUtilisateurByEmail(email).getRue(),
-                    utilisateurService.findUtilisateurByEmail(email).getCodePostal(),
-                    utilisateurService.findUtilisateurByEmail(email).getVille());
-        return adresseVendeur;
-    }
 }

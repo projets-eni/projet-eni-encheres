@@ -7,6 +7,6 @@ import fr.eni.projeteniencheres.dto.NouvelleVenteDto;
 public interface VenteService {
 
     ArticleVendu creerNouvelleVente(NouvelleVenteDto dto, String emailVendeur);
-    Retrait preparerAdresseVendeur(String email);
+    NouvelleVenteDto initFormulaireNouvelleVente(String email);
 
 }

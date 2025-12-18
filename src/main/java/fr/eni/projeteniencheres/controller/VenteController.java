@@ -33,10 +33,12 @@ public class VenteController {
     @GetMapping({"/", "/nouvelle-vente"})
     public String afficherPageNouvelleVente(Authentication authentication,
                                             Model modele) {
+
         // 1ère visite : ajoute formulaire VIDE
         if(!modele.containsAttribute("nouvelleVente")){
-            modele.addAttribute("nouvelleVente", new NouvelleVenteDto());
-            modele.addAttribute("adresseVendeur", venteService.preparerAdresseVendeur(authentication.getName()));
+//            String email = authentication.getName();
+            String email = "martin.dupond@yahoo.fr" ;
+            modele.addAttribute("nouvelleVente", venteService.initFormulaireNouvelleVente(email));
         }
         // Pour les visites suivantes = erreur validation (POST → GET) → true → On garde les données saisies !
         return "view-creer-vente";
@@ -54,7 +56,9 @@ public class VenteController {
 //            }
             return "view-creer-vente"; // Flash attributes auto-gérés par Spring
         }
-        venteService.creerNouvelleVente(dto, authentication.getName());
+//        venteService.creerNouvelleVente(dto, authentication.getName());
+        String email = "martin.dupond@yahoo.fr";
+        venteService.creerNouvelleVente(dto, email);
         logger.info("Sauvegarde article {}", dto.getNoCategorie());
 
         return "redirect:/encheres";

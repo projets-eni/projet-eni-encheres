@@ -1,6 +1,7 @@
 package fr.eni.projeteniencheres.dto;
 
 import jakarta.validation.constraints.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -27,10 +28,12 @@ public class NouvelleVenteDto {
     @Max(value = 1000000, message = "Prix maximum dépassé")
     private int prixInitial;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @NotNull(message = "La date de début est obligatoire")
     @FutureOrPresent(message = "La date de début doit être postérieure ou égale à la date du jour")
     private LocalDateTime dateDebutEncheres;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @NotNull(message = "La date de fin est obligatoire")
     private LocalDateTime dateFinEncheres;
 
