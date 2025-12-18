@@ -32,18 +32,19 @@ public class VenteServiceImpl implements VenteService {
         this.articleVenduService = articleVenduService;
     }
 
+    @Override
     public NouvelleVenteDto initFormulaireNouvelleVente(String email) {
 
         Utilisateur vendeur = utilisateurService.findUtilisateurByEmail(email);
 
         // Par défaut, si non renseigné, le retrait se fait à l'adresse du vendeur
-        // Par défaut, la date de début d'enchère = maintenant et durée de l'enchère = 7 jours
+        // Par défaut, la date de début d'enchère = commence dans 10 minutes et durée de l'enchère = 7 jours
 
         NouvelleVenteDto dto = new NouvelleVenteDto();
         dto.setRue(vendeur.getRue());
         dto.setCodePostal(vendeur.getCodePostal());
         dto.setVille(vendeur.getVille());
-        LocalDateTime maintenant = LocalDateTime.now().withSecond(0).withNano(0);
+        LocalDateTime maintenant = LocalDateTime.now().plusMinutes(10);
         dto.setDateDebutEncheres(maintenant);
         dto.setDateFinEncheres(maintenant.plusDays(7));
 
@@ -95,6 +96,16 @@ public class VenteServiceImpl implements VenteService {
         articleSaved.setRetrait(retraitSaved);
 
         return articleSaved;
+    }
+
+    @Override
+    public NouvelleVenteDto afficherVenteParNoArticle(int noArticle){
+        ArticleVendu infoArticle = articleVenduService.afficherArticleParId(noArticle);
+        NouvelleVenteDto dto = new NouvelleVenteDto();
+        BeanUtils.copyProperties(infoArticle, dto);
+        Retrait infoRetrait = retraitService.afficherRetraitParId(noArticle);
+        BeanUtils.copyProperties(infoRetrait, dto);
+        return dto;
     }
 
 }

@@ -1,6 +1,7 @@
 package fr.eni.projeteniencheres.controller;
 
 import fr.eni.projeteniencheres.bll.interfaces.*;
+import fr.eni.projeteniencheres.bo.ArticleVendu;
 import fr.eni.projeteniencheres.bo.Retrait;
 import fr.eni.projeteniencheres.dto.NouvelleVenteDto;
 import jakarta.validation.Valid;
@@ -12,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -61,6 +63,13 @@ public class VenteController {
         logger.info("Sauvegarde article {}", dto.getNoCategorie());
 
         return "redirect:/encheres";
+    }
+
+    @GetMapping("/details-vente/{id}")
+    public String afficherDetailsVente(@PathVariable int id, Authentication authentication, Model modele) {
+        NouvelleVenteDto vente = venteService.afficherVenteParNoArticle(id);
+        modele.addAttribute("vente", vente);
+        return "view-details-vente";
     }
 
 //    @PostMapping("/uploadImage")

@@ -8,5 +8,6 @@ public interface VenteService {
 
     ArticleVendu creerNouvelleVente(NouvelleVenteDto dto, String emailVendeur);
     NouvelleVenteDto initFormulaireNouvelleVente(String email);
+    NouvelleVenteDto afficherVenteParNoArticle(int noArticle);
 
 }
