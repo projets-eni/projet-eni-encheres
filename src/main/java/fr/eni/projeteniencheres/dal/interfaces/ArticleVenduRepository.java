@@ -38,4 +38,6 @@ public interface ArticleVenduRepository {
 
     public void delete(ArticleVendu vente);
 
+    public Enchere placerEnchere(Enchere enchere);
+
 }
