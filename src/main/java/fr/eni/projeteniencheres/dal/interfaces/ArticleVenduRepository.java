@@ -8,6 +8,8 @@ public interface ArticleVenduRepository {
 
     public List<ArticleVendu> findAll();
 
+    List<ArticleVendu> findEnCours();
+
     /**
      * Liste des ventes pour un état ou un utilisateur
      * @param etat  EtatVente  ou null
@@ -24,14 +26,15 @@ public interface ArticleVenduRepository {
      */
     public List<ArticleVendu> findByAcquereur(EtatAchat etat, Utilisateur utilisateur);
 
+    Integer terminerVente(ArticleVendu articleVendu);
+
     public ArticleVendu findById(int id);
+    public List<ArticleVendu> findById(List<Integer> ids);
 
     public ArticleVendu save(ArticleVendu vente);
 
     ArticleVendu ajoutArticle(ArticleVendu article);
 
     public void delete(ArticleVendu vente);
-
-    public Enchere placerEnchere(Enchere enchere);
 
 }
