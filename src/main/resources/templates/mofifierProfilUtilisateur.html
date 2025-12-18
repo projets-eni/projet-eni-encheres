@@ -1,16 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Inscription</title>
+    <title>Title</title>
 </head>
 <body>
 <div th:replace="fragments/formulaire-utilisateur :: form(
-    action=@{/inscription},
-    cancelUrl=@{/accueil},
+    action=@{/profil/modifier},
+    cancelUrl=@{/profil},
     utilisateurDTO=${utilisateurFormDTO})">
 </div>
-
-
 </body>
 </html>

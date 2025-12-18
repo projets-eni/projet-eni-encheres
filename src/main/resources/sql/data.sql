@@ -1,0 +1,14 @@
+-- --insertion utilisateurs
+-- DELETE FROM Utilisateurs;
+--
+-- --mdp : azerty1234
+-- INSERT INTO Utilisateurs (pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur)
+-- VALUES ('clmartin', 'Martin', 'Claire', 'claire.martin@mail.com', '0645678901', '3 rue Pasteur', '44000', 'Nantes', '{bcrypt}$2a$10$6D4p4PrBW5h8h2RsmU1ZGeamWNC1REl3nHYbdLjiiLB40GNvFDu6S', 100, 0);
+--
+-- --mdp : poiuyt1234
+-- INSERT INTO Utilisateurs (pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur)
+-- VALUES ('thdurand', 'Durand', 'Thomas', 'thomas.durand@mail.com', '0656789012', '27 chemin des Vignes', '34000', 'Montpellier', '{bcrypt}$2a$10$zQAUCog26UVwKf6ZADTn4.tLE61BkwGTFMx0o27wBwwA8rR./3a/S', 100, 0);
+--
+-- --mdp : wxcvbn1234
+-- INSERT INTO Utilisateurs (pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur)
+-- VALUES ('asimon', 'Simon', 'Alice', 'alice.simon@mail.com', '0667890123', '14 impasse des Roses', '21000', 'Dijon', '{bcrypt}$2a$10$mKLaqjCYNT8yReWM2dPNhetWIA5arKLmRj9hBo44GAkz1avqKBmcq', 100, 0);

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Profil</title>
+</head>
+<body>
+<table>
+    <caption>Détails de l'utilisateur</caption>
+    <tbody>
+    <tr>
+        <th>Pseudo</th>
+        <td th:text="${utilisateur.pseudo}"></td>
+    </tr>
+    <tr>
+        <th>Nom</th>
+        <td th:text="${utilisateur.nom}"></td>
+    </tr>
+    <tr>
+        <th>Prénom</th>
+        <td th:text="${utilisateur.prenom}"></td>
+    </tr>
+    <tr>
+        <th>Email</th>
+        <td th:text="${utilisateur.email}"></td>
+    </tr>
+    <tr>
+        <th>Téléphone</th>
+        <td th:text="${utilisateur.telephone}"></td>
+    </tr>
+    <tr>
+        <th>Rue</th>
+        <td th:text="${utilisateur.rue}"></td>
+    </tr>
+    <tr>
+        <th>Code Postal</th>
+        <td th:text="${utilisateur.codePostal}"></td>
+    </tr>
+    <tr>
+        <th>Ville</th>
+        <td th:text="${utilisateur.ville}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<a href="/" class="btn">Modifier</a>
+
+</body>
+</html>

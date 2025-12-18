@@ -1,6 +1,6 @@
 package fr.eni.projeteniencheres.dto;
 
-public class UtilisateurDTO {
+public class UtilisateurFormDTO {
 
     private long noUtilisateur;
     private String pseudo;
@@ -13,13 +13,11 @@ public class UtilisateurDTO {
     private String ville;
     private String motDePasse;
     private String confirmationMotDePasse;
-    private long credit;
-    private boolean administrateur;
 
-    public UtilisateurDTO() {
+    public UtilisateurFormDTO() {
     }
 
-    public UtilisateurDTO(String pseudo, String nom, String prenom, String email, String telephone, String rue, String codePostal, String ville, String motDePasse, String confirmationMotDePasse, long credit, boolean administrateur) {
+    public UtilisateurFormDTO(String pseudo, String nom, String prenom, String email, String telephone, String rue, String codePostal, String ville, String motDePasse, String confirmationMotDePasse) {
         this.pseudo = pseudo;
         this.nom = nom;
         this.prenom = prenom;
@@ -30,11 +28,9 @@ public class UtilisateurDTO {
         this.ville = ville;
         this.motDePasse = motDePasse;
         this.confirmationMotDePasse = confirmationMotDePasse;
-        this.credit = credit;
-        this.administrateur = administrateur;
     }
 
-    public UtilisateurDTO(long noUtilisateur, String pseudo, String nom, String prenom, String email, String telephone, String rue, String codePostal, String ville, String motDePasse, String confirmationMotDePasse, long credit, boolean administrateur) {
+    public UtilisateurFormDTO(long noUtilisateur, String pseudo, String nom, String prenom, String email, String telephone, String rue, String codePostal, String ville, String motDePasse, String confirmationMotDePasse) {
         this.noUtilisateur = noUtilisateur;
         this.pseudo = pseudo;
         this.nom = nom;
@@ -46,8 +42,6 @@ public class UtilisateurDTO {
         this.ville = ville;
         this.motDePasse = motDePasse;
         this.confirmationMotDePasse = confirmationMotDePasse;
-        this.credit = credit;
-        this.administrateur = administrateur;
     }
 
     public long getNoUtilisateur() {
@@ -136,21 +130,5 @@ public class UtilisateurDTO {
 
     public void setConfirmationMotDePasse(String confirmationMotDePasse) {
         this.confirmationMotDePasse = confirmationMotDePasse;
-    }
-
-    public long getCredit() {
-        return credit;
-    }
-
-    public void setCredit(long credit) {
-        this.credit = credit;
-    }
-
-    public boolean isAdministrateur() {
-        return administrateur;
-    }
-
-    public void setAdministrateur(boolean administrateur) {
-        this.administrateur = administrateur;
     }
 }

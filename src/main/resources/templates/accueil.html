@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Accueil</title>
+</head>
+<body>
+<p><a th:href="@{/connexion}">S'inscrire - Se connecter</a></p>
+<p><a th:href="@{/profil}">Profil</a></p>
+
+<form th:action="@{/logout}" method="post">
+    <input type="submit" value="Se déconnecter"/>
+</form>
+
+<h2 th:if="${pseudo != null}">
+    Bonjour <span th:text="${pseudo}"></span> !
+</h2>
+</body>
+</html>
