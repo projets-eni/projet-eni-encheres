@@ -3,6 +3,7 @@ package fr.eni.projeteniencheres.bll;
 import fr.eni.projeteniencheres.bll.interfaces.ArticleVenduService;
 import fr.eni.projeteniencheres.bll.interfaces.RetraitService;
 import fr.eni.projeteniencheres.bo.*;
+import fr.eni.projeteniencheres.dal.ArticleVenduRepositoryImpl;
 import fr.eni.projeteniencheres.dal.interfaces.ArticleVenduRepository;
 import fr.eni.projeteniencheres.dal.interfaces.EnchereRepository;
 import fr.eni.projeteniencheres.dal.interfaces.RetraitRepository;

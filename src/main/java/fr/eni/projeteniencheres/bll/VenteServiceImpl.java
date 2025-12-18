@@ -5,6 +5,7 @@ import fr.eni.projeteniencheres.bo.ArticleVendu;
 import fr.eni.projeteniencheres.bo.Categorie;
 import fr.eni.projeteniencheres.bo.Retrait;
 import fr.eni.projeteniencheres.bo.Utilisateur;
+import fr.eni.projeteniencheres.dal.ArticleVenduRepositoryImpl;
 import fr.eni.projeteniencheres.dal.interfaces.ArticleVenduRepository;
 import fr.eni.projeteniencheres.dto.NouvelleVenteDto;
 import org.springframework.beans.BeanUtils;
@@ -98,9 +99,10 @@ public class VenteServiceImpl implements VenteService {
         return articleSaved;
     }
 
+    /* reprendre ici */
     @Override
     public NouvelleVenteDto afficherVenteParNoArticle(int noArticle){
-        ArticleVendu infoArticle = articleVenduService.afficherArticleParId(noArticle);
+        ArticleVendu infoArticle = articleVenduService.findById(noArticle);
         NouvelleVenteDto dto = new NouvelleVenteDto();
         BeanUtils.copyProperties(infoArticle, dto);
         Retrait infoRetrait = retraitService.afficherRetraitParId(noArticle);
