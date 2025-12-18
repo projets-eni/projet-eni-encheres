@@ -5,28 +5,34 @@ import fr.eni.projeteniencheres.bo.Utilisateur;
 import fr.eni.projeteniencheres.dal.interfaces.UtilisateurRepository;
 import fr.eni.projeteniencheres.exception.UtilisateurExisteDeja;
 import fr.eni.projeteniencheres.exception.UtilisateurNotFoundByIdException;
+import fr.eni.projeteniencheres.exception.UtilisateurNotFoundByPseudoException;
+import fr.eni.projeteniencheres.exception.UtilisateurNotFoundByPseudoOrEmailException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class UtilisateurRepositoryImpl implements UtilisateurRepository {
 
-    private JdbcTemplate jdbcTemplate;
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    @Autowired
     public UtilisateurRepositoryImpl(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
@@ -55,7 +61,16 @@ public class UtilisateurRepositoryImpl implements UtilisateurRepository {
 
     @Override
     public Utilisateur findUtilisateurByPseudo(String pseudo) {
-        return null;
+        String sql = "SELECT no_utilisateur, pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur FROM Utilisateurs WHERE pseudo = ?";
+
+        Utilisateur utilisateur = null;
+
+        try {
+            utilisateur = jdbcTemplate.queryForObject(sql, new UtilisateurRowMapper(), pseudo);
+        } catch (EmptyResultDataAccessException ex) {
+            throw new UtilisateurNotFoundByPseudoException(pseudo);
+        }
+        return utilisateur;
     }
 
     @Override
@@ -70,6 +85,23 @@ public class UtilisateurRepositoryImpl implements UtilisateurRepository {
             throw new RuntimeException(ex) ;
         }
     }
+
+    @Override
+    public Optional<Utilisateur> findUtilisateurByPseudoOrEmail(String pseudo, String email) {
+        String sql = "SELECT no_utilisateur, pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur FROM Utilisateurs WHERE pseudo = :pseudo OR email = :email";
+        Utilisateur utilisateur = null;
+        Map<String, Object> params = new HashMap<>();
+        params.put("pseudo", pseudo);
+        params.put("email", email);
+
+        try {
+            utilisateur = namedParameterJdbcTemplate.queryForObject(sql, params, new UtilisateurRowMapper());
+            return Optional.of(utilisateur);
+        } catch (EmptyResultDataAccessException ex) {
+            throw new UtilisateurNotFoundByPseudoOrEmailException(pseudo);
+        }
+    }
+
 
     @Override
     public void saveUtilisateur(Utilisateur utilisateur) {
@@ -124,6 +156,43 @@ public class UtilisateurRepositoryImpl implements UtilisateurRepository {
             namedParameterJdbcTemplate.update(sql, parameterSource, keyHolder, new String[]{"no_utilisateur"});
 
         }
+    }
+
+    @Override
+    public void deleteUtilisateurById(long no_utilisateur) {
+        String sql = "DELETE FROM Utilisateurs WHERE no_utilisateur = ?";
+        jdbcTemplate.update(sql, no_utilisateur);
+
+    }
+
+    @Override
+    public Utilisateur updateUtilisateur(Utilisateur utilisateur) {
+        String sql = "UPDATE Utilisateurs" +
+                "SET" +
+                "pseudo = :pseudo,\n" +
+                "    nom = :nom,\n" +
+                "    prenom = :prenom,\n" +
+                "    email = :email,\n" +
+                "    telephone = :telephone,\n" +
+                "    rue = :rue,\n" +
+                "    code_postal = :codePostal,\n" +
+                "    ville = :ville,\n" +
+                "    mot_de_passe = :motDePasse" +
+                "WHERE no_utilisateur = :noUtilisateur";
+
+        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(utilisateur);
+//        MapSqlParameterSource parameterSource = new MapSqlParameterSource()
+//                .addValue("pseudo", utilisateur.getPseudo())
+//                .addValue("nom", utilisateur.getNom())
+//                .addValue("prenom", utilisateur.getPrenom())
+//                .addValue("email", utilisateur.getEmail())
+//                .addValue("telephone", utilisateur.getTelephone())
+//                .addValue("rue", utilisateur.getRue())
+//                .addValue("code_postal", utilisateur.getCodePostal())
+//                .addValue("ville", utilisateur.getVille())
+//                .addValue("mot_de_passe", utilisateur.getMotDePasse());
+        namedParameterJdbcTemplate.update(sql, parameterSource);
+        return findUtilisateurById(utilisateur.getNoUtilisateur());
     }
 
     class UtilisateurRowMapper implements RowMapper<Utilisateur> {
