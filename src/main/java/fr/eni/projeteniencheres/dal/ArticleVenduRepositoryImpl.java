@@ -3,6 +3,8 @@ package fr.eni.projeteniencheres.dal;
 import fr.eni.projeteniencheres.bo.*;
 import fr.eni.projeteniencheres.dal.interfaces.ArticleVenduRepository;
 import fr.eni.projeteniencheres.dal.interfaces.EnchereRepository;
+import fr.eni.projeteniencheres.exception.EnchereImpossible;
+import fr.eni.projeteniencheres.exception.EtatVenteErreur;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
@@ -11,7 +13,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import org.thymeleaf.expression.Lists;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -65,6 +66,24 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
             where.append(" AND v.no_utilisateur = :utilisateur");
         }
         return jdbcTemplate.query(this.rqtSelect + " WHERE 1 " + where.toString(), params, venteRowMapper);
+    }
+
+    @Override
+    public List<ArticleVendu> findByAcquereur(EtatAchat etat, Utilisateur utilisateur) {
+        return List.of();
+    }
+
+    @Override
+    public Integer terminerVente(ArticleVendu articleVendu) {
+        Integer res = null;
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("noArticle", articleVendu.getNoArticle());
+        try {
+            res = jdbcTemplate.update("EXEC terminerVentes :noArticle", params);
+        } catch (RuntimeException ex) {
+            throw new EtatVenteErreur(ex.getMessage());
+        }
+        return res;
     }
 
 
@@ -136,7 +155,7 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
 
         // Exécute l'INSERT ET remplit automatiquement keyHolder avec l'ID généré.
         //namedParameterJdbcTemplate.update(sqlFilm, paramsFilm, keyHolder);
-        namedParameterJdbcTemplate.update(sqlArticle, paramsArticle, keyHolder, new String[]{"no_article"});
+        jdbcTemplate.update(sqlArticle, paramsArticle, keyHolder, new String[]{"no_article"});
 
         // ré-injecter l'id dans l'objet retourné
         long generatedId = keyHolder.getKey().longValue();

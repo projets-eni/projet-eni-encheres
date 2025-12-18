@@ -12,7 +12,8 @@ BEGIN
         @VendeurId INT,
         @EnchereMaxUID INT,
         @EnchereMaxMontant INT,
-        @Now DATETIME2 = GETDATE();
+        @NAffectedVente INT = 0,
+        @Now DATETIME2 = GETUTCDATE();
 
     -- Déclaration du curseur en dehors des conditions (c'est ici que la portée du curseur est correcte)
     DECLARE vente_cursor CURSOR FOR
@@ -63,6 +64,7 @@ BEGIN
 
                     COMMIT TRANSACTION;
 
+                    set @NAffectedVente += 1;
                 END
 
             -- Lire la prochaine ligne
@@ -72,4 +74,6 @@ BEGIN
     -- Fermer et libérer les ressources du curseur
     CLOSE vente_cursor;
     DEALLOCATE vente_cursor;
+
+    return @NAffectedVente;
 END;
