@@ -22,6 +22,12 @@ public class Retrait implements Serializable {
         this.estRetire = estRetire;
     }
 
+    public Retrait(String rue, String codePostal, String ville) {
+        this.rue = rue;
+        this.codePostal = codePostal;
+        this.ville = ville;
+    }
+
     public long getNoArticle() {
         return noArticle;
     }

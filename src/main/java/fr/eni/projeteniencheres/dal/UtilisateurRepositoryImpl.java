@@ -1,5 +1,6 @@
 package fr.eni.projeteniencheres.dal;
 
+import fr.eni.projeteniencheres.bo.Categorie;
 import fr.eni.projeteniencheres.bo.Utilisateur;
 import fr.eni.projeteniencheres.dal.interfaces.UtilisateurRepository;
 import fr.eni.projeteniencheres.exception.UtilisateurExisteDeja;
@@ -33,14 +34,14 @@ public class UtilisateurRepositoryImpl implements UtilisateurRepository {
 
     @Override
     public List<Utilisateur> findAllUtilisateurs() {
-        String sql = "SELECT no_utilisateur, pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administateur FROM utilisateur";
+        String sql = "SELECT no_utilisateur, pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur FROM Utilisateurs";
         List<Utilisateur> utilisateurs = jdbcTemplate.query(sql, new UtilisateurRowMapper());
         return utilisateurs;
     }
 
     @Override
     public Utilisateur findUtilisateurById(long id) {
-        String sql = "SELECT no_utilisateur, pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administateur FROM utilisateur WHERE no_utilisateur = ?";
+        String sql = "SELECT no_utilisateur, pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur FROM Utilisateurs WHERE no_utilisateur = ?";
 
         Utilisateur utilisateur = null;
 
@@ -59,7 +60,15 @@ public class UtilisateurRepositoryImpl implements UtilisateurRepository {
 
     @Override
     public Utilisateur findUtilisateurByEmail(String email) {
-        return null;
+        String sql = "SELECT no_utilisateur, pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur FROM Utilisateurs where email = ?";
+        try {
+            Utilisateur vendeur = jdbcTemplate.queryForObject(sql, new UtilisateurRepositoryImpl.UtilisateurRowMapper(), email);
+            return vendeur;
+
+        } catch (DataAccessException ex) {
+//            throw new UtilisateurNotFoundByEmailException(ex);
+            throw new RuntimeException(ex) ;
+        }
     }
 
     @Override
