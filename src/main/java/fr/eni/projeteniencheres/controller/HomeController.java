@@ -22,6 +22,9 @@ public class HomeController {
         if (principal != null) {
             String pseudo = principal.getName();
             model.addAttribute("pseudo", pseudo);
+            System.out.println("principal : " + principal.getName());
+        } else {
+            System.out.println("Aucun utilisateur connecté");
         }
         return "accueil";
     }

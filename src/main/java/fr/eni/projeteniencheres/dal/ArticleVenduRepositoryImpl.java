@@ -35,14 +35,14 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
         return jdbcTemplate.query(this.rqtSelect, Map.of(), venteRowMapper);
     }
 
-    @Override
-    public List<ArticleVendu> findEnCours() {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("dateDebut", "GETUTCDATE()");
-        return jdbcTemplate.query(this.rqtSelect
-                + " WHERE v.date_fin_encheres < :dateDebut and v.date_debut_encheres <= :dateDebut",
-                params, venteRowMapper);
-    }
+//    @Override
+//    public List<ArticleVendu> findEnCours() {
+//        MapSqlParameterSource params = new MapSqlParameterSource();
+//        params.addValue("dateDebut", "GETUTCDATE()");
+//        return jdbcTemplate.query(this.rqtSelect
+//                + " WHERE v.date_fin_encheres < :dateDebut and v.date_debut_encheres <= :dateDebut",
+//                params, venteRowMapper);
+//    }
 
     public List<ArticleVendu> findTermines() {
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -73,12 +73,12 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
         return null;
     }
 
-    @Override
-    public List<ArticleVendu> findById(List<Integer> ids) {
-        return jdbcTemplate.query(rqtSelect + " WHERE v.no_article IN ("
-                + ids.stream().map(String::valueOf).collect(Collectors.joining(", "))
-                + ")", new MapSqlParameterSource(), venteRowMapper);
-    }
+//    @Override
+//    public List<ArticleVendu> findById(List<Integer> ids) {
+//        return jdbcTemplate.query(rqtSelect + " WHERE v.no_article IN ("
+//                + ids.stream().map(String::valueOf).collect(Collectors.joining(", "))
+//                + ")", new MapSqlParameterSource(), venteRowMapper);
+//    }
 
     @Override
     public ArticleVendu save(ArticleVendu vente) {
@@ -136,7 +136,7 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
 
         // Exécute l'INSERT ET remplit automatiquement keyHolder avec l'ID généré.
         //namedParameterJdbcTemplate.update(sqlFilm, paramsFilm, keyHolder);
-        namedParameterJdbcTemplate.update(sqlArticle, paramsArticle, keyHolder, new String[]{"no_article"});
+        jdbcTemplate.update(sqlArticle, paramsArticle, keyHolder, new String[]{"no_article"});
 
         // ré-injecter l'id dans l'objet retourné
         long generatedId = keyHolder.getKey().longValue();

@@ -6,6 +6,8 @@ import fr.eni.projeteniencheres.dto.UtilisateurAffichageDTO;
 import fr.eni.projeteniencheres.dto.UtilisateurFormDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -71,10 +73,10 @@ public String inscription(@Valid @ModelAttribute("utilisateurFormDTO") Utilisate
     // Thymeleaf va générer l'url avec l'id correspondant à l'utilisateur et
     // le place dans la variable identifiant
     //le controller injecte cette inscription dans le model puis le passe à la vue
-    public String afficherUnUtilisateur(@RequestParam(name="noUtilisateur") long identifiant, Model model) {
+    public String afficherUnUtilisateur(@AuthenticationPrincipal UserDetails userDetails, Model model) {
 
         //méthode findUtilisateurAffichageById() pour pouvoir utiliser un DTO pour l'affichage des données utilisateur
-        UtilisateurAffichageDTO utilisateurAffichageDTO = utilisateurService.findUtilisateurAffichageById(identifiant);
+        UtilisateurAffichageDTO utilisateurAffichageDTO = utilisateurService.findUtilisateurAffichageByPseudo(userDetails.getUsername());
         System.out.println(utilisateurAffichageDTO);
 
         model.addAttribute("utilisateur", utilisateurAffichageDTO);

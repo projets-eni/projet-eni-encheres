@@ -16,13 +16,13 @@ public interface ArticleVenduRepository {
      */
     public List<ArticleVendu> findByEtatEtVendeur(EtatVente etat, Utilisateur utilisateur);
 
-    /**
-     * Liste des articles remportés pour un urilisateur
-     * @param etat          EtatAchat
-     * @param utilisateur   Utilisateur ou null
-     * @return
-     */
-    public List<ArticleVendu> findByAcquereur(EtatAchat etat, Utilisateur utilisateur);
+//    /**
+//     * Liste des articles remportés pour un urilisateur
+//     * @param etat          EtatAchat
+//     * @param utilisateur   Utilisateur ou null
+//     * @return
+//     */
+//    public List<ArticleVendu> findByAcquereur(EtatAchat etat, Utilisateur utilisateur);
 
     public ArticleVendu findById(int id);
 
@@ -32,6 +32,6 @@ public interface ArticleVenduRepository {
 
     public void delete(ArticleVendu vente);
 
-    public Enchere placerEnchere(Enchere enchere);
+//    public Enchere placerEnchere(Enchere enchere);
 
 }
