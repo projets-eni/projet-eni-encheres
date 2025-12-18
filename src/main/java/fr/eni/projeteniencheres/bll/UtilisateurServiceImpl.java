@@ -40,8 +40,8 @@ public class UtilisateurServiceImpl implements UtilisateurService {
      * @return utilisateurAffichagedto
      */
     @Override
-    public UtilisateurAffichageDTO findUtilisateurAffichageById(long no_utilisateur) {
-        Utilisateur utilisateur = findUtilisateurById(no_utilisateur);
+    public UtilisateurAffichageDTO findUtilisateurAffichageByPseudo(String pseudo) {
+        Utilisateur utilisateur = findUtilisateurByPseudo(pseudo);
         UtilisateurAffichageDTO utilisateurAffichagedto = new UtilisateurAffichageDTO();
         BeanUtils.copyProperties(utilisateur, utilisateurAffichagedto);
         return utilisateurAffichagedto;
