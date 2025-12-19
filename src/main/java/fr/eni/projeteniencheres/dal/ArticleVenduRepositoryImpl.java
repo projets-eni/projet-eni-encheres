@@ -33,7 +33,7 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
 
     @Override
     public List<ArticleVendu> findAll() {
-        return jdbcTemplate.query(this.rqtSelect, Map.of(), venteRowMapper);
+        return jdbcTemplate.query(this.rqtSelect + " ORDER BY date_fin_encheres ", Map.of(), venteRowMapper);
     }
 
     @Override
@@ -41,7 +41,8 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("dateDebut", "GETUTCDATE()");
         return jdbcTemplate.query(this.rqtSelect
-                + " WHERE v.date_fin_encheres < :dateDebut and v.date_debut_encheres <= :dateDebut",
+                + " WHERE v.date_fin_encheres > :dateDebut and v.date_debut_encheres <= :dateDebut"
+                + " ORDER BY date_fin_encheres ",
                 params, venteRowMapper);
     }
 
@@ -65,7 +66,7 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
             params.addValue("utilisateur", utilisateur.getNoUtilisateur());
             where.append(" AND v.no_utilisateur = :utilisateur");
         }
-        return jdbcTemplate.query(this.rqtSelect + " WHERE 1 " + where.toString(), params, venteRowMapper);
+        return jdbcTemplate.query(this.rqtSelect + " WHERE 1 " + where.toString() + " ORDER BY date_fin_encheres ", params, venteRowMapper);
     }
 
     @Override
@@ -88,15 +89,17 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
 
 
     @Override
-    public ArticleVendu findById(int id) {
+    public ArticleVendu findById(long id) {
         return null;
     }
 
     @Override
-    public List<ArticleVendu> findById(List<Integer> ids) {
+    public List<ArticleVendu> findById(List<Long> ids) {
         return jdbcTemplate.query(rqtSelect + " WHERE v.no_article IN ("
                 + ids.stream().map(String::valueOf).collect(Collectors.joining(", "))
-                + ")", new MapSqlParameterSource(), venteRowMapper);
+                + ")"
+                + " ORDER BY date_fin_encheres "
+                , new MapSqlParameterSource(), venteRowMapper);
     }
 
     @Override

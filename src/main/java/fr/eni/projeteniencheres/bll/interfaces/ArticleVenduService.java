@@ -48,4 +48,6 @@ public interface ArticleVenduService {
      */
     void updaterEtat(ArticleVendu article);
 
+    List<ArticleVendu> findEnCours();
+
 }

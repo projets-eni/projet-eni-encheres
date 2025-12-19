@@ -6,5 +6,9 @@
 </head>
 <body>
     <h1>Liste des enchères</h1>
+<th:block th:replace="fragments :: recherche (${recherche})"></th:block>
+<div th:each="article : ${ventesEnCours}">
+    <th:block th:replace="fragments :: vente-card (${article})"></th:block>
+</div>
 </body>
 </html>

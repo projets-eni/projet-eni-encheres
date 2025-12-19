@@ -1,0 +1,36 @@
+<div class="recherche" th:fragment="recherche (recherche)" th:object="${recherche}">
+<input type="search" th:field="*{kw}" placeholder="Rechercher..."/>
+<select th:field="*{idCategorie}">
+    <option value="0">Toutes</option>
+    <option th:each="categorie : ${categoryService.afficherCategories()}" th:selected="(${categorie.noCaetgorie} == *{idCategorie})">
+</select>
+<fieldset th:disabled="${#fields.field('achatOuverts').isEmpty()
+and #fields.hasError('achatMesEncheres').isEmpty() and #fields.field('achatMesAcquis').isEmpty()}">
+<input type="radio" th:field="*{type}" th:value="achat"><label th:text="achat">Achats</label>
+<ul>
+    <li><input type="checkbox" th:field="*{achatOuverts}" th:checked="*{(#fields.field('achatOuverts').isEmpty() ? '':'checked')}"><label th:for="achatOuverts">enchères ouvertes</label></li>
+    <li><input type="checkbox" th:field="*{achatMesEncheres}" th:checked="*{(#fields.field('achatMesEncheres').isEmpty() ? '':'checked')}"><label th:for="achatMesEncheres">mes enchères</label></li>
+    <li><input type="checkbox" th:field="*{achatMesAcquis}" th:checked="*{(#fields.field('achatMesAcquis').isEmpty() ? '':'checked')}"><label th:for="achatMesAcquis">mes enchères remportées</label></li>
+</ul>
+</fieldset>
+<fieldset th:disabled="${#fields.field('achatOuverts').isEmpty()
+and #fields.hasError('achatMesEncheres').isEmpty() and #fields.field('achatMesAcquis').isEmpty()}">
+<input type="radio" th:field="*{type}" th:value="vente"><label th:text="vente">Ventes</label>
+    <ul>
+        <li><input type="checkbox" th:field="*{venteOuvertes}" th:checked="*{(#fields.field('venteOuvertes').isEmpty() ? '':'checked')}"><label th:for="venteOuvertes">mes ventes en cours</label></li>
+        <li><input type="checkbox" th:field="*{venteAttentes}" th:checked="*{(#fields.field('venteAttentes').isEmpty() ? '':'checked')}"><label th:for="venteAttentes">ventes non débutées</label></li>
+        <li><input type="checkbox" th:field="*{venteTermines}" th:checked="*{(#fields.field('venteTermines').isEmpty() ? '':'checked')}"><label th:for="venteTermines">ventes terminées</label></li>
+    </ul>
+</fieldset>
+<input type="submit" value="Rechercher"/>
+</div>
+
+<div class="vente card" th:fragment="vente-card (articleVendu)">
+    <div class="card-body"><img th:src="${articleVendu.imageFilename}" class="card-img-left" alt="...">
+    <h3 th:text="${articleVendu.nom}"></h3></div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item" th:text="${'Prix : ' + articleVendu.prixVente + ' points'}"></li>
+        <li class="list-group-item" th:text="${'Date : ' + articleVendu.dateFinEncheres}"></li>
+        <li class="list-group-item" th:text="${'Vendeur : ' + articleVendu.getVendeur().getPseudo()}"></li>
+    </ul>
+</div>

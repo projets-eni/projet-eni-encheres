@@ -79,6 +79,12 @@ BEGIN
     SET @EnchereInvalide = -6;
 END
 
+IF @montantEnchere <= @PrixInit
+BEGIN
+    -- Montant enchère doit être supérieur au prix initial
+    SET @EnchereInvalide = -7
+end
+
     -- Validation ou rollback de la transaction
 IF @EnchereInvalide = 0
     BEGIN

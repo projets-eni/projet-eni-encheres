@@ -5,6 +5,7 @@ import fr.eni.projeteniencheres.bo.Retrait;
 import fr.eni.projeteniencheres.bo.Utilisateur;
 import fr.eni.projeteniencheres.dal.interfaces.ArticleVenduRepository;
 import fr.eni.projeteniencheres.dal.interfaces.UtilisateurRepository;
+import fr.eni.projeteniencheres.dal.populateFakeDatas;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,7 +18,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.time.temporal.TemporalAmount;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -44,9 +44,13 @@ public class ArticleVenduRepositoryImplTests {
 
     static Random random = new Random();
 
-
     @BeforeAll
     static void beforeAll(@Autowired JdbcTemplate jdbcTemplate,  @Autowired UtilisateurRepository utilisateurRepository) {
+
+        // réinit encheres
+        jdbcTemplate.update("DELETE FROM Encheres");
+        // réinit ventes
+        jdbcTemplate.update("DELETE FROM ArticlesVendus");
 
         jdbcTemplate.update("DELETE FROM Utilisateurs");
         for(int i = 0; i < 10; i++) {
@@ -54,20 +58,11 @@ public class ArticleVenduRepositoryImplTests {
             utilisateurRepository.saveUtilisateur(user);
             utilisateurs.add(user);
         }
-
-        // réinit encheres
-        jdbcTemplate.update("DELETE FROM Encheres");
-        // réinit ventes
-        jdbcTemplate.update("DELETE FROM ArticlesVendus");
     }
 
-    /**
-     * @todo datafaker (user, vente, encheres)
-     */
     @Test
     @Order(1)
     void testArticleVenduSave() {
-
         Long id = random.nextLong(10000);
 
         articleVendu.setNoArticle(id);
@@ -91,14 +86,14 @@ public class ArticleVenduRepositoryImplTests {
         ArticleVendu res = articleVenduRepository.save(articleVendu);
 
         Assertions.assertEquals(id, res.getNoArticle());
-
     }
 
     @Test
     @Order(2)
     void testArticleVenduFindById() {
-
-
+        Long id = articleVendu.getNoArticle();
+        ArticleVendu foundArticle = articleVenduRepository.findById(id);
+        Assertions.assertNotNull(foundArticle);
+        Assertions.assertEquals(id, foundArticle.getNoArticle());
     }
-
 }

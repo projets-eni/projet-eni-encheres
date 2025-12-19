@@ -1,12 +1,15 @@
 package fr.eni.projeteniencheres.controller;
 
 import fr.eni.projeteniencheres.bll.interfaces.*;
+import fr.eni.projeteniencheres.bo.ArticleVendu;
 import fr.eni.projeteniencheres.bo.Retrait;
 import fr.eni.projeteniencheres.dto.NouvelleVenteDto;
+import fr.eni.projeteniencheres.dto.RechercheRecord;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,22 +18,37 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
 @Controller
 public class VenteController {
 
     Logger logger = LoggerFactory.getLogger(VenteController.class);
     private final VenteService venteService;
+    private ArticleVenduService articleVenduService;
 
-    public VenteController(VenteService venteService) {
+    public VenteController(VenteService venteService, ArticleVenduService articleVenduService) {
         this.venteService = venteService;
+        this.articleVenduService = articleVenduService;
     }
 
     @GetMapping("/encheres")
-    public String listeEncheres(Model modele) {
+    public String listeEncheres(
+            @Valid RechercheRecord recherche, Model modele, UserDetails authenticatedPrincipal) {
+        List<ArticleVendu> ventesEnCours = articleVenduService.findEnCours();
+        /*
+        if (authenticatedPrincipal != null) {
+            ventesEnCours = ventesEnCours.stream().filter(
+                    v -> v.getVendeur().getPseudo().equals(authenticatedPrincipal.getUsername())
+            ).toList();
+        }
+         */
+        modele.addAttribute("recherche", recherche);
+        modele.addAttribute("ventesEnCours", ventesEnCours);
         return "view-liste-encheres";
     }
 
-    @GetMapping({"/", "/nouvelle-vente"})
+    @GetMapping( "/nouvelle-vente")
     public String afficherPageNouvelleVente(Authentication authentication,
                                             Model modele) {
 

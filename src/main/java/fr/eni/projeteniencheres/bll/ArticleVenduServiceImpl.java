@@ -35,8 +35,12 @@ public class ArticleVenduServiceImpl implements ArticleVenduService {
 
     @Override
     public List<ArticleVendu> afficherArticles() {
-        return List.of();
+        return findEnCours();
+    }
 
+    @Override
+    public List<ArticleVendu> findEnCours() {
+        return articleVenduRepository.findEnCours();
     }
 
     @Override
@@ -67,7 +71,7 @@ public class ArticleVenduServiceImpl implements ArticleVenduService {
 
     @Override
     public List<ArticleVendu> findByAcquereur(Utilisateur utilisateur) {
-        List<Integer> acquisitions = ((List<Integer>) enchereRepository.findByAcquereur(utilisateur)
+        List<Long> acquisitions = ((List<Long>) enchereRepository.findByAcquereur(utilisateur)
                 .stream().map(e -> { return e.getArticleVendu().getNoArticle(); }).distinct());
         List<ArticleVendu> articles = articleVenduRepository.findById(acquisitions);
         return articles;
@@ -75,7 +79,7 @@ public class ArticleVenduServiceImpl implements ArticleVenduService {
 
     @Override
     public List<ArticleVendu> findByEncherisseur(Utilisateur utilisateur) {
-        List<Integer> encheres = ((List<Integer>) enchereRepository.findByEncherisseur(utilisateur)
+        List<Long> encheres = ((List<Long>) enchereRepository.findByEncherisseur(utilisateur)
                 .stream().map(e -> { return e.getArticleVendu().getNoArticle(); }).distinct());
         List<ArticleVendu> articles = articleVenduRepository.findById(encheres);
         return articles;
