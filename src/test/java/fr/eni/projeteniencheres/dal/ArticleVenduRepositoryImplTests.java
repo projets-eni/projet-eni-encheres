@@ -50,7 +50,7 @@ public class ArticleVenduRepositoryImplTests {
         // réinit encheres
         jdbcTemplate.update("DELETE FROM Encheres");
         // réinit ventes
-        jdbcTemplate.update("DELETE FROM ArticlesVendus");
+        //jdbcTemplate.update("DELETE FROM ArticlesVendus");
 
         jdbcTemplate.update("DELETE FROM Utilisateurs");
         for(int i = 0; i < 10; i++) {

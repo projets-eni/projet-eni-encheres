@@ -78,11 +78,11 @@ public class VenteServiceImpl implements VenteService {
 
 //        // Par défaut, la date de début d'enchère = maintenant et durée de l'enchère = 7 jours
 //        if (dto.getDateDebutEncheres() != null && dto.getDateFinEncheres() != null) {
-//            nouvelarticle.setDateDebutEncheres(dto.getDateDebutEncheres());
-//            nouvelarticle.setDateFinEncheres(dto.getDateFinEncheres());
+//            nouvelvente.setDateDebutEncheres(dto.getDateDebutEncheres());
+//            nouvelvente.setDateFinEncheres(dto.getDateFinEncheres());
 //        } else {
-//            nouvelarticle.setDateDebutEncheres(LocalDateTime.now());
-//            nouvelarticle.setDateFinEncheres(LocalDateTime.now().plusDays(7));
+//            nouvelvente.setDateDebutEncheres(LocalDateTime.now());
+//            nouvelvente.setDateFinEncheres(LocalDateTime.now().plusDays(7));
 //        }
 
         // on appelle le service qui enregistre l'article en BDD

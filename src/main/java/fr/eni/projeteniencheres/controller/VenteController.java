@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -34,7 +35,7 @@ public class VenteController {
 
     @GetMapping("/encheres")
     public String listeEncheres(
-            @Valid RechercheRecord recherche, Model modele, UserDetails authenticatedPrincipal) {
+            @Valid RechercheRecord recherche, Model modele, Principal user) {
         List<ArticleVendu> ventesEnCours = articleVenduService.findEnCours();
         /*
         if (authenticatedPrincipal != null) {
@@ -42,6 +43,10 @@ public class VenteController {
                     v -> v.getVendeur().getPseudo().equals(authenticatedPrincipal.getUsername())
             ).toList();
         }
+         */
+
+        /**
+         * @TODO la recherche TH qui plante avec le bricollage de fieldset
          */
         modele.addAttribute("recherche", recherche);
         modele.addAttribute("ventesEnCours", ventesEnCours);

@@ -2,15 +2,16 @@
 <input type="search" th:field="*{kw}" placeholder="Rechercher..."/>
 <select th:field="*{idCategorie}">
     <option value="0">Toutes</option>
-    <option th:each="categorie : ${categoryService.afficherCategories()}" th:selected="(${categorie.noCaetgorie} == *{idCategorie})">
+    <option th:each="categorie : ${@categoryService.afficherCategories()}" th:value="${categorie.getNoCategorie()}" th:selected="(*{idCategorie} == ${categorie.getNoCategorie()})">
 </select>
-<fieldset th:disabled="${#fields.field('achatOuverts').isEmpty()
-and #fields.hasError('achatMesEncheres').isEmpty() and #fields.field('achatMesAcquis').isEmpty()}">
+<fieldset th:disabled="*{(achatOuverts == null or achatOuverts == 0)
+and (achatMesEncheres == null or achatMesEncheres == 0)
+and (achatMesAcquis == null or achatMesAcquis)}">
 <input type="radio" th:field="*{type}" th:value="achat"><label th:text="achat">Achats</label>
 <ul>
-    <li><input type="checkbox" th:field="*{achatOuverts}" th:checked="*{(#fields.field('achatOuverts').isEmpty() ? '':'checked')}"><label th:for="achatOuverts">enchères ouvertes</label></li>
-    <li><input type="checkbox" th:field="*{achatMesEncheres}" th:checked="*{(#fields.field('achatMesEncheres').isEmpty() ? '':'checked')}"><label th:for="achatMesEncheres">mes enchères</label></li>
-    <li><input type="checkbox" th:field="*{achatMesAcquis}" th:checked="*{(#fields.field('achatMesAcquis').isEmpty() ? '':'checked')}"><label th:for="achatMesAcquis">mes enchères remportées</label></li>
+    <li><input type="checkbox" th:field="*{achatOuverts}" th:checked="*{(achatOuverts == 0 ? '':'checked')}"><label th:for="achatOuverts">enchères ouvertes</label></li>
+    <li><input type="checkbox" th:field="*{achatMesEncheres}" th:checked="*{(achatMesEncheres == 0 ? '':'checked')}"><label th:for="achatMesEncheres">mes enchères</label></li>
+    <li><input type="checkbox" th:field="*{achatMesAcquis}" th:checked="*{(achatMesAcquis ? '':'checked')}"><label th:for="achatMesAcquis">mes enchères remportées</label></li>
 </ul>
 </fieldset>
 <fieldset th:disabled="${#fields.field('achatOuverts').isEmpty()

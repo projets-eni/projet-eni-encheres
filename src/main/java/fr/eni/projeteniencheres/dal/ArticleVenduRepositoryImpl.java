@@ -39,9 +39,9 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
     @Override
     public List<ArticleVendu> findEnCours() {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("dateDebut", "GETUTCDATE()");
+        //params.addValue("dateDebut", "");
         return jdbcTemplate.query(this.rqtSelect
-                + " WHERE v.date_fin_encheres > :dateDebut and v.date_debut_encheres <= :dateDebut"
+                + " WHERE v.date_fin_encheres > GETUTCDATE() and v.date_debut_encheres <= GETUTCDATE()"
                 + " ORDER BY date_fin_encheres ",
                 params, venteRowMapper);
     }
@@ -111,7 +111,36 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
 
     @Override
     public ArticleVendu save(ArticleVendu vente) {
-        return null;
+
+        if (Long.valueOf(vente.getNoArticle()) == 0) {
+            // pas de no_article, c'est un ajout
+            return this.ajoutArticle(vente);
+        }
+
+        String sqlArticle = "UPDATE ArticlesVendus SET nom_article=:nom_article, description=:description, " +
+            "date_debut_encheres=:date_debut_encheres, date_fin_encheres=:date_fin_encheres, prix_initial=:prix_initial, " +
+            "image_filename=:image_filename, etat_vente=:etat_vente, no_categorie=:no_categorie, no_utilisateur=:no_utilisateur " +
+            "WHERE no_article = :noArticle";
+
+        MapSqlParameterSource paramsArticle = new MapSqlParameterSource();
+        paramsArticle.addValue("noArticle", vente.getNoArticle());
+        paramsArticle.addValue("nom_article", vente.getNomArticle());
+        paramsArticle.addValue("description", vente.getDescription());
+        paramsArticle.addValue("date_debut_encheres", vente.getDateDebutEncheres());
+        paramsArticle.addValue("date_fin_encheres", vente.getDateFinEncheres());
+        paramsArticle.addValue("prix_initial", vente.getPrixInitial());
+        paramsArticle.addValue("image_filename", vente.getImageFilename());
+        paramsArticle.addValue("etat_vente", vente.getEtatVente());
+        // ajout des relations de FK
+        paramsArticle.addValue("no_categorie", vente.getCategorie().getNoCategorie());
+        paramsArticle.addValue("no_utilisateur", vente.getVendeur().getNoUtilisateur());
+
+        int res = jdbcTemplate.update(sqlArticle, paramsArticle);
+        if (res > 0) {
+            vente = this.findById(vente.getNoArticle());
+        }
+
+        return vente;
     }
 
     @Override
