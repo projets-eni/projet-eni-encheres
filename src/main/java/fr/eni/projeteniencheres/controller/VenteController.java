@@ -22,9 +22,11 @@ public class VenteController {
 
     Logger logger = LoggerFactory.getLogger(VenteController.class);
     private final VenteService venteService;
+    private final ArticleVenduService articleVenduService ;
 
-    public VenteController(VenteService venteService) {
+    public VenteController(VenteService venteService, ArticleVenduService articleVenduService) {
         this.venteService = venteService;
+        this.articleVenduService = articleVenduService;
     }
 
     @GetMapping("/encheres")
@@ -57,16 +59,16 @@ public class VenteController {
 //            }
             return "view-creer-vente"; // Flash attributes auto-gérés par Spring
         }
-        String email = authentication.getName();
-        venteService.creerNouvelleVente(dto, authentication.getName());
-        venteService.creerNouvelleVente(dto, email);
+        String pseudo = authentication.getName();
+        venteService.creerNouvelleVente(dto, pseudo);
         logger.info("Sauvegarde article {}", dto.getNoCategorie());
 
         return "redirect:/encheres";
     }
 
     @GetMapping("/details-vente/{id}")
-    public String afficherDetailsVente(@PathVariable int id, Authentication authentication, Model modele) {
+    public String afficherDetailsVente(@PathVariable int id, Authentication authentication,
+                                       Model modele) {
         NouvelleVenteDto vente = venteService.afficherVenteParNoArticle(id);
         modele.addAttribute("vente", vente);
         return "view-details-vente";

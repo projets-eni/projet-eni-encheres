@@ -34,9 +34,9 @@ public class VenteServiceImpl implements VenteService {
     }
 
     @Override
-    public NouvelleVenteDto initFormulaireNouvelleVente(String email) {
+    public NouvelleVenteDto initFormulaireNouvelleVente(String pseudo) {
 
-        Utilisateur vendeur = utilisateurService.findUtilisateurByEmail(email);
+        Utilisateur vendeur = utilisateurService.findUtilisateurByPseudo(pseudo);
 
         // Par défaut, si non renseigné, le retrait se fait à l'adresse du vendeur
         // Par défaut, la date de début d'enchère = commence dans 10 minutes et durée de l'enchère = 7 jours
@@ -54,14 +54,14 @@ public class VenteServiceImpl implements VenteService {
 
     @Transactional
     @Override
-    public ArticleVendu creerNouvelleVente(NouvelleVenteDto dto, String email) {
+    public ArticleVendu creerNouvelleVente(NouvelleVenteDto dto, String pseudo) {
 
         // récupération des attributs simples
         ArticleVendu nouvelarticle = new ArticleVendu();
         BeanUtils.copyProperties(dto, nouvelarticle);
 
         // récupération des attributs issus de relations FK
-        Utilisateur vendeur = utilisateurService.findUtilisateurByEmail(email);
+        Utilisateur vendeur = utilisateurService.findUtilisateurByPseudo(pseudo);
         Categorie categorie = categorieService.afficherCategoryParId(dto.getNoCategorie());
         nouvelarticle.setCategorie(categorie);
         nouvelarticle.setVendeur(vendeur);
@@ -99,14 +99,16 @@ public class VenteServiceImpl implements VenteService {
         return articleSaved;
     }
 
-    /* reprendre ici */
     @Override
     public NouvelleVenteDto afficherVenteParNoArticle(int noArticle){
         ArticleVendu infoArticle = articleVenduService.findById(noArticle);
-        NouvelleVenteDto dto = new NouvelleVenteDto();
-        BeanUtils.copyProperties(infoArticle, dto);
         Retrait infoRetrait = retraitService.afficherRetraitParId(noArticle);
+        NouvelleVenteDto dto = new NouvelleVenteDto();
+
+        BeanUtils.copyProperties(infoArticle, dto);
+        dto.setLibelle(infoArticle.getCategorie().getLibelle());
         BeanUtils.copyProperties(infoRetrait, dto);
+
         return dto;
     }
 

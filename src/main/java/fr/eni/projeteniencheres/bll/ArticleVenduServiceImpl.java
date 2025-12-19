@@ -41,11 +41,6 @@ public class ArticleVenduServiceImpl implements ArticleVenduService {
     }
 
     @Override
-    public ArticleVendu afficherArticleParId(int id) {
-        return null;
-    }
-
-    @Override
     public ArticleVendu ajoutArticle(ArticleVendu article) {
         return articleVenduRepository.ajoutArticle(article);
     }
@@ -128,5 +123,9 @@ public class ArticleVenduServiceImpl implements ArticleVenduService {
         logger.info("UpdaterEtat -- fin");
     }
 
+    @Override
+    public ArticleVendu findById(int id) {
+        return articleVenduRepository.findById(id);
+    }
 
 }

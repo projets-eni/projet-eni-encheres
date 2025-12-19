@@ -20,6 +20,8 @@ public class NouvelleVenteDto {
     @NotNull(message = "La catégorie est obligatoire")
     private int noCategorie;
 
+    private String libelle;
+
 //    @NotBlank(message = "L'image est obligatoire")
     private String idImage ;
 
@@ -55,10 +57,11 @@ public class NouvelleVenteDto {
 
     public NouvelleVenteDto() {
     }
-    public NouvelleVenteDto(String nomArticle, String description, int noCategorie, String idImage, int prixInitial, LocalDateTime dateDebutEncheres, LocalDateTime dateFinEncheres, String rue, String codePostal, String ville) {
+    public NouvelleVenteDto(String nomArticle, String description, int noCategorie, String libelle, String idImage, int prixInitial, LocalDateTime dateDebutEncheres, LocalDateTime dateFinEncheres, String rue, String codePostal, String ville) {
         this.nomArticle = nomArticle;
         this.description = description;
         this.noCategorie = noCategorie;
+        this.libelle = libelle;
         this.idImage = idImage;
         this.prixInitial = prixInitial;
         this.dateDebutEncheres = dateDebutEncheres;
@@ -68,6 +71,12 @@ public class NouvelleVenteDto {
         this.ville = ville;
     }
 
+    public String getLibelle() {
+        return libelle;
+    }
+    public void setLibelle(String libelle) {
+        this.libelle = libelle;
+    }
     public String getNomArticle() {
         return nomArticle;
     }

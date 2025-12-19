@@ -3,10 +3,12 @@ package fr.eni.projeteniencheres.dal;
 import fr.eni.projeteniencheres.bo.*;
 import fr.eni.projeteniencheres.dal.interfaces.ArticleVenduRepository;
 import fr.eni.projeteniencheres.dal.interfaces.EnchereRepository;
+import fr.eni.projeteniencheres.exception.ArticleNotFoundException;
 import fr.eni.projeteniencheres.exception.EnchereImpossible;
 import fr.eni.projeteniencheres.exception.EtatVenteErreur;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -36,14 +38,14 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
         return jdbcTemplate.query(this.rqtSelect, Map.of(), venteRowMapper);
     }
 
-//    @Override
-//    public List<ArticleVendu> findEnCours() {
-//        MapSqlParameterSource params = new MapSqlParameterSource();
-//        params.addValue("dateDebut", "GETUTCDATE()");
-//        return jdbcTemplate.query(this.rqtSelect
-//                + " WHERE v.date_fin_encheres < :dateDebut and v.date_debut_encheres <= :dateDebut",
-//                params, venteRowMapper);
-//    }
+    @Override
+    public List<ArticleVendu> findEnCours() {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("dateDebut", "GETUTCDATE()");
+        return jdbcTemplate.query(this.rqtSelect
+                + " WHERE v.date_fin_encheres < :dateDebut and v.date_debut_encheres <= :dateDebut",
+                params, venteRowMapper);
+    }
 
     public List<ArticleVendu> findTermines() {
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -96,15 +98,24 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
 
     @Override
     public ArticleVendu findById(int id) {
-        return null;
+        MapSqlParameterSource params = new MapSqlParameterSource().addValue("id", id);
+        String sql = "SELECT no_article, nom_article, description, date_debut_encheres, date_fin_encheres," +
+                "prix_initial, prix_vente, etat_vente, no_utilisateur, no_categorie, image_filename " +
+                "FROM ArticlesVendus WHERE no_article = :id";
+        try {
+            ArticleVendu article = jdbcTemplate.queryForObject(sql, params, venteRowMapper);
+            return article;
+        } catch (DataAccessException e) {
+            throw new ArticleNotFoundException("Article avec ID " + id + " non trouvé!");
+        }
     }
 
-//    @Override
-//    public List<ArticleVendu> findById(List<Integer> ids) {
-//        return jdbcTemplate.query(rqtSelect + " WHERE v.no_article IN ("
-//                + ids.stream().map(String::valueOf).collect(Collectors.joining(", "))
-//                + ")", new MapSqlParameterSource(), venteRowMapper);
-//    }
+    @Override
+    public List<ArticleVendu> findById(List<Integer> ids) {
+        return jdbcTemplate.query(rqtSelect + " WHERE v.no_article IN ("
+                + ids.stream().map(String::valueOf).collect(Collectors.joining(", "))
+                + ")", new MapSqlParameterSource(), venteRowMapper);
+    }
 
     @Override
     public ArticleVendu save(ArticleVendu vente) {

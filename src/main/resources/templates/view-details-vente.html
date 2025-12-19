@@ -7,9 +7,21 @@
 <body>
     <h1>Détails vente</h1>
 
-    <div th:object="${vente}">
-        <p>Rue: <span th:text="*{rue}"></span></p>
-        <p>Prix: <span th:text="*{prixInitial}"></span></p>
+    <div>
+        <p>Article : <span th:text="*{vente.nomArticle}"></span></p>
+        <p>Description : <span th:text="*{description}"></span></p>
+        <p>Catégorie : <span th:text="*{libelle}"></span></p>
+        <p>Meilleure offre : à récupérer</p>
+        <p>Mise à prix : <span th:text="*{prixInitial}"></span> points</p>
+        <p>Fin de l'enchère : <span th:text="*{dateFinEncheres}"></span></p>
+        <p>Retrait: <span th:text="*{rue}"></span>
+        <p> <span th:text="*{codePostal}"></span>
+            <span th:text="*{ville}"></span>
+        </p>
+        <p>Vendeur : à récupérer</p>
+        <p>Ma proposition : à récupérer</p>
+
+        <a th:href="@{/accueil}">Enchérir</a>
     </div>
 
 </body>

@@ -6,8 +6,8 @@ import fr.eni.projeteniencheres.dto.NouvelleVenteDto;
 
 public interface VenteService {
 
-    ArticleVendu creerNouvelleVente(NouvelleVenteDto dto, String emailVendeur);
-    NouvelleVenteDto initFormulaireNouvelleVente(String email);
+    ArticleVendu creerNouvelleVente(NouvelleVenteDto dto, String pseudo);
+    NouvelleVenteDto initFormulaireNouvelleVente(String pseudo);
     NouvelleVenteDto afficherVenteParNoArticle(int noArticle);
 
 }
