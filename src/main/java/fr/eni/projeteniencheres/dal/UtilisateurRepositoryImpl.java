@@ -77,7 +77,7 @@ public class UtilisateurRepositoryImpl implements UtilisateurRepository {
     public Utilisateur findUtilisateurByEmail(String email) {
         String sql = "SELECT no_utilisateur, pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur FROM Utilisateurs where email = ?";
         try {
-            Utilisateur vendeur = jdbcTemplate.queryForObject(sql, new UtilisateurRepositoryImpl.UtilisateurRowMapper(), email);
+            Utilisateur vendeur = jdbcTemplate.queryForObject(sql, new UtilisateurRowMapper(), email);
             return vendeur;
 
         } catch (DataAccessException ex) {

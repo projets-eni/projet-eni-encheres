@@ -74,6 +74,13 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
         return List.of();
     }
 
+
+    /**
+     * Pour modifier le statut d'une vente avec la procédure stockée terminerVentes
+     * si articleVendu est null, prend toutes les ventes avec etat_vente différent de "Terminée"
+     * @param articleVendu
+     * @return Nombre de vente impactée
+     */
     @Override
     public Integer terminerVente(ArticleVendu articleVendu) {
         Integer res = null;
