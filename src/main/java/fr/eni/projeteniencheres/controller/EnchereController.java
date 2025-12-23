@@ -4,12 +4,17 @@ import fr.eni.projeteniencheres.bll.interfaces.ArticleVenduService;
 import fr.eni.projeteniencheres.bll.interfaces.EnchereService;
 import fr.eni.projeteniencheres.bll.interfaces.UtilisateurService;
 import fr.eni.projeteniencheres.bo.ArticleVendu;
+import fr.eni.projeteniencheres.bo.Enchere;
 import fr.eni.projeteniencheres.bo.Utilisateur;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @Controller
 public class EnchereController {
@@ -34,6 +39,15 @@ public class EnchereController {
 //        enchereService.placer(new Enchere(LocalDateTime.now(),nouveauMontantEnchere,article,acheteur));
 
         return "redirect:/vente/" + noArticle; // redirection ou vue ?
+    }
+
+    @GetMapping("/encheres")
+    public String listeEncheres(Model modele) {
+
+//        List<Enchere> encheres = enchereService.findAll();
+//        modele.addAttribute("encheres", encheres);
+
+        return "view-liste-encheres";
     }
 
 }

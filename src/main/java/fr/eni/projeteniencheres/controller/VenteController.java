@@ -34,11 +34,6 @@ public class VenteController {
         this.enchereService = enchereService;
     }
 
-    @GetMapping("/encheres")
-    public String listeEncheres(Model modele) {
-        return "view-liste-encheres";
-    }
-
     @GetMapping({"/vente/creer"})
     public String afficherPageNouvelleVente(Authentication authentication,
                                             Model modele) {
