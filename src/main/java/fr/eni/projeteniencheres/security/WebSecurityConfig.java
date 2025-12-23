@@ -19,7 +19,7 @@ public class WebSecurityConfig {
         http
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/", "/accueil", "/inscription", "/connexion", "/css/*", "/images/*").permitAll()
-                        .requestMatchers("/profil/**", "/enchere/**", "/article/**","/nouvelle-vente", "/details-vente/*").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/profil/**", "/enchere/**", "/vente/creer", "/vente/*").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/films/creer").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )

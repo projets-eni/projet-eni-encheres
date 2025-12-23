@@ -98,18 +98,18 @@ public class VenteServiceImpl implements VenteService {
 
         return articleSaved;
     }
-
-    @Override
-    public NouvelleVenteDto afficherVenteParNoArticle(int noArticle){
-        ArticleVendu infoArticle = articleVenduService.findById(noArticle);
-        Retrait infoRetrait = retraitService.afficherRetraitParId(noArticle);
-        NouvelleVenteDto dto = new NouvelleVenteDto();
-
-        BeanUtils.copyProperties(infoArticle, dto);
-        dto.setLibelle(infoArticle.getCategorie().getLibelle());
-        BeanUtils.copyProperties(infoRetrait, dto);
-
-        return dto;
-    }
+// à supprimer ?!
+//    @Override
+//    public NouvelleVenteDto afficherVenteParNoArticle(int noArticle){
+//        ArticleVendu infoArticle = articleVenduService.findById(noArticle);
+//        Retrait infoRetrait = retraitService.afficherRetraitParId(noArticle);
+//        NouvelleVenteDto dto = new NouvelleVenteDto();
+//
+//        BeanUtils.copyProperties(infoArticle, dto);
+//        dto.setLibelle(infoArticle.getCategorie().getLibelle());
+//        BeanUtils.copyProperties(infoRetrait, dto);
+//
+//        return dto;
+//    }
 
 }

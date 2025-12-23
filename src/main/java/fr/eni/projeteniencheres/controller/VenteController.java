@@ -2,6 +2,7 @@ package fr.eni.projeteniencheres.controller;
 
 import fr.eni.projeteniencheres.bll.interfaces.*;
 import fr.eni.projeteniencheres.bo.ArticleVendu;
+import fr.eni.projeteniencheres.bo.Enchere;
 import fr.eni.projeteniencheres.bo.Retrait;
 import fr.eni.projeteniencheres.dto.NouvelleVenteDto;
 import jakarta.validation.Valid;
@@ -17,16 +18,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Comparator;
+
 @Controller
 public class VenteController {
 
     Logger logger = LoggerFactory.getLogger(VenteController.class);
     private final VenteService venteService;
     private final ArticleVenduService articleVenduService ;
+    private final EnchereService enchereService;
 
-    public VenteController(VenteService venteService, ArticleVenduService articleVenduService) {
+    public VenteController(VenteService venteService, ArticleVenduService articleVenduService, EnchereService enchereService) {
         this.venteService = venteService;
         this.articleVenduService = articleVenduService;
+        this.enchereService = enchereService;
     }
 
     @GetMapping("/encheres")
@@ -34,7 +39,7 @@ public class VenteController {
         return "view-liste-encheres";
     }
 
-    @GetMapping({"/nouvelle-vente"})
+    @GetMapping({"/vente/creer"})
     public String afficherPageNouvelleVente(Authentication authentication,
                                             Model modele) {
 
@@ -47,7 +52,7 @@ public class VenteController {
         return "view-creer-vente";
     }
 
-    @PostMapping("/nouvelle-vente")
+    @PostMapping("/vente/creer")
     public String creerNouvelleVente(Authentication authentication,
                                      @Valid @ModelAttribute("nouvelleVente") NouvelleVenteDto dto,
                                      BindingResult resultat, RedirectAttributes redirectAttr) {
@@ -66,11 +71,22 @@ public class VenteController {
         return "redirect:/encheres";
     }
 
-    @GetMapping("/details-vente/{id}")
-    public String afficherDetailsVente(@PathVariable int id, Authentication authentication,
+    @GetMapping("/vente/{noArticle}")
+    public String afficherDetailsVente(@PathVariable int noArticle, Authentication authentication,
                                        Model modele) {
-        NouvelleVenteDto vente = venteService.afficherVenteParNoArticle(id);
-        modele.addAttribute("vente", vente);
+
+        // Récupérer les infos de l'article depuis le service et ajout au modèle pour la vue
+        ArticleVendu article = articleVenduService.findById(noArticle);
+        modele.addAttribute("article", article);
+
+        // Remonter maProposition à la vue car elle n'est pas contenue dans l'objet article et ajout au modèle
+        Enchere monOffre = enchereService.getMaDerniereOffre(authentication.getName(),noArticle);
+        modele.addAttribute("monOffre", monOffre);
+
+        // Meilleure offre
+        Enchere meilleureOffre = enchereService.getMeilleureOffreByArticle(noArticle);
+        modele.addAttribute("meilleureOffre", meilleureOffre);
+
         return "view-details-vente";
     }
 
@@ -95,6 +111,5 @@ public class VenteController {
 //        // 3. Revenir sur la page avec l’objet rempli
 //        return "view-creer-vente";
 //    }
-
 
 }

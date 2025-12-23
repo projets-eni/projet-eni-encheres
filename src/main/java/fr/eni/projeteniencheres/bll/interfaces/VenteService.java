@@ -8,6 +8,6 @@ public interface VenteService {
 
     ArticleVendu creerNouvelleVente(NouvelleVenteDto dto, String pseudo);
     NouvelleVenteDto initFormulaireNouvelleVente(String pseudo);
-    NouvelleVenteDto afficherVenteParNoArticle(int noArticle);
+//    NouvelleVenteDto afficherVenteParNoArticle(int noArticle); -- à supprimer ?
 
 }

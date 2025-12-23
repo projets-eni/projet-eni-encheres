@@ -8,20 +8,35 @@
     <h1>Détails vente</h1>
 
     <div>
-        <p>Article : <span th:text="*{vente.nomArticle}"></span></p>
-        <p>Description : <span th:text="*{description}"></span></p>
-        <p>Catégorie : <span th:text="*{libelle}"></span></p>
-        <p>Meilleure offre : à récupérer</p>
-        <p>Mise à prix : <span th:text="*{prixInitial}"></span> points</p>
-        <p>Fin de l'enchère : <span th:text="*{dateFinEncheres}"></span></p>
-        <p>Retrait: <span th:text="*{rue}"></span>
-        <p> <span th:text="*{codePostal}"></span>
-            <span th:text="*{ville}"></span>
+        <p>Article : <span th:text="${article.nomArticle}"></span></p>
+        <p>Description : <span th:text="${article.description}"></span></p>
+        <p>Catégorie : <span th:text="${article.categorie.libelle}"></span></p>
+        <p>Meilleure offre :
+            <span th:text="${meilleureOffre.montantEnchere}"></span>
+            points par
+            <a th:href="@{/profil}" th:text="${meilleureOffre.acheteur.pseudo}"></a>
         </p>
-        <p>Vendeur : à récupérer</p>
-        <p>Ma proposition : à récupérer</p>
+        <p>Mise à prix : <span th:text="${article.prixInitial}"></span> points</p>
+        <p>Fin de l'enchère : <span th:text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yyyy')}"></span></p>
+        <p>
+            <span>Retrait: </span>
+            <span th:text="${article.retrait?.rue} ?: ''">
+                <p> <span th:text="${article.retrait?.codePostal} ?: ''"></span>
+                    <span th:text="${article.retrait?.ville} ?: ''"></span>
+                </p>
+            </span>
+        </p>
+        <p>Vendeur :
+            <a th:href="@{/profil}" th:text="${article.vendeur.pseudo}"></a>
+        </p>
 
-        <a th:href="@{/accueil}">Enchérir</a>
+        <form th:action="@{/vente/{id}/encherir(id=${article.noArticle})}" method="POST">
+            <p>Ma proposition :
+                <input type="number" name="nouveauMontantEnchere" th:value="${monOffre.montantEnchere}" required min="10" step="10">
+                points
+                <input type="submit" value="Enchérir">
+            </p>
+        </form>
     </div>
 
 </body>

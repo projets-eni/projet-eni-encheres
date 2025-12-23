@@ -1,19 +1,28 @@
 package fr.eni.projeteniencheres.bll;
 
+import fr.eni.projeteniencheres.bll.interfaces.ArticleVenduService;
 import fr.eni.projeteniencheres.bll.interfaces.EnchereService;
+import fr.eni.projeteniencheres.bll.interfaces.UtilisateurService;
 import fr.eni.projeteniencheres.bo.ArticleVendu;
 import fr.eni.projeteniencheres.bo.Enchere;
+import fr.eni.projeteniencheres.bo.Utilisateur;
 import fr.eni.projeteniencheres.dal.interfaces.EnchereRepository;
 import fr.eni.projeteniencheres.exception.EnchereImpossible;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class EnchereServiceImpl implements EnchereService {
 
+    private final UtilisateurService utilisateurService;
+    private final ArticleVenduService articleVenduService;
     private EnchereRepository enchereRepository;
 
-    public EnchereServiceImpl(EnchereRepository enchereRepository) {
+    public EnchereServiceImpl(EnchereRepository enchereRepository, UtilisateurService utilisateurService, ArticleVenduService articleVenduService) {
         this.enchereRepository = enchereRepository;
+        this.utilisateurService = utilisateurService;
+        this.articleVenduService = articleVenduService;
     }
 
     @Override
@@ -60,5 +69,17 @@ public class EnchereServiceImpl implements EnchereService {
                 throw new EnchereImpossible(msg);
         }
         return nouvelle;
+    }
+
+    @Override
+    public Enchere getMaDerniereOffre(String username, int noArticle) {
+        ArticleVendu article = articleVenduService.findById(noArticle);
+        return enchereRepository.getLastOffreByArticleAndUserName(article, username);
+    }
+
+    @Override
+    public Enchere getMeilleureOffreByArticle(int noArticle) {
+        ArticleVendu article = articleVenduService.findById(noArticle);
+        return enchereRepository.getMeilleureOffreByArticle(article);
     }
 }
