@@ -12,21 +12,21 @@
     </div>
 
     <!-- Vente terminée -->
-    <th:block th:if="${article.etatVente.equals('Terminée')}">
-        <th:block th:if="${#strings.equals(meilleureOffre.acheteur.pseudo, #authentication.getName())}">
+    <th:block th:if="${article.etatVente == 'Terminée'}">
+        <th:block th:if="${#strings.equals(meilleureOffre.acheteur.pseudo, #authentication.name)}">
             <h1>Vous avez remporté la vente !</h1>
         </th:block>
-        <th:block th:if="${!#strings.equals(meilleureOffre.acheteur.pseudo, #authentication.getName())}">
-            <h1>meilleureOffre.acheteur.pseudo a remporté l'enchère'</h1>
+        <th:block th:if="${!#strings.equals(meilleureOffre.acheteur.pseudo, #authentication.name)}">
+            <h1><span th:text="${meilleureOffre.acheteur.pseudo}"></span> a remporté l'enchère</h1>
         </th:block>
     </th:block>
 
     <!-- Vente en cours -->
-    <th:block th:if="${article.etatVente.equals('En cours')}">
+    <th:block th:if="${article.etatVente == 'En cours'}">
         <h1>Détails vente</h1>
     </th:block>
 
-    <th:block th:if="${article.etatVente.equals('En cours') || article.etatVente.equals('Terminée')}">
+    <th:block th:if="${article.etatVente == 'En cours' || article.etatVente == 'Terminée'}">
         <!-- Une vente non commencée n'est visible que par le vendeur -->
         <div>
             <p>Article : <span th:text="${article.nomArticle}"></span></p>
@@ -51,29 +51,26 @@
                 <a th:href="@{/profil}" th:text="${article.vendeur.pseudo}"></a>
             </p>
 
-            <h2>Option 1 : Si etatVente = En cours</h2>
             <!-- Un acheteur peut enchérir tant que la vente est encore en cours -->
-    <!--        <form th:if="${article.etatVente == 'En cours'}" th:action="@{/vente/{id}/encherir(id=${article.noArticle})}" method="POST">-->
-            <form th:action="@{/vente/{id}/encherir(id=${article.noArticle})}" method="POST">
+            <form th:if="${article.etatVente == 'En cours'}" th:action="@{/vente/{id}/encherir(id=${article.noArticle})}" method="POST">
                 <p>Ma proposition :
-                    <input type="number" name="nouveauMontantEnchere" th:value="${monOffre.montantEnchere}" required min="10" step="10">
+                    <input th:if="${monOffre == null}" type="number" name="nouveauMontantEnchere" th:value="0" required min="10" step="10">
+                    <input th:if="${monOffre != null}" type="number" name="nouveauMontantEnchere" th:value="${monOffre.montantEnchere}" required min="10" step="10">
                     points
                     <input type="submit" value="Enchérir">
                 </p>
             </form>
 
-
-            <!-- Si la vente est terminée, impossible de renchérir -->
-    <!--        <div th:if="${article.etatVente == 'Terminée'}">-->
-            <h2>Option 1 : Si etatVente = Terminée</h2>
-            <div>
-                <span>Ma proposition :
-                    <span th:text="${monOffre.montantEnchere}"></span>
-                    points
-                </span>
+<!--             Si la vente est terminée, impossible de renchérir -->
+            <div th:if="${article.etatVente == 'Terminée'}">
+                <div th:if="${monOffre != null}">
+                    <span>Ma proposition :
+                        <span th:text="${monOffre.montantEnchere}"></span>
+                        points
+                    </span>
+                </div>
             </div>
         </div>
     </th:block>
-
 </body>
 </html>

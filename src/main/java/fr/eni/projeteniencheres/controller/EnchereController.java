@@ -44,8 +44,8 @@ public class EnchereController {
     @GetMapping("/encheres")
     public String listeEncheres(Model modele) {
 
-//        List<Enchere> encheres = enchereService.findAll();
-//        modele.addAttribute("encheres", encheres);
+        List<ArticleVendu> articles = articleVenduService.afficherArticles();
+        modele.addAttribute("articles", articles);
 
         return "view-liste-encheres";
     }

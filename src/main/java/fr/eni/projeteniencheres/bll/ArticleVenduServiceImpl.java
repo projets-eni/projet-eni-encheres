@@ -36,7 +36,7 @@ public class ArticleVenduServiceImpl implements ArticleVenduService {
 
     @Override
     public List<ArticleVendu> afficherArticles() {
-        return List.of();
+        return articleVenduRepository.findAll();
 
     }
 

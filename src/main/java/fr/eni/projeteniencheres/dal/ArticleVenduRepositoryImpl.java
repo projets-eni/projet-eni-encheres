@@ -28,7 +28,7 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
 
     private NamedParameterJdbcTemplate jdbcTemplate;
 
-    private final String rqtSelect = "select v.* from ArticlesVendus v ";
+    private final String rqtSelect = "select v.*, u.pseudo from ArticlesVendus v inner join (select no_utilisateur, pseudo from Utilisateurs) u on v.no_utilisateur=u.no_utilisateur ";
     @Autowired
     private UtilisateurService utilisateurService;
 
@@ -38,7 +38,7 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
 
     @Override
     public List<ArticleVendu> findAll() {
-        return jdbcTemplate.query(this.rqtSelect, Map.of(), venteRowMapper);
+        return jdbcTemplate.query(this.rqtSelect, Map.of(), venteRowMapperLazyLoading);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
         params.addValue("dateDebut", "GETUTCDATE()");
         return jdbcTemplate.query(this.rqtSelect
                 + " WHERE v.date_fin_encheres < :dateDebut and v.date_debut_encheres <= :dateDebut",
-                params, venteRowMapper);
+                params, venteRowMapperLazyLoading);
     }
 
     public List<ArticleVendu> findTermines() {
@@ -55,7 +55,7 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
         params.addValue("dateFin", "GETUTCDATE()");
         return jdbcTemplate.query(this.rqtSelect
                         + " WHERE v.date_fin_encheres <= :dateFin",
-                params, venteRowMapper);
+                params, venteRowMapperLazyLoading);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
             params.addValue("utilisateur", utilisateur.getNoUtilisateur());
             where.append(" AND v.no_utilisateur = :utilisateur");
         }
-        return jdbcTemplate.query(this.rqtSelect + " WHERE 1 " + where.toString(), params, venteRowMapper);
+        return jdbcTemplate.query(this.rqtSelect + " WHERE 1 " + where.toString(), params, venteRowMapperLazyLoading);
     }
 
     @Override
@@ -102,7 +102,7 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
     public List<ArticleVendu> findById(List<Integer> ids) {
         return jdbcTemplate.query(rqtSelect + " WHERE v.no_article IN ("
                 + ids.stream().map(String::valueOf).collect(Collectors.joining(", "))
-                + ")", new MapSqlParameterSource(), venteRowMapper);
+                + ")", new MapSqlParameterSource(), venteRowMapperLazyLoading);
     }
 
     @Override
@@ -126,7 +126,7 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
                 "INNER JOIN Utilisateurs AS u ON a.no_utilisateur = u.no_utilisateur " +
                 "INNER JOIN Retraits AS r ON a.no_article = r.no_article " +
                 "WHERE a.no_article = :id";
-        ArticleVendu article = jdbcTemplate.queryForObject(sql, params, venteRowMapper);
+        ArticleVendu article = jdbcTemplate.queryForObject(sql, params, venteRowMapperEagerLoading);
 
         sql = "SELECT e.*, u.pseudo FROM Encheres AS e INNER JOIN Utilisateurs AS u ON e.no_utilisateur=u.no_utilisateur WHERE no_article= :id" ;
         List<Enchere> encheres = jdbcTemplate.query(sql, params, enchereRowMapper);
@@ -143,7 +143,27 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
 
     }
 
-    private final RowMapper<ArticleVendu> venteRowMapper = (rs, rowNum) -> {
+    private final RowMapper<ArticleVendu> venteRowMapperLazyLoading = (rs, rowNum) -> {
+        ArticleVendu article = new ArticleVendu();
+        article.setNoArticle(rs.getInt("no_article"));
+        article.setNomArticle(rs.getString("nom_article"));
+        article.setDescription(rs.getString("description"));
+        article.setDateDebutEncheres(rs.getTimestamp("date_debut_encheres").toLocalDateTime());
+        article.setDateFinEncheres(rs.getTimestamp("date_fin_encheres").toLocalDateTime());
+        article.setPrixInitial(rs.getInt("prix_initial"));
+        article.setPrixVente(rs.getInt("prix_vente"));
+        article.setEtatVente(rs.getString("etat_vente"));
+        article.setImageFilename(rs.getString("image_filename"));
+
+        Utilisateur vendeur = new Utilisateur();
+        vendeur.setNoUtilisateur(rs.getInt("no_utilisateur"));
+        vendeur.setPseudo(rs.getString("pseudo"));
+        article.setVendeur(vendeur);
+
+        return article;
+    };
+
+    private final RowMapper<ArticleVendu> venteRowMapperEagerLoading = (rs, rowNum) -> {
         ArticleVendu article = new ArticleVendu();
         article.setNoArticle(rs.getInt("no_article"));
         article.setNomArticle(rs.getString("nom_article"));

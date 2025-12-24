@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>ENI-Enchères</title>
@@ -29,130 +29,29 @@
     <!-- Mes achats -->
     <!-- Mes ventes -->
 
-
     <div class="container mt-4">
         <div class="row g-3">
-            <!-- Carte 1 -->
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div th:each="article : ${articles}" class="col-12 col-sm-6 col-md-4 col-lg-3">
                 <div class="card h-100">
-                    <a th:href="@{/vente/1}" class="text-decoration-none text-dark">
-                        <img src="/images/pc-gamer.jpg" class="card-img-top" alt="logo de l'ENI">
+                    <a th:href="@{/vente/{id}(id=${article.noArticle})}" class="text-decoration-none text-dark">
+                        <img th:src="@{/images/{image}(image=${article.imageFilename})}"
+                             class="card-img-top img-fluid"
+                             style="height: 180px; object-fit: cover;"
+                             th:alt="${article.nomArticle}">
                         <div class="card-body">
-                            <h5 class="card-title">PC-gamer</h5>
-                            <p class="card-text">Afficher le détail pour la vente numéro 1</p>
+                            <h5 class="card-title" th:text="${article.nomArticle}">Nom produit</h5>
+                            <p class="card-text">
+                                | Prix : <span th:text="${article.prixVente}"></span>
+                                | Début de l'enchère : <span th:text="${#temporals.format(article.dateDebutEncheres, 'dd/MM/yyyy')}"></span>
+                                | Fin de l'enchère : <span th:text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yyyy')}"></span>
+                                | Etat : <span th:text="${article.etatVente}"></span>
+                                | Vendeur : <span th:text="${article.vendeur.pseudo}"></span>
+                            </p>
                         </div>
                     </a>
                 </div>
             </div>
-            <!-- Carte 1 -->
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                <div class="card h-100">
-                    <a th:href="@{/vente/2}" class="text-decoration-none text-dark">
-                        <img src="/images/pc-gamer.jpg" class="card-img-top" alt="logo de l'ENI">
-                        <div class="card-body">
-                            <h5 class="card-title">PC-gamer</h5>
-                            <p class="card-text">Afficher le détail pour la vente numéro 2</p>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <!-- Carte 2 -->
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                <div class="card h-100">
-                    <a th:href="@{/vente/3}" class="text-decoration-none text-dark">
-                        <img src="/images/pc-gamer.jpg" class="card-img-top" alt="logo de l'ENI">
-                        <div class="card-body">
-                            <h5 class="card-title">PC-gamer</h5>
-                            <p class="card-text">Afficher le détail pour la vente numéro 3</p>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <!-- Carte 3 -->
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                <div class="card h-100">
-                    <a th:href="@{/vente/4}" class="text-decoration-none text-dark">
-                        <img src="/images/pc-gamer.jpg" class="card-img-top" alt="logo de l'ENI">
-                        <div class="card-body">
-                            <h5 class="card-title">PC-gamer</h5>
-                            <p class="card-text">Afficher le détail pour la vente numéro 4</p>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <!-- Carte 5 -->
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                <div class="card h-100">
-                    <a th:href="@{/vente/5}" class="text-decoration-none text-dark">
-                        <img src="/images/pc-gamer.jpg" class="card-img-top" alt="logo de l'ENI">
-                        <div class="card-body">
-                            <h5 class="card-title">PC-gamer</h5>
-                            <p class="card-text">Afficher le détail pour la vente numéro 5</p>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <!-- Carte 6 -->
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                <div class="card h-100">
-                    <a th:href="@{/vente/6}" class="text-decoration-none text-dark">
-                        <img src="/images/pc-gamer.jpg" class="card-img-top" alt="logo de l'ENI">
-                        <div class="card-body">
-                            <h5 class="card-title">PC-gamer</h5>
-                            <p class="card-text">Afficher le détail pour la vente numéro 6</p>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <!-- Carte 7 -->
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                <div class="card h-100">
-                    <a th:href="@{/vente/7}" class="text-decoration-none text-dark">
-                        <img src="/images/pc-gamer.jpg" class="card-img-top" alt="logo de l'ENI">
-                        <div class="card-body">
-                            <h5 class="card-title">PC-gamer</h5>
-                            <p class="card-text">Afficher le détail pour la vente numéro 7</p>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <!-- Carte 8 -->
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                <div class="card h-100">
-                    <a th:href="@{/vente/8}" class="text-decoration-none text-dark">
-                        <img src="/images/pc-gamer.jpg" class="card-img-top" alt="logo de l'ENI">
-                        <div class="card-body">
-                            <h5 class="card-title">PC-gamer</h5>
-                            <p class="card-text">Afficher le détail pour la vente numéro 8</p>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <!-- Carte 9 -->
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                <div class="card h-100">
-                    <a th:href="@{/vente/9}" class="text-decoration-none text-dark">
-                        <img src="/images/pc-gamer.jpg" class="card-img-top" alt="logo de l'ENI">
-                        <div class="card-body">
-                            <h5 class="card-title">PC-gamer</h5>
-                            <p class="card-text">Afficher le détail pour la vente numéro 9</p>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <!-- Carte 10 -->
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                <div class="card h-100">
-                    <a th:href="@{/vente/10}" class="text-decoration-none text-dark">
-                        <img src="/images/pc-gamer.jpg" class="card-img-top" alt="logo de l'ENI">
-                        <div class="card-body">
-                            <h5 class="card-title">PC-gamer</h5>
-                            <p class="card-text">Afficher le détail pour la vente numéro 10</p>
-                        </div>
-                    </a>
-                </div>
-            </div>
-
-</body>
+        </div>
+    </div>
 </body>
 </html>
