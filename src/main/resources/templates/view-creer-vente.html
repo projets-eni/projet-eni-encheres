@@ -5,12 +5,20 @@
     <title>ENI-Enchères</title>
 </head>
 <body>
-<h1>Nouvelle vente</h1>
+<h1 th:if="${nouvelleVente.nomArticle == null}">Nouvelle vente</h1>
+<h1 th:if="${nouvelleVente.nomArticle != null}">Modifier vente</h1>
 
     <div>
         <th:block th:object="${nouvelleVente}">
+
             <span>
-                <img th:src="*{idImage}" alt="Aucune image sélectionnée">
+                <img th:src="@{'/images/' + ${nouvelleVente.idImage}}"
+                     th:alt="${nouvelleVente.idImage != null ? 'Image de ' + nouvelleVente.nomArticle : 'Aucune image sélectionnée'}"
+                     th:if="${nouvelleVente.idImage != null}"
+                     style="max-width: 200px; max-height: 200px;" />
+                <span th:if="${nouvelleVente.idImage == null}" class="text-muted">
+                    Aucune image sélectionnée
+                </span>
             </span>
 
             <form th:action="${noArticle == null} ? @{/vente/creer}
@@ -161,6 +169,47 @@
                 }
             });
         });
+    </script>
+    <!-- Charger dynamiquement l'image -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const idImageField = document.getElementById('idImageField');
+            const previewImg = document.getElementById('previewImg');
+            const imagePreview = document.getElementById('imagePreview');
+
+            // Quand un nouveau fichier est sélectionné
+            document.getElementById('fileInput').addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    idImageField.value = file.name;
+                    // Aperçu immédiat du fichier local
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewImg.src = e.target.result;
+                        previewImg.style.display = 'block';
+                        imagePreview.innerHTML = ''; // Cache le texte "aucune image"
+                        imagePreview.appendChild(previewImg);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Charger l'image existante depuis le serveur (si modification)
+            const existingImage = idImageField.value;
+            if (existingImage) {
+                chargerImageServeur(existingImage);
+            }
+        });
+
+        function chargerImageServeur(filename) {
+            const img = document.getElementById('previewImg');
+            img.src = '/images/' + filename + '?t=' + new Date().getTime(); // Cache busting
+            img.style.display = 'block';
+            img.onerror = function() {
+                img.style.display = 'none';
+                document.getElementById('imagePreview').innerHTML = '<span class="text-muted">Image non trouvée</span>';
+            };
+        }
     </script>
 </body>
 </html>

@@ -29,6 +29,16 @@
                      || #strings.equals(article.vendeur.pseudo, #authentication.name)}">
         <!-- Une vente non commencée n'est visible que par le vendeur -->
         <div>
+            <span>
+                <img th:src="@{'/images/' + ${article.idImage}}"
+                     th:alt="${article.idImage != null ? 'Image de ' + article.nomArticle : 'Aucune image sélectionnée'}"
+                     th:if="${article.idImage != null}"
+                     style="max-width: 200px; max-height: 200px;" />
+                <span th:if="${article.idImage == null}" class="text-muted">
+                    Aucune image sélectionnée
+                </span>
+            </span>
+
             <p>Article : <span th:text="${article.nomArticle}"></span></p>
             <p>Description : <span th:text="${article.description}"></span></p>
             <p>Catégorie : <span th:text="${article.categorie.libelle}"></span></p>

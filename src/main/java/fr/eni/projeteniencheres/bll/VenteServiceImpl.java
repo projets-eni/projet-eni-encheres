@@ -9,9 +9,18 @@ import fr.eni.projeteniencheres.dal.ArticleVenduRepositoryImpl;
 import fr.eni.projeteniencheres.dal.interfaces.ArticleVenduRepository;
 import fr.eni.projeteniencheres.dto.NouvelleVenteDto;
 import org.springframework.beans.BeanUtils;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
@@ -160,6 +169,21 @@ public class VenteServiceImpl implements VenteService {
 
         return articleSaved;
     }
+
+    @GetMapping("/images/{filename:.+}")
+    public ResponseEntity<Resource> getImage(@PathVariable String filename) throws IOException {
+        // Charger l'image depuis ton dossier (ex: upload/)
+        Path path = Paths.get("upload/" + filename);
+        Resource resource = new UrlResource(path.toUri());
+
+        if (resource.exists() && resource.isReadable()) {
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_JPEG) // ou IMAGE_PNG
+                    .body(resource);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
 // à supprimer ?!
 //    @Override
 //    public NouvelleVenteDto afficherVenteParNoArticle(int noArticle){
