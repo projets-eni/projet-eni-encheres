@@ -13615,3 +13615,7 @@ org.springframework.expression.spel.SpelEvaluationException: EL1004E: Method cal
 2025-12-27T07:41:27.734+01:00 DEBUG 20184 --- [projet-eni-encheres] [http-nio-8080-exec-1] o.s.jdbc.core.JdbcTemplate               : Executing prepared SQL query
 2025-12-27T07:41:27.734+01:00 DEBUG 20184 --- [projet-eni-encheres] [http-nio-8080-exec-1] o.s.jdbc.core.JdbcTemplate               : Executing prepared SQL statement [select e.*, pseudo from Encheres AS e LEFT JOIN Utilisateurs AS u ON e.no_utilisateur=u.no_utilisateur where no_article=?]
 2025-12-27T07:41:27.734+01:00 TRACE 20184 --- [projet-eni-encheres] [http-nio-8080-exec-1] o.s.jdbc.core.StatementCreatorUtils      : Setting SQL statement parameter value: column index 1, parameter value [1], value class [java.lang.Long], SQL type unknown
+2025-12-27T08:04:32.290+01:00  INFO 20184 --- [projet-eni-encheres] [SpringApplicationShutdownHook] o.s.boot.tomcat.GracefulShutdown         : Commencing graceful shutdown. Waiting for active requests to complete
+2025-12-27T08:04:32.298+01:00  INFO 20184 --- [projet-eni-encheres] [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown         : Graceful shutdown complete
+2025-12-27T08:04:32.300+01:00  INFO 20184 --- [projet-eni-encheres] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-48 - Shutdown initiated...
+2025-12-27T08:04:32.301+01:00  INFO 20184 --- [projet-eni-encheres] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-48 - Shutdown completed.

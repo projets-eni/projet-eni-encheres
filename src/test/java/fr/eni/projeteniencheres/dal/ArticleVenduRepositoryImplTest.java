@@ -17,13 +17,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.time.temporal.TemporalAmount;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 @SpringBootTest
-public class ArticleVenduRepositoryImplTests {
+public class ArticleVenduRepositoryImplTest {
 
     private final Faker faker = new Faker();
 
@@ -97,8 +96,6 @@ public class ArticleVenduRepositoryImplTests {
     @Test
     @Order(2)
     void testArticleVenduFindById() {
-
-
     }
 
 }
