@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 @Controller
 public class VenteController {
@@ -82,6 +84,11 @@ public class VenteController {
         Enchere meilleureOffre = enchereService.getMeilleureOffreByArticle(noArticle);
         modele.addAttribute("meilleureOffre", meilleureOffre);
 
+        // Remonter la liste des encheres
+        List<Enchere> encheres = enchereService.getByArticleVendu(article);
+//        Collections.reverse(encheres); // inverser l’ordre pour afficher de la + récente à la + ancienne
+        modele.addAttribute("encheres", encheres);
+
         return "view-details-vente";
     }
 
@@ -122,27 +129,5 @@ public class VenteController {
 
         return "redirect:/vente/" + noArticle ;
     }
-
-//    @PostMapping("/uploadImage")
-//    public String uploadImage(@RequestParam("file") MultipartFile file,
-//                              @ModelAttribute("monObjet") NouvelleVenteDto nouvelleVenteDto) throws IOException {
-//
-//        if (!file.isEmpty()) {
-//            // 1. Sauvegarde physique
-//            String fileName = file.getOriginalFilename();
-//            Path uploadDir = Paths.get("src/main/resources/static/uploads");
-//            Files.createDirectories(uploadDir);
-//            Files.copy(file.getInputStream(),
-//                    uploadDir.resolve(fileName),
-//                    StandardCopyOption.REPLACE_EXISTING);
-//
-//            // 2. Met la valeur dans le champ de ton bean
-//            String url = "/" + fileName;   // ou juste fileName, selon ton besoin
-//            nouvelleVenteDto.setIdImage(url);
-//        }
-//
-//        // 3. Revenir sur la page avec l’objet rempli
-//        return "view-creer-vente";
-//    }
 
 }

@@ -42,16 +42,30 @@
             <p>Article : <span th:text="${article.nomArticle}"></span></p>
             <p>Description : <span th:text="${article.description}"></span></p>
             <p>Catégorie : <span th:text="${article.categorie.libelle}"></span></p>
+
             <p>Meilleure offre :
                 <th:block th:if="${meilleureOffre != null}">
                     <span th:text="${meilleureOffre.montantEnchere}"></span>
                     points par
                     <a th:href="@{/profil}" th:text="${meilleureOffre.acheteur.pseudo}"></a>
+
+                    <div th:if="${#strings.equals(article.vendeur.pseudo, #authentication.name) and encheres.size() > 0}">
+                        <p>Enchères reçues : </p>
+                        <div th:each="enchere : ${encheres}">
+                            <span th:text="${enchere.montantEnchere}"></span>
+                            points proposée par
+                            <a th:href="@{/profil/{pseudo}(pseudo=${enchere.acheteur.pseudo})}" th:text="${enchere.acheteur.pseudo}"></a>
+                            le <span th:text="${#temporals.format(enchere.dateEnchere, 'dd/MM/yyyy')}"></span>
+                            à <span th:text="${#temporals.format(enchere.dateEnchere, 'hh:mm')}"></span>
+                        </div>
+                    </div>
                 </th:block>
+
                 <th:block th:unless="${meilleureOffre != null}">
-                    Aucune offre.
+                    Aucune offre pour le moment.
                 </th:block>
             </p>
+
             <p>Mise à prix : <span th:text="${article.prixInitial}"></span> points</p>
             <p>Début de l'enchère : <span th:text="${#temporals.format(article.dateDebutEncheres, 'dd/MM/yyyy')}"></span></p>
             <p>Fin de l'enchère : <span th:text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yyyy')}"></span></p>
