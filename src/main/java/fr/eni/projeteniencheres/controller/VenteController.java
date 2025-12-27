@@ -60,10 +60,10 @@ public class VenteController {
             return "view-creer-vente"; // Flash attributes auto-gérés par Spring
         }
         String pseudo = authentication.getName();
-        venteService.creerNouvelleVente(dto, pseudo);
+        ArticleVendu article = venteService.creerNouvelleVente(dto, pseudo);
         logger.info("Sauvegarde article {}", dto.getNoCategorie());
 
-        return "redirect:/encheres";
+        return "redirect:/vente/" + article.getNoArticle();
     }
 
     @GetMapping("/vente/{noArticle}")
@@ -83,6 +83,44 @@ public class VenteController {
         modele.addAttribute("meilleureOffre", meilleureOffre);
 
         return "view-details-vente";
+    }
+
+    @GetMapping("/vente/{noArticle}/modifier")
+    public String affichePageModificationDetailsVente(@PathVariable int noArticle, Authentication authentication,
+                                                      Model modele) {
+
+        // 1er passage : init formulaire avec les données enregistrées en BDD
+        if(!modele.containsAttribute("nouvelleVente")){
+            String email = authentication.getName();
+            modele.addAttribute("nouvelleVente", venteService.initFormulaireModifierVente(email, noArticle));
+        }
+        // Pour les visites suivantes = erreur validation (POST → GET) → true → On garde les données saisies !
+        return "view-creer-vente";
+    }
+
+    @PostMapping("/vente/{noArticle}/modifier")
+    public String modifierDetailsVente(@PathVariable int noArticle,
+                                       Authentication authentication,
+                                       @Valid @ModelAttribute("nouvelleVente") NouvelleVenteDto dto,
+                                       BindingResult resultat, RedirectAttributes redirectAttr) {
+        if(resultat.hasErrors()) {
+            return "view-creer-vente"; // Flash attributes auto-gérés par Spring
+        }
+
+        String pseudo = authentication.getName();
+        ArticleVendu article = venteService.modifierVente(noArticle,dto, pseudo);
+
+        return "redirect:/vente/" + noArticle ;
+    }
+
+    @PostMapping("/vente/{noArticle}/annuler")
+    public String annulerVente(@PathVariable int noArticle,
+                               Authentication authentication) {
+
+        String pseudo = authentication.getName();
+        ArticleVendu article = venteService.annulerVente(noArticle, pseudo);
+
+        return "redirect:/vente/" + noArticle ;
     }
 
 //    @PostMapping("/uploadImage")

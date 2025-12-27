@@ -12,7 +12,12 @@
             <span>
                 <img th:src="*{idImage}" alt="Aucune image sélectionnée">
             </span>
-            <form th:action="@{/vente/creer}" method="POST">
+
+            <form th:action="${noArticle == null} ? @{/vente/creer}
+                                                  : @{/vente/{noArticle}/modifier(noArticle=${noArticle})}"
+                  method="POST"
+                  th:object="${nouvelleVente}">
+
                 <ul class="flex-outer">
 <!--                        <li>-->
 <!--                            <span style="color: red;" th:if="${#fields.hasErrors()}">-->

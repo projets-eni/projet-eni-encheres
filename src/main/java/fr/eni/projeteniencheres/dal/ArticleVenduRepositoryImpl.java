@@ -4,12 +4,8 @@ import fr.eni.projeteniencheres.bll.interfaces.UtilisateurService;
 import fr.eni.projeteniencheres.bo.*;
 import fr.eni.projeteniencheres.dal.interfaces.ArticleVenduRepository;
 import fr.eni.projeteniencheres.dal.interfaces.EnchereRepository;
-import fr.eni.projeteniencheres.exception.ArticleNotFoundException;
-import fr.eni.projeteniencheres.exception.EnchereImpossible;
 import fr.eni.projeteniencheres.exception.EtatVenteErreur;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -122,9 +118,9 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
         MapSqlParameterSource params = new MapSqlParameterSource().addValue("id", id);
         String sql = "SELECT a.*, c.libelle, u.pseudo, r.rue, r.code_postal, r.ville " +
                 "FROM ArticlesVendus AS a " +
-                "INNER JOIN Categories AS c ON a.no_categorie = c.no_categorie " +
-                "INNER JOIN Utilisateurs AS u ON a.no_utilisateur = u.no_utilisateur " +
-                "INNER JOIN Retraits AS r ON a.no_article = r.no_article " +
+                "LEFT JOIN Categories AS c ON a.no_categorie = c.no_categorie " +
+                "LEFT JOIN Utilisateurs AS u ON a.no_utilisateur = u.no_utilisateur " +
+                "LEFT JOIN Retraits AS r ON a.no_article = r.no_article " +
                 "WHERE a.no_article = :id";
         ArticleVendu article = jdbcTemplate.queryForObject(sql, params, venteRowMapperEagerLoading);
 
@@ -153,7 +149,7 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
         article.setPrixInitial(rs.getInt("prix_initial"));
         article.setPrixVente(rs.getInt("prix_vente"));
         article.setEtatVente(rs.getString("etat_vente"));
-        article.setImageFilename(rs.getString("image_filename"));
+        article.setIdImage(rs.getString("image_filename"));
 
         Utilisateur vendeur = new Utilisateur();
         vendeur.setNoUtilisateur(rs.getInt("no_utilisateur"));
@@ -173,7 +169,7 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
         article.setPrixInitial(rs.getInt("prix_initial"));
         article.setPrixVente(rs.getInt("prix_vente"));
         article.setEtatVente(rs.getString("etat_vente"));
-        article.setImageFilename(rs.getString("image_filename"));
+        article.setIdImage(rs.getString("image_filename"));
 
         Utilisateur vendeur = new Utilisateur();
         vendeur.setNoUtilisateur(rs.getInt("no_utilisateur"));
@@ -235,7 +231,7 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
         paramsArticle.addValue("date_debut_encheres", article.getDateDebutEncheres());
         paramsArticle.addValue("date_fin_encheres", article.getDateFinEncheres());
         paramsArticle.addValue("prix_initial", article.getPrixInitial());
-        paramsArticle.addValue("image_filename", article.getImageFilename());
+        paramsArticle.addValue("image_filename", article.getIdImage());
         paramsArticle.addValue("etat_vente", article.getEtatVente());
         // ajout des relations de FK
         paramsArticle.addValue("no_categorie", article.getCategorie().getNoCategorie());
@@ -254,6 +250,45 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
         // pas d'enchère à la création -> pas d'insertion dans Encheres
         // l'utilisateur est existant en BDD -> pas d'insertion dans Utilisateurs
         // les catégories sont prédéfinies -> pas d'insertion dans Categories
+
+        return article;
+
+    }
+
+    @Override
+    public ArticleVendu modifierArticle(int noArticle, ArticleVendu article) {
+
+        // ----------------------------------------------------------- //
+        // --           Création d'un ArticleVendu                  -- //
+        // ----------------------------------------------------------- //
+
+        String sqlArticle = "UPDATE ArticlesVendus " +
+                "SET nom_article = :nom_article, " +
+                "    description = :description, " +
+                "    date_debut_encheres = :date_debut_encheres, " +
+                "    date_fin_encheres = :date_fin_encheres, " +
+                "    prix_initial = :prix_initial, " +
+                "    image_filename = :image_filename, " +
+                "    etat_vente = :etat_vente, " +
+                "    no_categorie = :no_categorie, " +
+                "    no_utilisateur = :no_utilisateur " +
+                "WHERE no_article = :no_article";
+
+        MapSqlParameterSource paramsArticle = new MapSqlParameterSource();
+        paramsArticle.addValue("no_article", noArticle);
+        paramsArticle.addValue("nom_article", article.getNomArticle());
+        paramsArticle.addValue("description", article.getDescription());
+        paramsArticle.addValue("date_debut_encheres", article.getDateDebutEncheres());
+        paramsArticle.addValue("date_fin_encheres", article.getDateFinEncheres());
+        paramsArticle.addValue("prix_initial", article.getPrixInitial());
+        paramsArticle.addValue("image_filename", article.getIdImage());
+        paramsArticle.addValue("etat_vente", article.getEtatVente());
+        // ajout des relations de FK
+        paramsArticle.addValue("no_categorie", article.getCategorie().getNoCategorie());
+        paramsArticle.addValue("no_utilisateur", article.getVendeur().getNoUtilisateur());
+
+        // Exécute l'UPDATE à partir de no_article
+        jdbcTemplate.update(sqlArticle, paramsArticle);
 
         return article;
 

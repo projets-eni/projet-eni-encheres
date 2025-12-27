@@ -1,20 +1,18 @@
 -- Script de création de la base de données ENCHERES
 --   type :      SQL Server 2012
-/*
+
 -- Désactiver toutes les contraintes de clé étrangère
-EXEC sp_MSforeachtable 'ALTER TABLE ? NOCHECK CONSTRAINT ALL';*/
+EXEC sp_MSforeachtable 'ALTER TABLE ? NOCHECK CONSTRAINT ALL';
 -- Supprimer une table spécifique
-/*
+
 DROP TABLE Encheres ;
 DROP TABLE Retraits ;
 DROP TABLE ArticlesVendus ;
 DROP TABLE Categories ;
 DROP TABLE Utilisateurs ;
-*/
+
 -- Réactiver toutes les contraintes de clé étrangère
-/*
 EXEC sp_MSforeachtable 'ALTER TABLE ? CHECK CONSTRAINT ALL';
-*/
 
 
 CREATE TABLE Categories
@@ -69,7 +67,7 @@ CREATE TABLE ArticlesVendus
         CONSTRAINT CK_ArticlesVendus_prixInitial CHECK (prix_initial > 0),
     prix_vente          INTEGER,
     etat_vente          NVARCHAR(30)           NOT NULL
-        CONSTRAINT CK_ArticlensVendus_etatVente CHECK (etat_vente IN ('Non commencée', 'En cours', 'Terminée')),
+        CONSTRAINT CK_ArticlensVendus_etatVente CHECK (etat_vente IN ('Non commencée', 'En cours', 'Annulée', 'Terminée')),
 
     no_utilisateur      INTEGER                NOT NULL,
     no_categorie        INTEGER                NOT NULL,
@@ -174,22 +172,22 @@ ALTER TABLE Retraits
 alter table Retraits
     alter column code_postal varchar(5);
 
-
--- views
-create view ventes as
-select
-    no_article,
-    nom_article,
-    description,
-    date_debut_encheres,
-    date_fin_encheres,
-    prix_initial,
-    prix_vente,
-    case
-        when date_fin_encheres < GETDATE() THEN 'Terminée'
-        when date_debut_encheres > GETDATE() THEN 'Non commencée'
-        else 'En cours'
-    end as etat_vente,
-    no_utilisateur,
-    no_categorie
-from ArticlesVendus
+--
+-- -- views
+-- create view ventes as
+-- select
+--     no_article,
+--     nom_article,
+--     description,
+--     date_debut_encheres,
+--     date_fin_encheres,
+--     prix_initial,
+--     prix_vente,
+--     case
+--         when date_fin_encheres < GETDATE() THEN 'Terminée'
+--         when date_debut_encheres > GETDATE() THEN 'Non commencée'
+--         else 'En cours'
+--     end as etat_vente,
+--     no_utilisateur,
+--     no_categorie
+-- from ArticlesVendus

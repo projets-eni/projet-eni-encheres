@@ -20,6 +20,11 @@ public class RetraitServiceImpl implements RetraitService {
     }
 
     @Override
+    public Retrait modifierRetrait(int noArticle, Retrait retrait) {
+        return retraitRepository.modifierRetrait(noArticle, retrait);
+    }
+
+    @Override
     public Retrait afficherRetraitParId(int noArticle) {
         return retraitRepository.afficherRetraitParId(noArticle);
     }

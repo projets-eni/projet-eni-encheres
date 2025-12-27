@@ -32,12 +32,23 @@
     <div class="container mt-4">
         <div class="row g-3">
             <div th:each="article : ${articles}" class="col-12 col-sm-6 col-md-4 col-lg-3">
-                <div class="card h-100">
+                <div th:classappend="${article.etatVente == 'Non commencée' || article.etatVente == 'Terminée' || article.etatVente == 'Annulée'} ? 'card h-100 opacity-50 bg-light' : 'card h-100'"
+                     th:style="${article.etatVente == 'Non commencée' && !#strings.equals(article.vendeur.pseudo, #authentication.name)} ? 'pointer-events: none; cursor: not-allowed' : ''">
                     <a th:href="@{/vente/{id}(id=${article.noArticle})}" class="text-decoration-none text-dark">
-                        <img th:src="@{/images/{image}(image=${article.imageFilename})}"
+                        <img th:src="@{/images/{image}(image=${article.idImage})}"
                              class="card-img-top img-fluid"
                              style="height: 180px; object-fit: cover;"
                              th:alt="${article.nomArticle}">
+                        <!-- Grand badge -->
+                        <span th:if="${article.etatVente == 'Non commencée'}" class="position-absolute top-50 start-50 translate-middle badge text-bg-warning fs-6 px-4 py-2 rotate-45">
+                            A VENIR
+                        </span>
+                        <span th:if="${article.etatVente == 'Terminée'}" class="position-absolute top-50 start-50 translate-middle badge text-bg-secondary fs-6 px-4 py-2 rotate-45">
+                            TERMINÉE
+                        </span>
+                        <span th:if="${article.etatVente == 'Annulée'}" class="position-absolute top-50 start-50 translate-middle badge text-bg-danger fs-6 px-4 py-2 rotate-45">
+                            ANNULEE
+                        </span>
                         <div class="card-body">
                             <h5 class="card-title" th:text="${article.nomArticle}">Nom produit</h5>
                             <p class="card-text">

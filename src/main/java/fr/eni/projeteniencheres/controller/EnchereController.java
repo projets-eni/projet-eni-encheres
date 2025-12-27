@@ -41,7 +41,7 @@ public class EnchereController {
         return "redirect:/vente/" + noArticle; // redirection ou vue ?
     }
 
-    @GetMapping("/encheres")
+    @GetMapping({"/","/encheres"})
     public String listeEncheres(Model modele) {
 
         List<ArticleVendu> articles = articleVenduService.afficherArticles();

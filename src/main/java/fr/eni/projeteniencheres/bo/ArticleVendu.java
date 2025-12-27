@@ -16,7 +16,7 @@ public class ArticleVendu implements Serializable {
     private LocalDateTime dateFinEncheres;
     private int prixInitial;
     private int prixVente;
-    private String imageFilename;
+    private String idImage;
     private String etatVente;
     private Categorie categorie;
     private Utilisateur vendeur;
@@ -26,7 +26,7 @@ public class ArticleVendu implements Serializable {
     public ArticleVendu() {
     }
 
-    public ArticleVendu(String nomArticle, String description, LocalDateTime dateDebutEncheres, LocalDateTime dateFinEncheres, int prixInitial, int prixVente, String etatVente, Categorie categorie, Utilisateur vendeur, List<Enchere> encheres, Retrait retrait, String imageFilename) {
+    public ArticleVendu(String nomArticle, String description, LocalDateTime dateDebutEncheres, LocalDateTime dateFinEncheres, int prixInitial, int prixVente, String etatVente, Categorie categorie, Utilisateur vendeur, List<Enchere> encheres, Retrait retrait, String idImage) {
         this.nomArticle = nomArticle;
         this.description = description;
         this.dateDebutEncheres = dateDebutEncheres;
@@ -38,10 +38,10 @@ public class ArticleVendu implements Serializable {
         this.vendeur = vendeur;
         this.encheres = new ArrayList<>();
         this.retrait = retrait;
-        this.imageFilename = imageFilename;
+        this.idImage = idImage;
     }
 
-    public ArticleVendu(long noArticle, String nomArticle, String description, LocalDateTime dateDebutEncheres, LocalDateTime dateFinEncheres, int prixInitial, int prixVente, String etatVente, Categorie categorie, Utilisateur vendeur, List<Enchere> encheres, Retrait retrait, String imageFilename) {
+    public ArticleVendu(long noArticle, String nomArticle, String description, LocalDateTime dateDebutEncheres, LocalDateTime dateFinEncheres, int prixInitial, int prixVente, String etatVente, Categorie categorie, Utilisateur vendeur, List<Enchere> encheres, Retrait retrait, String idImage) {
         this.noArticle = noArticle;
         this.nomArticle = nomArticle;
         this.description = description;
@@ -54,19 +54,19 @@ public class ArticleVendu implements Serializable {
         this.vendeur = vendeur;
         this.encheres = new ArrayList<>();
         this.retrait = retrait;
-        this.imageFilename = imageFilename;
+        this.idImage = idImage;
     }
 
     public long getNoArticle() {
         return noArticle;
     }
 
-    public String getImageFilename() {
-        return imageFilename;
+    public String getIdImage() {
+        return idImage;
     }
 
-    public void setImageFilename(String imageFilename) {
-        this.imageFilename = imageFilename;
+    public void setIdImage(String idImage) {
+        this.idImage = idImage;
     }
 
     public void setNoArticle(long noArticle) {

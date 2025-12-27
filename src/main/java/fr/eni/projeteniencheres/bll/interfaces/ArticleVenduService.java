@@ -10,7 +10,7 @@ import java.util.List;
 public interface ArticleVenduService {
     List<ArticleVendu> afficherArticles();
     ArticleVendu ajoutArticle(ArticleVendu article);
-    ArticleVendu modifierArticle(ArticleVendu article);
+    ArticleVendu modifierArticle(int noArticle, ArticleVendu article);
     void supprimerArticle(ArticleVendu article);
 
     void terminerArticle(ArticleVendu article);

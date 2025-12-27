@@ -46,6 +46,29 @@ public class RetraitRepositoryImpl implements RetraitRepository {
         return retrait;
     }
 
+    @Override
+    public Retrait modifierRetrait(int noArticle, Retrait retrait) {
+
+        String sqlRetrait = "UPDATE Retraits " +
+                "SET no_article = :no_article, " +
+                "    rue = :rue, " +
+                "    code_postal = :code_postal, " +
+                "    ville = :ville, " +
+                "    est_retire = :est_retire " +
+                "WHERE no_article = :no_article";
+
+        MapSqlParameterSource paramsRetrait = new MapSqlParameterSource();
+        paramsRetrait.addValue("no_article", noArticle);
+        paramsRetrait.addValue("rue", retrait.getRue());
+        paramsRetrait.addValue("code_postal", retrait.getCodePostal());
+        paramsRetrait.addValue("ville", retrait.getVille());
+        paramsRetrait.addValue("est_retire", retrait.isEstRetire());
+
+        namedParameterJdbcTemplate.update(sqlRetrait, paramsRetrait);
+
+        return retrait;
+    }
+
 
     class RetraitRowMapper implements RowMapper<Retrait> {
 

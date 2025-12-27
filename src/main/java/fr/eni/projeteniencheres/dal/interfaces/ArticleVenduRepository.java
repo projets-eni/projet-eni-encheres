@@ -33,6 +33,7 @@ public interface ArticleVenduRepository {
     public ArticleVendu save(ArticleVendu vente);
 
     ArticleVendu ajoutArticle(ArticleVendu article);
+    ArticleVendu modifierArticle(int noArticle, ArticleVendu article);
 
     public void delete(ArticleVendu vente);
 

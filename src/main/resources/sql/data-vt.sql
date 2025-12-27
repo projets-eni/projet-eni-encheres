@@ -5,10 +5,10 @@ DELETE FROM Retraits;
 DELETE FROM Utilisateurs;
 
 /* ⚠️ RÉINITIALISER IDENTITY à 1 pour CHAQUE table avec IDENTITY */
-DBCC CHECKIDENT('Categories', RESEED, 0);
-DBCC CHECKIDENT('Utilisateurs', RESEED, 0);
-DBCC CHECKIDENT('ArticlesVendus', RESEED, 0);
-DBCC CHECKIDENT('Encheres', RESEED, 0);
+DBCC CHECKIDENT('Categories', RESEED, 1);
+DBCC CHECKIDENT('Utilisateurs', RESEED, 1);
+DBCC CHECKIDENT('ArticlesVendus', RESEED, 1);
+DBCC CHECKIDENT('Encheres', RESEED, 1);
 
 /* Table Categorie */
 /* active temporairement l'insertion manuelle de valeurs dans une colonne IDENTITY (auto-incrémentée) */
@@ -22,7 +22,7 @@ SET IDENTITY_INSERT Categories OFF;
 
 
 -- 3. UTILISATEURS (5 utilisateurs)
-DBCC CHECKIDENT('Utilisateurs', RESEED, 0);
+DBCC CHECKIDENT('Utilisateurs', RESEED, 1);
 INSERT INTO Utilisateurs (pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur) VALUES
 -- Admin
 ('admin', 'Dupont', 'Paul', 'admin@eni.fr', '0123456789', '12 Rue Admin', '75001', 'Paris', '{bcrypt}$2a$10$6D4p4PrBW5h8h2RsmU1ZGeamWNC1REl3nHYbdLjiiLB40GNvFDu6S', 500, 1),
@@ -44,7 +44,7 @@ ALTER TABLE ArticlesVendus
 GO
 
 -- 4. ARTICLES VENDUS (8 articles variés)
-DBCC CHECKIDENT('ArticlesVendus', RESEED, 0);
+DBCC CHECKIDENT('ArticlesVendus', RESEED, 1);
 INSERT INTO ArticlesVendus (nom_article, description, date_debut_encheres, date_fin_encheres, prix_initial, prix_vente, etat_vente, no_utilisateur, no_categorie, image_filename) VALUES
 -- NON COMMENCÉES (futures)
 ('PC Gamer RTX 4090', 'Ordinateur gaming haut de gamme', '2025-12-25 10:00:00', '2025-12-28 20:00:00', 1500, NULL, 'Non commencée', 2, 1, 'pc_gamer.jpg'),
@@ -83,7 +83,7 @@ INSERT INTO Retraits (no_article, rue, code_postal, ville, est_retire) VALUES
 GO
 
 -- 6. ENCHÈRES (pour articles en cours et terminés)
-DBCC CHECKIDENT('Encheres', RESEED, 0);
+DBCC CHECKIDENT('Encheres', RESEED, 1);
 INSERT INTO Encheres (date_enchere, montant_enchere, no_article, no_utilisateur) VALUES
 -- iPhone 15 (en cours) - enchères croissantes
 ('2025-12-20 10:15:00', 920, 3, 4),

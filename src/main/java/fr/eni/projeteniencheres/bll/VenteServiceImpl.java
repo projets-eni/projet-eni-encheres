@@ -52,6 +52,77 @@ public class VenteServiceImpl implements VenteService {
         return dto;
     }
 
+    @Override
+    public NouvelleVenteDto initFormulaireModifierVente(String pseudo, int noArticle) {
+
+        Utilisateur vendeur = utilisateurService.findUtilisateurByPseudo(pseudo);
+        ArticleVendu article = articleVenduService.findById(noArticle);
+
+        NouvelleVenteDto dto = new NouvelleVenteDto();
+        dto.setNomArticle(article.getNomArticle());
+        dto.setDescription(article.getDescription());
+        dto.setNoCategorie((int) article.getCategorie().getNoCategorie());
+        dto.setIdImage(article.getIdImage());
+        dto.setPrixInitial(article.getPrixInitial());
+        dto.setDateDebutEncheres(article.getDateDebutEncheres());
+        dto.setDateFinEncheres(article.getDateFinEncheres());
+        dto.setRue(article.getRetrait().getRue());
+        dto.setCodePostal(article.getRetrait().getCodePostal());
+        dto.setVille(article.getRetrait().getVille());
+
+        return dto;
+    }
+
+    @Transactional
+    @Override
+    public ArticleVendu modifierVente(int noArticle, NouvelleVenteDto dto, String pseudo) {
+
+        // récupération des attributs simples
+        ArticleVendu nouvelarticle = new ArticleVendu();
+        BeanUtils.copyProperties(dto, nouvelarticle);
+
+        // récupération des attributs issus de relations FK
+        Utilisateur vendeur = utilisateurService.findUtilisateurByPseudo(pseudo);
+        Categorie categorie = categorieService.afficherCategoryParId(dto.getNoCategorie());
+        nouvelarticle.setCategorie(categorie);
+        nouvelarticle.setVendeur(vendeur);
+
+        // Etat de la vente au départ = Non commencée
+        nouvelarticle.setEtatVente("Non commencée");
+
+        // Par défaut, si non renseigné, le retrait se fait à l'adresse du vendeur
+        Retrait retraitSaisie = new Retrait();
+        BeanUtils.copyProperties(dto, retraitSaisie);
+        nouvelarticle.setRetrait(retraitSaisie);
+        if (retraitSaisie.getRue().isEmpty() || retraitSaisie.getVille().isEmpty() || retraitSaisie.getCodePostal().isEmpty()) {
+            Retrait retraitChezVendeur = new Retrait(vendeur.getRue(), vendeur.getCodePostal(), vendeur.getVille());
+            nouvelarticle.setRetrait(retraitChezVendeur);
+        }
+
+        // on appelle le service qui modifie l'article en BDD
+        ArticleVendu articleSaved = articleVenduService.modifierArticle(noArticle, nouvelarticle);
+
+        // on appelle le service qui modifie le retrait associé au nouvel article en BDD
+        Retrait retraitSaved = retraitService.modifierRetrait(noArticle, retraitSaisie);
+        articleSaved.setRetrait(retraitSaved);
+
+        return articleSaved;
+
+    }
+
+    @Override
+    public ArticleVendu annulerVente(int noArticle, String pseudo) {
+
+        ArticleVendu articleToDelete = articleVenduService.findById(noArticle);
+        articleToDelete.setEtatVente("Annulée");
+        // on appelle le service qui modifie l'article en BDD
+        ArticleVendu articleSaved = articleVenduService.modifierArticle(noArticle, articleToDelete);
+        // pas besoin de modifier le retrait, il va persister en BDD
+        // on peut envisager : appeler une procédure stockée qui supprimer les ventes annulées - garder un historique de X ans seulement
+
+        return articleSaved;
+    }
+
     @Transactional
     @Override
     public ArticleVendu creerNouvelleVente(NouvelleVenteDto dto, String pseudo) {
@@ -77,15 +148,6 @@ public class VenteServiceImpl implements VenteService {
             Retrait retraitChezVendeur = new Retrait(vendeur.getRue(), vendeur.getCodePostal(), vendeur.getVille());
             nouvelarticle.setRetrait(retraitChezVendeur);
         }
-
-//        // Par défaut, la date de début d'enchère = maintenant et durée de l'enchère = 7 jours
-//        if (dto.getDateDebutEncheres() != null && dto.getDateFinEncheres() != null) {
-//            nouvelarticle.setDateDebutEncheres(dto.getDateDebutEncheres());
-//            nouvelarticle.setDateFinEncheres(dto.getDateFinEncheres());
-//        } else {
-//            nouvelarticle.setDateDebutEncheres(LocalDateTime.now());
-//            nouvelarticle.setDateFinEncheres(LocalDateTime.now().plusDays(7));
-//        }
 
         // on appelle le service qui enregistre l'article en BDD
         ArticleVendu articleSaved = articleVenduService.ajoutArticle(nouvelarticle);
