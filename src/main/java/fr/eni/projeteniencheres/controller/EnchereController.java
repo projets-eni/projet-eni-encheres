@@ -36,13 +36,13 @@ public class EnchereController {
     @PostMapping("/vente/{noArticle}/encherir")
     public String encherir(Authentication authentication, @PathVariable int noArticle, @RequestParam("nouveauMontantEnchere") int nouveauMontantEnchere) {
 
-        ArticleVendu article = articleVenduService.findById(noArticle);
-        Utilisateur acheteur = utilisateurService.findUtilisateurByPseudo(authentication.getName());
-
-        // appel de la méthode placerEnchère à insérer
+//        ArticleVendu article = articleVenduService.findById(noArticle);
+//        Utilisateur acheteur = utilisateurService.findUtilisateurByPseudo(authentication.getName());
+//        // appel de la méthode placerEnchère à insérer
 //        enchereService.placer(new Enchere(LocalDateTime.now(),nouveauMontantEnchere,article,acheteur));
+        enchereService.encherir(noArticle, authentication.getName(), nouveauMontantEnchere);
 
-        return "redirect:/vente/" + noArticle; // redirection ou vue ?
+        return "redirect:/vente/" + noArticle;
     }
 
     @GetMapping({"/","/encheres"})
@@ -84,7 +84,7 @@ public class EnchereController {
         List<ArticleVendu> articles = articleVenduService.rechercher(dto, pseudo);
         modele.addAttribute("articles", articles);
 
-        return "redirect:/encheres"; // ← PAS DE REDIRECT (car pas de modification de données (idempotent))
+        return "redirect:/encheres";
     }
 
 }
