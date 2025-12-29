@@ -4,6 +4,7 @@ import fr.eni.projeteniencheres.bo.ArticleVendu;
 import fr.eni.projeteniencheres.bo.Categorie;
 import fr.eni.projeteniencheres.bo.EtatVente;
 import fr.eni.projeteniencheres.bo.Utilisateur;
+import fr.eni.projeteniencheres.dto.RechercheDto;
 
 import java.util.List;
 
@@ -48,5 +49,9 @@ public interface ArticleVenduService {
     void updaterEtat(ArticleVendu article);
 
     ArticleVendu findById(int id);
+
+    RechercheDto initRecherche();
+
+    List<ArticleVendu> rechercher(RechercheDto dto, String pseudo);
 
 }

@@ -156,6 +156,10 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
         vendeur.setPseudo(rs.getString("pseudo"));
         article.setVendeur(vendeur);
 
+        Categorie categorie = new Categorie();
+        categorie.setNoCategorie(rs.getInt("no_categorie"));
+        article.setCategorie(categorie);
+
         return article;
     };
 
