@@ -50,7 +50,7 @@ public String inscription(@Valid @ModelAttribute("utilisateurFormDTO") Utilisate
 
     utilisateurService.createUtilisateur(utilisateurFormDTO);
 
-    return "redirect:/accueil";
+    return "redirect:/encheres";
 }
 
     @GetMapping("/connexion")

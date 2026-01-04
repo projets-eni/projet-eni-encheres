@@ -1,19 +1,32 @@
 package fr.eni.projeteniencheres.bll;
 
+import fr.eni.projeteniencheres.bll.interfaces.ArticleVenduService;
 import fr.eni.projeteniencheres.bll.interfaces.EnchereService;
+import fr.eni.projeteniencheres.bll.interfaces.UtilisateurService;
 import fr.eni.projeteniencheres.bo.ArticleVendu;
 import fr.eni.projeteniencheres.bo.Enchere;
+import fr.eni.projeteniencheres.bo.Utilisateur;
 import fr.eni.projeteniencheres.dal.interfaces.EnchereRepository;
 import fr.eni.projeteniencheres.exception.EnchereImpossible;
+import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
+@Service
 public class EnchereServiceImpl implements EnchereService {
 
+    private final UtilisateurService utilisateurService;
+    private final ArticleVenduService articleVenduService;
     private EnchereRepository enchereRepository;
 
-    public EnchereServiceImpl(EnchereRepository enchereRepository) {
+    public EnchereServiceImpl(EnchereRepository enchereRepository, UtilisateurService utilisateurService, ArticleVenduService articleVenduService) {
         this.enchereRepository = enchereRepository;
+        this.utilisateurService = utilisateurService;
+        this.articleVenduService = articleVenduService;
     }
 
     @Override
@@ -23,7 +36,26 @@ public class EnchereServiceImpl implements EnchereService {
 
     @Override
     public List<Enchere> getByArticleVendu(ArticleVendu articleVendu) {
-        return List.of();
+        List<Enchere> encheresAll = enchereRepository.findByVente(articleVendu);
+
+        List<Utilisateur> acquereurs = encheresAll.stream()            // Transformer List en Stream
+                .map(enchere -> enchere.getAcheteur())        // TRANSFORMER : Enchere → Utilisateur
+                .distinct()                                            // ÉLIMINER DOUBLONS (Marie, Marie → Marie)
+                .sorted(Comparator.comparing(Utilisateur::getPseudo))  // TRIER alphabétiquement
+                .collect(Collectors.toList());                         // TERMINER : Conversion en List
+
+        List<Enchere> encheresBest = encheresAll.stream()
+                .collect(Collectors.groupingBy(                                             // GROUPER comme un dictionnaire
+                        Enchere::getAcheteur,                                               // Clé = acquéreur
+                        Collectors.maxBy(Comparator.comparing(Enchere::getMontantEnchere))  // Valeur = MAX enchère
+                ))                                                                          // Résultat : Map<Utilisateur, Optional<Enchere>>
+                .values()                       // Prendre SEULEMENT les valeurs (Optionals) -> on obtient un tableau d'Optionnal<Enchere>
+                .stream()                       // Retourner en Stream -> on obtient un stream de tableau d'Optionnal<Enchere>
+                .map(Optional::get)             // Extraire l'Enchere de chaque Optional -> on obtient un stream d'Encheres
+                .sorted(Comparator.comparing(Enchere::getMontantEnchere).reversed())  // TRIER par montant ↓
+                .collect(Collectors.toList());  // TERMINER : Conversion en List
+
+        return encheresBest ;
     }
 
     @Override
@@ -60,5 +92,17 @@ public class EnchereServiceImpl implements EnchereService {
                 throw new EnchereImpossible(msg);
         }
         return nouvelle;
+    }
+
+    @Override
+    public Enchere getMaDerniereOffre(String username, int noArticle) {
+        ArticleVendu article = articleVenduService.findById(noArticle);
+        return enchereRepository.getLastOffreByArticleAndUserName(article, username);
+    }
+
+    @Override
+    public Enchere getMeilleureOffreByArticle(int noArticle) {
+        ArticleVendu article = articleVenduService.findById(noArticle);
+        return enchereRepository.getMeilleureOffreByArticle(article);
     }
 }

@@ -18,8 +18,8 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/", "/accueil", "/inscription", "/connexion", "/css/*", "/images/*", "/nouvelle-vente").permitAll()
-                        .requestMatchers("/profil/**", "/enchere/**", "/article/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/", "/encheres", "/inscription", "/connexion", "/css/*", "/images/*").permitAll()
+                        .requestMatchers("/profil/**", "/enchere/**", "/vente/creer", "/vente/*").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/films/creer").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
@@ -28,11 +28,11 @@ public class WebSecurityConfig {
 //                        .loginProcessingUrl("/connexion")
                         .usernameParameter("pseudo")
                         .passwordParameter("motDePasse")
-                        .defaultSuccessUrl("/accueil", true)
+                        .defaultSuccessUrl("/encheres", true)
                         .permitAll())
                 .logout(logout -> logout
                         .logoutUrl("/logout")       // URL à appeler pour déconnecter
-                        .logoutSuccessUrl("/accueil")
+                        .logoutSuccessUrl("/encheres")
                         .permitAll());
 
         return http.build();

@@ -14,4 +14,8 @@ public interface EnchereService {
 
     Enchere placer(Enchere enchere) throws EnchereImpossible;
 
+    Enchere getMaDerniereOffre(String username, int id);
+
+    Enchere getMeilleureOffreByArticle(int id);
+
 }

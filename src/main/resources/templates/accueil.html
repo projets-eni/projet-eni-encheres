@@ -15,5 +15,16 @@
 <h2 th:if="${pseudo != null}">
     Bonjour <span th:text="${pseudo}"></span> !
 </h2>
+
+    <h1>Liste des enchères</h1>
+    <h2>Ceci est un test pour la fonctionnalité Afficher le détail d'une vente</h2>
+    <a th:href="@{/vente/4}">Afficher le détail pour la vente numéro 4 (martin.dupond)</a>
+
+<!--    <h2>Détail vente <span th:text="${vente.id}"></span></h2>-->
+<!--    <p><strong>Nom :</strong> <span th:text="${vente.nom}"></span></p>-->
+<!--    <p><strong>Description :</strong> <span th:text="${vente.description}"></span></p>-->
+<!--    <a th:href="@{/}">Retour liste</a>-->
+
+
 </body>
 </html>

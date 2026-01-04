@@ -3,6 +3,7 @@ package fr.eni.projeteniencheres.bll;
 import fr.eni.projeteniencheres.bll.interfaces.ArticleVenduService;
 import fr.eni.projeteniencheres.bll.interfaces.RetraitService;
 import fr.eni.projeteniencheres.bo.*;
+import fr.eni.projeteniencheres.dal.ArticleVenduRepositoryImpl;
 import fr.eni.projeteniencheres.dal.interfaces.ArticleVenduRepository;
 import fr.eni.projeteniencheres.dal.interfaces.EnchereRepository;
 import fr.eni.projeteniencheres.dal.interfaces.RetraitRepository;
@@ -35,13 +36,8 @@ public class ArticleVenduServiceImpl implements ArticleVenduService {
 
     @Override
     public List<ArticleVendu> afficherArticles() {
-        return List.of();
+        return articleVenduRepository.findAll();
 
-    }
-
-    @Override
-    public ArticleVendu afficherArticleParId(int id) {
-        return null;
     }
 
     @Override
@@ -50,8 +46,8 @@ public class ArticleVenduServiceImpl implements ArticleVenduService {
     }
 
     @Override
-    public ArticleVendu modifierArticle(ArticleVendu article) {
-        return null;
+    public ArticleVendu modifierArticle(int noArticle, ArticleVendu article) {
+        return articleVenduRepository.modifierArticle(noArticle, article);
     }
 
     @Override
@@ -127,5 +123,9 @@ public class ArticleVenduServiceImpl implements ArticleVenduService {
         logger.info("UpdaterEtat -- fin");
     }
 
+    @Override
+    public ArticleVendu findById(int id) {
+        return articleVenduRepository.findById(id);
+    }
 
 }

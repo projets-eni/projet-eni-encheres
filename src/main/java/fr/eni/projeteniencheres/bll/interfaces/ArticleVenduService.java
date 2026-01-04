@@ -9,9 +9,8 @@ import java.util.List;
 
 public interface ArticleVenduService {
     List<ArticleVendu> afficherArticles();
-    ArticleVendu afficherArticleParId(int id);
     ArticleVendu ajoutArticle(ArticleVendu article);
-    ArticleVendu modifierArticle(ArticleVendu article);
+    ArticleVendu modifierArticle(int noArticle, ArticleVendu article);
     void supprimerArticle(ArticleVendu article);
 
     void terminerArticle(ArticleVendu article);
@@ -47,5 +46,7 @@ public interface ArticleVenduService {
      * @param article
      */
     void updaterEtat(ArticleVendu article);
+
+    ArticleVendu findById(int id);
 
 }
