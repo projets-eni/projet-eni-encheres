@@ -9,6 +9,7 @@ import fr.eni.projeteniencheres.bo.Utilisateur;
 import fr.eni.projeteniencheres.dal.interfaces.EnchereRepository;
 import fr.eni.projeteniencheres.exception.EnchereImpossible;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
@@ -92,6 +93,16 @@ public class EnchereServiceImpl implements EnchereService {
                 throw new EnchereImpossible(msg);
         }
         return nouvelle;
+    }
+
+    @Transactional
+    @Override
+    public Enchere encherir(int noArticle, String pseudo, int nouveauMontantEnchere) {
+        // Vérification que l'acheteur a bien le solde requis
+        // Vérification que le montant de l'offre est > la dernière offre
+
+//        Enchere enchere = enchereRepository.encherir(noArticle, pseudo, nouveauMontantEnchere);
+        return null ;
     }
 
     @Override

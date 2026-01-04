@@ -169,33 +169,4 @@ public class VenteServiceImpl implements VenteService {
 
         return articleSaved;
     }
-
-    @GetMapping("/images/{filename:.+}")
-    public ResponseEntity<Resource> getImage(@PathVariable String filename) throws IOException {
-        // Charger l'image depuis ton dossier (ex: upload/)
-        Path path = Paths.get("upload/" + filename);
-        Resource resource = new UrlResource(path.toUri());
-
-        if (resource.exists() && resource.isReadable()) {
-            return ResponseEntity.ok()
-                    .contentType(MediaType.IMAGE_JPEG) // ou IMAGE_PNG
-                    .body(resource);
-        }
-        return ResponseEntity.notFound().build();
-    }
-
-// à supprimer ?!
-//    @Override
-//    public NouvelleVenteDto afficherVenteParNoArticle(int noArticle){
-//        ArticleVendu infoArticle = articleVenduService.findById(noArticle);
-//        Retrait infoRetrait = retraitService.afficherRetraitParId(noArticle);
-//        NouvelleVenteDto dto = new NouvelleVenteDto();
-//
-//        BeanUtils.copyProperties(infoArticle, dto);
-//        dto.setLibelle(infoArticle.getCategorie().getLibelle());
-//        BeanUtils.copyProperties(infoRetrait, dto);
-//
-//        return dto;
-//    }
-
 }

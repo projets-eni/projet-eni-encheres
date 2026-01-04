@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>ENI-Enchères</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/countdown.css}" rel="stylesheet">
 </head>
 <body>
     <!-- Vente terminée -->
@@ -22,6 +23,24 @@
     <!-- Vente en cours -->
     <th:block th:if="${article.etatVente == 'En cours'}">
         <h1>Détails vente</h1>
+        <div id="countdown" th:data-timestamp="${dateFinTimestamp}">
+            <div class="tag">
+                <span class="value">-</span>
+                <span class="label">jours</span>
+            </div>
+            <div class="tag">
+                <span class="value">-</span>
+                <span class="label">heures</span>
+            </div>
+            <div class="tag">
+                <span class="value">-</span>
+                <span class="label">minutes</span>
+            </div>
+            <div class="tag">
+                <span class="value">-</span>
+                <span class="label">secondes</span>
+            </div>
+        </div>
     </th:block>
 
     <th:block th:if="${article.etatVente == 'En cours'
@@ -84,8 +103,8 @@
             <!-- Un acheteur peut enchérir tant que la vente est encore en cours -->
             <form th:if="${article.etatVente == 'En cours'}" th:action="@{/vente/{id}/encherir(id=${article.noArticle})}" method="POST">
                 <p>Ma proposition :
-                    <input th:if="${monOffre == null}" type="number" name="nouveauMontantEnchere" th:value="0" required min="10" step="10">
-                    <input th:if="${monOffre != null}" type="number" name="nouveauMontantEnchere" th:value="${monOffre.montantEnchere}" required min="10" step="10">
+                    <input th:if="${meilleureOffre == null}" type="number" name="nouveauMontantEnchere" th:value="${article.prixInitial}" required th:min="${article.prixInitial}" step="10">
+                    <input th:if="${meilleureOffre != null}" type="number" name="nouveauMontantEnchere" th:value="${meilleureOffre.montantEnchere+10}" required th:min="${meilleureOffre.montantEnchere+10}" step="10">
                     points
                     <input type="submit" value="Enchérir">
                 </p>
@@ -114,4 +133,12 @@
         </div>
     </th:block>
 </body>
+<!-- Appel du script qui génère le timer pour décompter le temps restant avant la clôture de la vente -->
+<script th:src="@{/js/countdown.js}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const timestamp = parseInt(document.getElementById('countdown').dataset.timestamp);
+        initCountdown(timestamp);
+    });
+</script>
 </html>

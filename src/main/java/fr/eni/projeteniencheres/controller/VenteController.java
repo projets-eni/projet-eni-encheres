@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -88,6 +89,13 @@ public class VenteController {
         List<Enchere> encheres = enchereService.getByArticleVendu(article);
 //        Collections.reverse(encheres); // inverser l’ordre pour afficher de la + récente à la + ancienne
         modele.addAttribute("encheres", encheres);
+
+        // countdowndate
+        long timestamp = article.getDateFinEncheres()
+                .atZone(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli();
+        modele.addAttribute("dateFinTimestamp", timestamp);
 
         return "view-details-vente";
     }
