@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>ENI-Enchères</title>
@@ -19,7 +19,51 @@
     </h2>
 
     <h1>Liste des enchères</h1>
-    <p>Ceci est un test pour vérifier l'accès à la fonctionnalité Afficher le détail d'une vente</p>
+
+    <h5>Filtres</h5>
+    <form th:action="@{/encheres}" method="POST" th:object="${recherche}">
+        <div>
+            <label for="find">Mots-clés : </label>
+            <input id="find" type="text" th:field="*{keywords}" placeholder="Le nom de l'article contient...">
+        </div>
+        <div>
+            <label for="categorie">Catégorie :</label>
+            <select id="categorie" th:field="*{noCategorie}">
+                <option value="0">Toutes</option>
+                <option th:each="cat : ${@categoryService.afficherCategories()}"
+                        th:value="${cat.noCategorie}"
+                        th:text="${cat.libelle}"></option>
+            </select>
+        </div>
+
+        <div sec:authorize="isAuthenticated()">
+            <div>
+                <input type="radio" id="achat" value="1" th:field="*{achatOuVente}">
+                <label for="achat">Achats</label><br>
+                <input type="checkbox" id="encheresOuvertes" th:field="*{encheresOuvertes}">
+                <label for="encheresOuvertes">enchères ouvertes</label>
+                <input type="checkbox" id="mesEncheres" th:field="*{mesEncheres}">
+                <label for="mesEncheres">mes enchères</label>
+                <input type="checkbox" id="mesEncheresRemportees" th:field="*{mesEncheresRemportees}">
+                <label for="mesEncheresRemportees">mes enchères remportées</label>
+            </div>
+            <div>
+                <input type="radio" id="vente" value="2" th:field="*{achatOuVente}">
+                <label for="vente">Mes ventes</label><br>
+                <input type="checkbox" id="mesVentesEnCours" th:field="*{mesVentesEnCours}">
+                <label for="mesVentesEnCours">mes ventes en cours</label>
+                <input type="checkbox" id="mesVentesNonDebutees" th:field="*{mesVentesNonDebutees}">
+                <label for="mesVentesNonDebutees">mes ventes non débutées</label>
+                <input type="checkbox" id="mesVentesTerminees" th:field="*{mesVentesTerminees}">
+                <label for="mesVentesTerminees">mes ventes terminées</label>
+            </div>
+        </div>
+
+        <div>
+            <input type="submit" value="Rechercher">
+        </div>
+
+    </form>
 
     <!--    <h2>Détail vente <span th:text="${vente.id}"></span></h2>-->
     <!--    <p><strong>Nom :</strong> <span th:text="${vente.nom}"></span></p>-->
@@ -56,7 +100,7 @@
                                 | Début de l'enchère : <span th:text="${#temporals.format(article.dateDebutEncheres, 'dd/MM/yyyy')}"></span>
                                 | Fin de l'enchère : <span th:text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yyyy')}"></span>
                                 | Etat : <span th:text="${article.etatVente}"></span>
-                                | Vendeur : <span th:text="${article.vendeur.pseudo}"></span>
+                                | Vendeur : <span><a th:href="@{/profil/{pseudo}(pseudo=${article.vendeur.pseudo})}" th:text="${article.vendeur.pseudo}"></a></span>
                             </p>
                         </div>
                     </a>
@@ -65,4 +109,52 @@
         </div>
     </div>
 </body>
+<script sec:authorize="isAuthenticated()">
+    document.addEventListener('DOMContentLoaded', function() {
+        function toggleRecherche() {
+            const achatChecked = document.getElementById('achat').checked;
+            const venteChecked = document.getElementById('vente').checked;
+            const ventesCheckboxes = ['mesVentesEnCours', 'mesVentesNonDebutees', 'mesVentesTerminees'];
+            const achatsCheckboxes = ['encheresOuvertes', 'mesEncheres', 'mesEncheresRemportees'];
+
+            // BIDIRECTIONNEL : désactive si achat, active si vente
+            ventesCheckboxes.forEach(id => {
+                const cb = document.getElementById(id);
+                if (cb) {
+                    cb.disabled = achatChecked;  // désactive si ACHATS est coché, et active si ACHATS n'est pas coché
+                    cb.checked = venteChecked;  // coche si VENTES est sélectionné
+                }
+            });
+
+            // BIDIRECTIONNEL : désactive si vente, active si achat
+            achatsCheckboxes.forEach(id => {
+                const cb = document.getElementById(id);
+                if (cb) {
+                    cb.disabled = venteChecked;  // désactive si VENTES est coché, et active si VENTES n'est pas coché
+                    cb.checked = achatChecked;  // coche si ACHATS est sélectionné
+                }
+            });
+        }
+
+        // Écouteurs SUR LES DEUX radios
+        document.getElementById('achat').addEventListener('change', toggleRecherche);
+        document.getElementById('vente').addEventListener('change', toggleRecherche);
+
+    });
+</script>
+<script sec:authorize!="isAuthenticated()">
+    document.addEventListener('DOMContentLoaded', function() {
+        function toggleRecherche() {
+            const checkboxes = ['mesVentesEnCours', 'mesVentesNonDebutees', 'mesVentesTerminees', 'encheresOuvertes', 'mesEncheres', 'mesEncheresRemportees'];
+
+            // BIDIRECTIONNEL : désactive si achat, active si vente
+            checkboxes.forEach(id => {
+                const cb = document.getElementById(id);
+                if (cb) {
+                    cb.checked = false;  // coche si VENTES est sélectionné
+                }
+            });
+        }
+    });
+</script>
 </html>

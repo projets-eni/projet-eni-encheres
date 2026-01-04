@@ -39,4 +39,4 @@ out/
 ### Added by VT
 .log
 .log.*
-/logs/*
+!logs/*

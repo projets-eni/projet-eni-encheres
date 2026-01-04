@@ -47,7 +47,7 @@
                 <th:block th:if="${meilleureOffre != null}">
                     <span th:text="${meilleureOffre.montantEnchere}"></span>
                     points par
-                    <a th:href="@{/profil}" th:text="${meilleureOffre.acheteur.pseudo}"></a>
+                    <a th:href="@{/profil/{pseudo}(pseudo=${meilleureOffre.acheteur.pseudo})}" th:text="${meilleureOffre.acheteur.pseudo}"></a>
 
                     <div th:if="${#strings.equals(article.vendeur.pseudo, #authentication.name) and encheres.size() > 0}">
                         <p>Enchères reçues : </p>
@@ -78,7 +78,7 @@
                 </span>
             </p>
             <p>Vendeur :
-                <a th:href="@{/profil}" th:text="${article.vendeur.pseudo}"></a>
+                <a th:href="@{/profil/{pseudo}(pseudo=${article.vendeur.pseudo})}" th:text="${article.vendeur.pseudo}"></a>
             </p>
 
             <!-- Un acheteur peut enchérir tant que la vente est encore en cours -->
