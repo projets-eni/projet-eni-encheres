@@ -86,8 +86,15 @@
             </p>
 
             <p>Mise à prix : <span th:text="${article.prixInitial}"></span> points</p>
-            <p>Début de l'enchère : <span th:text="${#temporals.format(article.dateDebutEncheres, 'dd/MM/yyyy')}"></span></p>
-            <p>Fin de l'enchère : <span th:text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yyyy')}"></span></p>
+            <p>Début de l'enchère :
+                le <span th:text="${#temporals.format(article.dateDebutEncheres, 'dd/MM/yyyy')}"></span>
+                à <span th:text="${#temporals.format(article.dateDebutEncheres, 'hh:mm')}"></span>
+            </p>
+            <p>Fin de l'enchère :
+                le <span th:text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yyyy')}"></span>
+                à <span th:text="${#temporals.format(article.dateFinEncheres, 'hh:mm')}"></span>
+
+            </p>
             <p>
                 <span>Retrait: </span>
                 <span th:text="${article.retrait?.rue} ?: ''">
