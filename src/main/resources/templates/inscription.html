@@ -1,16 +1,29 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
     <title>Inscription</title>
+    <link rel="stylesheet" th:href="@{/css/form.css}">
 </head>
-<body>
+
+<section layout:fragment="content">
+        <h1>Mon profil</h1>
+    <div id="inscription-container">
 <div th:replace="fragments/formulaire-utilisateur :: form(
     action=@{/inscription},
     cancelUrl=@{/accueil},
     utilisateurDTO=${utilisateurFormDTO})">
 </div>
+        <div class="btn-group">
+            <button class="btn btn-inscription" id="submit-button" type="submit" disabled aria-disabled="false">Créer</button>
+            <div class=" lien-btn btn-inscription">
+                <a th:href="@{/accueil}" class="btn">Annuler</a>
+            </div>
+        </div>
+    </div>
+    <script th:src="@{/js/registration.js}" defer></script>
+</section>
 
-
-</body>
 </html>

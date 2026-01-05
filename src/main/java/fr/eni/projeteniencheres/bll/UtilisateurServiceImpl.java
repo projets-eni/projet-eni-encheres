@@ -34,9 +34,9 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     }
 
     /**
-     * Méthode pour trouver un utilisateurAffichageDTO par son id
-     * utilisation de la méthode findUtilisateurById puis mapping vers le DTO
-     * @param no_utilisateur
+     * Méthode pour trouver un utilisateurAffichageDTO par son pseudo
+     * utilisation de la méthode findUtilisateurByPseudo puis mapping vers le DTO
+     * @param pseudo
      * @return utilisateurAffichagedto
      */
     @Override
@@ -68,11 +68,14 @@ public class UtilisateurServiceImpl implements UtilisateurService {
         utilisateur.setNom(dto.getNom());
         utilisateur.setPrenom(dto.getPrenom());
         utilisateur.setEmail(dto.getEmail());
-        utilisateur.setTelephone(dto.getTelephone());
+        //uniformiser le numéro de téléphone en BDD
+        String telephoneNormalise = dto.getTelephone().replaceAll("[ .-]", "");
+        utilisateur.setTelephone(telephoneNormalise);
         utilisateur.setRue(dto.getRue());
         utilisateur.setCodePostal(dto.getCodePostal());
         utilisateur.setVille(dto.getVille());
         utilisateur.setMotDePasse(dto.getMotDePasse());
+        //TODO : comparaison confirmation de mot de passe et mot de passe
 
         //règles métier
         utilisateur.setCredit(100L);
