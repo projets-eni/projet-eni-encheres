@@ -6,7 +6,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 -- pour terminer les ventes et refaire les soldes de vendeurs et acquéreurs
-ALTER PROCEDURE [dbo].[updaterEtatVentes]
+CREATE PROCEDURE updaterEtatVentes
 @noArticle INT = NULL -- Paramètre nullable
 AS
 BEGIN
