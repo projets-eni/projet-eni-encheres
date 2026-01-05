@@ -81,18 +81,17 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
 
 
     /**
-     * Pour modifier le statut d'une vente avec la procédure stockée terminerVentes
+     * Pour modifier le statut d'une vente avec la procédure stockée updaterEtatVentes
      * si articleVendu est null, prend toutes les ventes avec etat_vente différent de "Terminée"
-     * @param articleVendu
      * @return Nombre de vente impactée
      */
     @Override
-    public Integer terminerVente(ArticleVendu articleVendu) {
+    public Integer updaterEtatVentes() {
         Integer res = null;
         MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("noArticle", articleVendu.getNoArticle());
+                .addValue("noArticle", null);
         try {
-            res = jdbcTemplate.update("EXEC terminerVentes :noArticle", params);
+            res = jdbcTemplate.update("EXEC updaterEtatVentes :noArticle", params);
         } catch (RuntimeException ex) {
             throw new EtatVenteErreur(ex.getMessage());
         }

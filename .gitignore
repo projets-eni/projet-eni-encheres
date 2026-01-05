@@ -40,4 +40,4 @@ out/
 .log
 .log.*
 logs/*
-/logs/
+/logs/*

@@ -26,7 +26,8 @@ public interface ArticleVenduRepository {
 //     */
     public List<ArticleVendu> findByAcquereur(EtatAchat etat, Utilisateur utilisateur);
 
-    Integer terminerVente(ArticleVendu articleVendu);
+    //Integer updaterEtatVentes(ArticleVendu articleVendu);
+    Integer updaterEtatVentes();
 
     public ArticleVendu findById(int id);
     public List<ArticleVendu> findById(List<Integer> ids);

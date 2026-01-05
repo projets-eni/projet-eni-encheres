@@ -65,12 +65,6 @@ public class ArticleVenduServiceImpl implements ArticleVenduService {
     public void supprimerArticle(ArticleVendu article) {
     }
 
-    @Override
-    @Scheduled(fixedRate = 30000)
-    public void terminerArticle(ArticleVendu article) {
-
-    }
-
 
 //    @Override
 //    public List<ArticleVendu> findByAcquereur(Utilisateur utilisateur) {
@@ -121,13 +115,13 @@ public class ArticleVenduServiceImpl implements ArticleVenduService {
         return articles;
     }
 
-    @Scheduled(fixedRate = 950)
+    @Scheduled(fixedRate = 10000)
     @Override
-    public void updaterEtat(ArticleVendu article) {
+    public void updaterEtat() {
         logger.info("UpdaterEtat -- début");
         try {
-            Integer affectedVentes = articleVenduRepository.terminerVente(article);
-            logger.info("UpdaterEtat -- ventes modifiées :  " + affectedVentes);
+            Integer affectedVentes = articleVenduRepository.updaterEtatVentes();
+            logger.info("UpdaterEtat -- ventes impactées :  " + affectedVentes);
         } catch (RuntimeException e) {
             logger.error("UpdaterEtat -- " + e.getMessage(), e);
         }
