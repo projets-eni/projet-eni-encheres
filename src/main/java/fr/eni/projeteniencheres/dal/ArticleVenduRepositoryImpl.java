@@ -39,7 +39,7 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
 
     @Override
     public List<ArticleVendu> findAll() {
-        return jdbcTemplate.query(this.rqtSelect + " ORDER BY date_fin_encheres ", Map.of(), venteRowMapper);
+        return jdbcTemplate.query(this.rqtSelect + " ORDER BY date_fin_encheres ", Map.of(), venteRowMapperLazyLoading);
     }
 
     @Override
@@ -131,7 +131,7 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
     public List<ArticleVendu> findById(List<Integer> ids) {
         return jdbcTemplate.query(rqtSelect + " WHERE v.no_article IN ("
                 + ids.stream().map(String::valueOf).collect(Collectors.joining(", "))
-                + ")", new MapSqlParameterSource(), venteRowMapper);
+                + ")", new MapSqlParameterSource(), venteRowMapperEagerLoading);
     }
 
     @Override
