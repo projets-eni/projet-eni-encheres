@@ -1,0 +1,25 @@
+
+<header th:fragment="header"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+    <nav>
+        <div class="navbar">
+            <div class="navbar-main-title"><a th:href="@{/}">ENI-Enchères</a></div>
+            <div class="navbar-items">
+
+                <ul>
+                    <li><a th:href="@{/connexion}">S'inscrire - Se connecter</a></li> <!--TODO : condition d'affichage-->
+                    <li><a th:href="@{/encheres}">Enchères</a></li>
+                    <li><a th:href="@{/vente/creer}">Vendre un article</a></li>
+                    <li><a th:href="@{/profil}">Mon profil</a></li>
+                    <li>
+                        <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
+                            <input type="submit" value="Déconnexion"/>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>

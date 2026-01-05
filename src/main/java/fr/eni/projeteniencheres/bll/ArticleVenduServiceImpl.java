@@ -72,21 +72,21 @@ public class ArticleVenduServiceImpl implements ArticleVenduService {
     }
 
 
-    @Override
-    public List<ArticleVendu> findByAcquereur(Utilisateur utilisateur) {
-        List<Integer> acquisitions = ((List<Integer>) enchereRepository.findByAcquereur(utilisateur)
-                .stream().map(e -> { return e.getArticleVendu().getNoArticle(); }).distinct());
-        List<ArticleVendu> articles = articleVenduRepository.findById(acquisitions);
-        return articles;
-    }
+//    @Override
+//    public List<ArticleVendu> findByAcquereur(Utilisateur utilisateur) {
+//        List<Integer> acquisitions = ((List<Integer>) enchereRepository.findByAcquereur(utilisateur)
+//                .stream().map(e -> { return e.getArticleVendu().getNoArticle(); }).distinct());
+//        List<ArticleVendu> articles = articleVenduRepository.findById(acquisitions);
+//        return articles;
+//    }
 
-    @Override
-    public List<ArticleVendu> findByEncherisseur(Utilisateur utilisateur) {
-        List<Integer> encheres = ((List<Integer>) enchereRepository.findByEncherisseur(utilisateur)
-                .stream().map(e -> { return e.getArticleVendu().getNoArticle(); }).distinct());
-        List<ArticleVendu> articles = articleVenduRepository.findById(encheres);
-        return articles;
-    }
+//    @Override
+//    public List<ArticleVendu> findByEncherisseur(Utilisateur utilisateur) {
+//        List<Integer> encheres = ((List<Integer>) enchereRepository.findByEncherisseur(utilisateur)
+//                .stream().map(e -> { return e.getArticleVendu().getNoArticle(); }).distinct());
+//        List<ArticleVendu> articles = articleVenduRepository.findById(encheres);
+//        return articles;
+//    }
 
     @Override
     public List<ArticleVendu> filter(List<ArticleVendu> articles, EtatVente etat, Categorie cat, String keywords) {

@@ -1,12 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
     <title>Profil</title>
+    <link rel="stylesheet" th:href="@{/css/form.css}">
 </head>
-<body>
-<table>
-    <caption>Détails de l'utilisateur</caption>
+
+<section layout:fragment="content">
+<table class="tableau affichageProfil">
     <tbody>
     <tr>
         <th>Pseudo</th>
@@ -43,7 +46,10 @@
     </tbody>
 </table>
 
-<a href="/" class="btn">Modifier</a>
+    <div class=" lien-btn btn-modifierInsciption">
+        <a href="/profil/modifier" class="btn">Modifier</a>
+    </div>
 
-</body>
+</section>
+
 </html>
