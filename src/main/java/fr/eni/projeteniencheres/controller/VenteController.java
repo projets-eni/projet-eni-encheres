@@ -3,7 +3,6 @@ package fr.eni.projeteniencheres.controller;
 import fr.eni.projeteniencheres.bll.interfaces.*;
 import fr.eni.projeteniencheres.bo.ArticleVendu;
 import fr.eni.projeteniencheres.bo.Enchere;
-import fr.eni.projeteniencheres.bo.Retrait;
 import fr.eni.projeteniencheres.dto.NouvelleVenteDto;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -12,16 +11,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.time.ZoneId;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
+
+import java.time.ZoneId;
 
 @Controller
 public class VenteController {
@@ -33,8 +28,8 @@ public class VenteController {
 
     public VenteController(VenteService venteService, ArticleVenduService articleVenduService, EnchereService enchereService) {
         this.venteService = venteService;
-        this.articleVenduService = articleVenduService;
         this.enchereService = enchereService;
+        this.articleVenduService = articleVenduService;
     }
 
     @GetMapping({"/vente/creer"})

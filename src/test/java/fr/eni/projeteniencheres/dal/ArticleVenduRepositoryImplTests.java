@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Random;
 
 @SpringBootTest
-public class ArticleVenduRepositoryImplTest {
+public class ArticleVenduRepositoryImplTests {
 
     private final Faker faker = new Faker();
 
@@ -47,6 +47,11 @@ public class ArticleVenduRepositoryImplTest {
     @BeforeAll
     static void beforeAll(@Autowired JdbcTemplate jdbcTemplate,  @Autowired UtilisateurRepository utilisateurRepository) {
 
+        // réinit encheres
+        jdbcTemplate.update("DELETE FROM Encheres");
+        // réinit ventes
+        //jdbcTemplate.update("DELETE FROM ArticlesVendus");
+
         jdbcTemplate.update("DELETE FROM Utilisateurs");
         for(int i = 0; i < 10; i++) {
             Utilisateur user = populateFakeDatas.utilisateur();
@@ -67,7 +72,7 @@ public class ArticleVenduRepositoryImplTest {
     @Order(1)
     void testArticleVenduSave() {
 
-        Long id = random.nextLong(10000);
+        int id = random.nextInt(10000);
 
         articleVendu.setNoArticle(id);
         articleVendu.setVendeur(utilisateurs.get(random.nextInt(utilisateurs.size())));
@@ -96,6 +101,10 @@ public class ArticleVenduRepositoryImplTest {
     @Test
     @Order(2)
     void testArticleVenduFindById() {
+        int id = articleVendu.getNoArticle();
+        ArticleVendu foundArticle = articleVenduRepository.findById(id);
+        Assertions.assertNotNull(foundArticle);
+        Assertions.assertEquals(id, foundArticle.getNoArticle());
     }
 
 }

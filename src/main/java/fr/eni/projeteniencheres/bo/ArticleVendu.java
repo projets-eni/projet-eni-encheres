@@ -9,7 +9,7 @@ import java.util.Objects;
 public class ArticleVendu implements Serializable {
 
     private static final long serialVersionUID = 1L ;
-    private long noArticle;
+    private int noArticle;
     private String nomArticle;
     private String description;
     private LocalDateTime dateDebutEncheres;
@@ -41,7 +41,7 @@ public class ArticleVendu implements Serializable {
         this.idImage = idImage;
     }
 
-    public ArticleVendu(long noArticle, String nomArticle, String description, LocalDateTime dateDebutEncheres, LocalDateTime dateFinEncheres, int prixInitial, int prixVente, String etatVente, Categorie categorie, Utilisateur vendeur, List<Enchere> encheres, Retrait retrait, String idImage) {
+    public ArticleVendu(int noArticle, String nomArticle, String description, LocalDateTime dateDebutEncheres, LocalDateTime dateFinEncheres, int prixInitial, int prixVente, String etatVente, Categorie categorie, Utilisateur vendeur, List<Enchere> encheres, Retrait retrait, String idImage) {
         this.noArticle = noArticle;
         this.nomArticle = nomArticle;
         this.description = description;
@@ -57,7 +57,7 @@ public class ArticleVendu implements Serializable {
         this.idImage = idImage;
     }
 
-    public long getNoArticle() {
+    public int getNoArticle() {
         return noArticle;
     }
 
@@ -69,7 +69,7 @@ public class ArticleVendu implements Serializable {
         this.idImage = idImage;
     }
 
-    public void setNoArticle(long noArticle) {
+    public void setNoArticle(int noArticle) {
         this.noArticle = noArticle;
     }
 

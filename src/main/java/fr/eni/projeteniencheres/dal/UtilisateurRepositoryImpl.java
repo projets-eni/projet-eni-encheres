@@ -136,12 +136,13 @@ public class UtilisateurRepositoryImpl implements UtilisateurRepository {
 
         } else {
 
-            String sql = "INSERT INTO Utilisateurs (pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur)" +
-                    "VALUES (:pseudo, :nom, :prenom, :email, :telephone, :rue, :code_postal, :ville, :mot_de_passe, :credit, :administrateur)";
+            String sql = "UPDATE Utilisateurs SET pseudo=:pseudo, nom=:nom, prenom=:prenom, email=:email, " +
+                    "telephone=:telephone, rue=:rue, code_postal=:code_postal, ville=:ville, mot_de_passe=:mot_de_passe, " +
+                    "credit=:credit, administrateur=:administrateur " +
+                    "WHERE no_utilisateur = :noUtilisateur";
 
-            GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-
-            //parameterSource.addValue("pseudo", utilisateur.getPseudo());
+            parameterSource.addValue("noUtilisateur", utilisateur.getNoUtilisateur());
+            parameterSource.addValue("pseudo", utilisateur.getPseudo());
             parameterSource.addValue("nom", utilisateur.getNom());
             parameterSource.addValue("prenom", utilisateur.getPrenom());
             parameterSource.addValue("email", utilisateur.getEmail());
@@ -153,7 +154,7 @@ public class UtilisateurRepositoryImpl implements UtilisateurRepository {
             parameterSource.addValue("credit", utilisateur.getCredit());
             parameterSource.addValue("administrateur", utilisateur.isAdministrateur() ? 1 : 0);
 
-            namedParameterJdbcTemplate.update(sql, parameterSource, keyHolder, new String[]{"no_utilisateur"});
+            namedParameterJdbcTemplate.update(sql, parameterSource);
 
         }
     }
@@ -165,35 +166,6 @@ public class UtilisateurRepositoryImpl implements UtilisateurRepository {
 
     }
 
-    @Override
-    public Utilisateur updateUtilisateur(Utilisateur utilisateur) {
-        String sql = "UPDATE Utilisateurs" +
-                "SET" +
-                "pseudo = :pseudo,\n" +
-                "    nom = :nom,\n" +
-                "    prenom = :prenom,\n" +
-                "    email = :email,\n" +
-                "    telephone = :telephone,\n" +
-                "    rue = :rue,\n" +
-                "    code_postal = :codePostal,\n" +
-                "    ville = :ville,\n" +
-                "    mot_de_passe = :motDePasse" +
-                "WHERE no_utilisateur = :noUtilisateur";
-
-        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(utilisateur);
-//        MapSqlParameterSource parameterSource = new MapSqlParameterSource()
-//                .addValue("pseudo", utilisateur.getPseudo())
-//                .addValue("nom", utilisateur.getNom())
-//                .addValue("prenom", utilisateur.getPrenom())
-//                .addValue("email", utilisateur.getEmail())
-//                .addValue("telephone", utilisateur.getTelephone())
-//                .addValue("rue", utilisateur.getRue())
-//                .addValue("code_postal", utilisateur.getCodePostal())
-//                .addValue("ville", utilisateur.getVille())
-//                .addValue("mot_de_passe", utilisateur.getMotDePasse());
-        namedParameterJdbcTemplate.update(sql, parameterSource);
-        return findUtilisateurById(utilisateur.getNoUtilisateur());
-    }
 
     class UtilisateurRowMapper implements RowMapper<Utilisateur> {
 
