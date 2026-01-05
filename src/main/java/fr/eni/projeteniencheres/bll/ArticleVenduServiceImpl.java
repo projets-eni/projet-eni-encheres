@@ -219,8 +219,9 @@ public class ArticleVenduServiceImpl implements ArticleVenduService {
 
         // Filtre sur les mots clés
         if (!dto.getKeywords().isEmpty()){
-            articles = articles.stream().filter(article ->
-                    article.getNomArticle().toLowerCase().contains(dto.getKeywords())).toList();
+            articles = articles.stream().filter(article -> {
+                    return article.getNomArticle().toLowerCase().contains(dto.getKeywords()) || article.getNomArticle().toLowerCase().contains(dto.getKeywords());
+            }).toList();
         }
 
         return articles ;
