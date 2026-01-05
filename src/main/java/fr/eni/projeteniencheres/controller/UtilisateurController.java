@@ -11,10 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -50,7 +47,7 @@ public String inscription(@Valid @ModelAttribute("utilisateurFormDTO") Utilisate
 
     utilisateurService.createUtilisateur(utilisateurFormDTO);
 
-    return "redirect:/accueil";
+    return "redirect:/encheres";
 }
 
     @GetMapping("/connexion")
@@ -81,6 +78,14 @@ public String inscription(@Valid @ModelAttribute("utilisateurFormDTO") Utilisate
 
         model.addAttribute("utilisateur", utilisateurAffichageDTO);
 
+        return "profilUtilisateur";
+    }
+
+    // Pour permettre le lien vers la page d'affichage du profil du vendeur sur la page détails de la vente
+    @GetMapping("/profil/{pseudo}")
+    public String profil(@PathVariable("pseudo") String pseudo, Model model) {
+        Utilisateur utilisateur = utilisateurService.findUtilisateurByPseudo(pseudo);
+        model.addAttribute("utilisateur", utilisateur);
         return "profilUtilisateur";
     }
 

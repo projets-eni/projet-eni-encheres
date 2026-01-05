@@ -3,10 +3,12 @@ package fr.eni.projeteniencheres.bll;
 import fr.eni.projeteniencheres.bll.interfaces.ArticleVenduService;
 import fr.eni.projeteniencheres.bll.interfaces.RetraitService;
 import fr.eni.projeteniencheres.bo.*;
+import fr.eni.projeteniencheres.dal.ArticleVenduRepositoryImpl;
 import fr.eni.projeteniencheres.dal.interfaces.ArticleVenduRepository;
 import fr.eni.projeteniencheres.dal.interfaces.EnchereRepository;
 import fr.eni.projeteniencheres.dal.interfaces.RetraitRepository;
 import fr.eni.projeteniencheres.dto.NouvelleVenteDto;
+import fr.eni.projeteniencheres.dto.RechercheDto;
 import fr.eni.projeteniencheres.exception.EtatVenteErreur;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class ArticleVenduServiceImpl implements ArticleVenduService {
@@ -55,7 +58,7 @@ public class ArticleVenduServiceImpl implements ArticleVenduService {
 
     @Override
     public ArticleVendu modifierArticle(ArticleVendu article) {
-        return null;
+        return articleVenduRepository.modifierArticle(article.getNoArticle(), article);
     }
 
     @Override
@@ -71,7 +74,7 @@ public class ArticleVenduServiceImpl implements ArticleVenduService {
 
     @Override
     public List<ArticleVendu> findByAcquereur(Utilisateur utilisateur) {
-        List<Long> acquisitions = ((List<Long>) enchereRepository.findByAcquereur(utilisateur)
+        List<Integer> acquisitions = ((List<Integer>) enchereRepository.findByAcquereur(utilisateur)
                 .stream().map(e -> { return e.getArticleVendu().getNoArticle(); }).distinct());
         List<ArticleVendu> articles = articleVenduRepository.findById(acquisitions);
         return articles;
@@ -79,7 +82,7 @@ public class ArticleVenduServiceImpl implements ArticleVenduService {
 
     @Override
     public List<ArticleVendu> findByEncherisseur(Utilisateur utilisateur) {
-        List<Long> encheres = ((List<Long>) enchereRepository.findByEncherisseur(utilisateur)
+        List<Integer> encheres = ((List<Integer>) enchereRepository.findByEncherisseur(utilisateur)
                 .stream().map(e -> { return e.getArticleVendu().getNoArticle(); }).distinct());
         List<ArticleVendu> articles = articleVenduRepository.findById(encheres);
         return articles;
@@ -131,5 +134,26 @@ public class ArticleVenduServiceImpl implements ArticleVenduService {
         logger.info("UpdaterEtat -- fin");
     }
 
+    @Override
+    public ArticleVendu findById(int id) {
+        return articleVenduRepository.findById(id);
+    }
+
+    @Override
+    public RechercheDto initRecherche() {
+        RechercheDto recherche = new RechercheDto("", 0, 1, true
+                , true, true, false, false, false) ;
+        return recherche;
+    }
+
+    @Override
+    public List<ArticleVendu> rechercher(RechercheDto dto, String pseudo) {
+
+        List<ArticleVendu> articles = articleVenduRepository.findAll();
+
+        // à compléter avec les filtres
+
+        return articles ;
+    }
 
 }

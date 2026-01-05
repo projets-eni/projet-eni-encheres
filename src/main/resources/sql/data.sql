@@ -47,3 +47,42 @@ VALUES
     (6, 3, 2, 150),   -- Bob enchère 150 sur le t-shirt
     (7, 3, 3, 200);   -- Charlie enchère 200 sur le t-shirt
 SET IDENTITY_INSERT Encheres OFF;
+
+
+DELETE FROM ArticlesVendus;
+DELETE FROM Categories;
+DELETE FROM Encheres;
+DELETE FROM Retraits;
+DELETE FROM Utilisateurs;
+
+/* ⚠️ RÉINITIALISER IDENTITY à 1 pour CHAQUE table avec IDENTITY */
+DBCC CHECKIDENT('Categories', RESEED, 0);
+DBCC CHECKIDENT('Utilisateurs', RESEED, 0);
+DBCC CHECKIDENT('ArticlesVendus', RESEED, 0);
+DBCC CHECKIDENT('Encheres', RESEED, 0);
+
+/* Table Categorie */
+/* active temporairement l'insertion manuelle de valeurs dans une colonne IDENTITY (auto-incrémentée) */
+SET IDENTITY_INSERT Categories ON;
+INSERT INTO Categories(no_categorie, libelle)
+VALUES (1, 'Informatique'),
+       (2, 'Ameublement'),
+       (3, 'Vêtement'),
+       (4, 'Sport&Loisirs');
+SET IDENTITY_INSERT Categories OFF;
+
+/* Table Utilisateurs : azerty1234 */
+
+SET IDENTITY_INSERT Utilisateurs ON;
+INSERT INTO Utilisateurs(no_utilisateur, pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur)
+VALUES (1, 'mdupond', 'Dupond', 'Martin', 'martin.dupond@yahoo.fr', '0607080910',
+        '2 rue de la Boétie', '33000', 'Bordeaux', '{bcrypt}$2a$10$6D4p4PrBW5h8h2RsmU1ZGeamWNC1REl3nHYbdLjiiLB40GNvFDu6S', 100, 1);
+SET IDENTITY_INSERT Utilisateurs OFF;
+
+    SET IDENTITY_INSERT ArticlesVendus ON;
+INSERT INTO ArticlesVendus (no_article, nom_article, description, etat_vente, date_fin_encheres, prix_initial, no_utilisateur, no_categorie)
+VALUES
+    (1, 'Ordinateur Portable', 'Un ordinateur portable haut de gamme', 'Non commencée', '2026-12-15T10:00:00', 1000, 1, 1),
+    (2, 'Canapé', 'Canapé 3 places en cuir', 'Non commencée', '2026-12-15T10:00:00', 500, 2, 2),
+    (3, 'T-shirt Sport', 'T-shirt de sport en coton', 'Non commencée', '2026-12-10T10:00:00', 100, 3, 3);
+SET IDENTITY_INSERT ArticlesVendus OFF;

@@ -16,16 +16,16 @@ public class HomeController {
         this.utilisateurService = utilisateurService;
     }
 
-    @GetMapping({"/", "/accueil"})
-    public String accueil(Model model, Principal principal) {
-
-        if (principal != null) {
-            String pseudo = principal.getName();
-            model.addAttribute("pseudo", pseudo);
-            System.out.println("principal : " + principal.getName());
-        } else {
-            System.out.println("Aucun utilisateur connecté");
-        }
-        return "accueil";
-    }
+//    @GetMapping({"/", "/encheres"})
+//    public String accueil(Model model, Principal principal) {
+//
+//        if (principal != null) {
+//            String pseudo = principal.getName();
+//            model.addAttribute("pseudo", pseudo);
+//            System.out.println("principal : " + principal.getName());
+//        } else {
+//            System.out.println("Aucun utilisateur connecté");
+//        }
+//        return "view-liste-encheres";
+//    }
 }

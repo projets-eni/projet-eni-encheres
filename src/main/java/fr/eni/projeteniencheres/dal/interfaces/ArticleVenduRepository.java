@@ -28,12 +28,12 @@ public interface ArticleVenduRepository {
 
     Integer terminerVente(ArticleVendu articleVendu);
 
-    public ArticleVendu findById(long id);
-    public List<ArticleVendu> findById(List<Long> ids);
-
+    public ArticleVendu findById(int id);
+    public List<ArticleVendu> findById(List<Integer> ids);
     public ArticleVendu save(ArticleVendu vente);
 
     ArticleVendu ajoutArticle(ArticleVendu article);
+    ArticleVendu modifierArticle(int noArticle, ArticleVendu article);
 
     public void delete(ArticleVendu vente);
 

@@ -50,4 +50,10 @@ public interface ArticleVenduService {
 
     List<ArticleVendu> findEnCours();
 
+    ArticleVendu findById(int id);
+
+    RechercheDto initRecherche();
+
+    List<ArticleVendu> rechercher(RechercheDto dto, String pseudo);
+
 }

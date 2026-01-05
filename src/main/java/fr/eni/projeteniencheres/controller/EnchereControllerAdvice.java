@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
  * pour catcher les exception issues de l'appli et renvoyer vers une page d'erreur
  */
 
-@ControllerAdvice
+//@ControllerAdvice
 public class EnchereControllerAdvice  {
 
     Logger logger = LoggerFactory.getLogger(EnchereControllerAdvice.class);

@@ -1,14 +1,75 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>ENI-Enchères</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+
+    <p><a th:href="@{/connexion}">S'inscrire - Se connecter</a></p>
+    <p><a th:href="@{/profil}">Profil</a></p>
+
+    <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
+        <input type="submit" value="Se déconnecter"/>
+    </form>
+
+    <h2 th:if="${pseudo != null}">
+        Bonjour <span th:text="${pseudo}"></span> !
+    </h2>
+
     <h1>Liste des enchères</h1>
 <th:block th:replace="fragments/vente :: recherche (${recherche})"></th:block>
-<div th:each="article : ${ventesEnCours}">
+<div th:each="article : ${ventesEnCours}" class="col-12 col-sm-6 col-md-4 col-lg-3">
     <th:block th:replace="fragments/vente :: vente-card (${article})"></th:block>
 </div>
 </body>
+<script sec:authorize="isAuthenticated()">
+    document.addEventListener('DOMContentLoaded', function() {
+        function toggleRecherche() {
+            const achatChecked = document.getElementById('achat').checked;
+            const venteChecked = document.getElementById('vente').checked;
+            const ventesCheckboxes = ['mesVentesEnCours', 'mesVentesNonDebutees', 'mesVentesTerminees'];
+            const achatsCheckboxes = ['encheresOuvertes', 'mesEncheres', 'mesEncheresRemportees'];
+
+            // BIDIRECTIONNEL : désactive si achat, active si vente
+            ventesCheckboxes.forEach(id => {
+                const cb = document.getElementById(id);
+                if (cb) {
+                    cb.disabled = achatChecked;  // désactive si ACHATS est coché, et active si ACHATS n'est pas coché
+                    cb.checked = venteChecked;  // coche si VENTES est sélectionné
+                }
+            });
+
+            // BIDIRECTIONNEL : désactive si vente, active si achat
+            achatsCheckboxes.forEach(id => {
+                const cb = document.getElementById(id);
+                if (cb) {
+                    cb.disabled = venteChecked;  // désactive si VENTES est coché, et active si VENTES n'est pas coché
+                    cb.checked = achatChecked;  // coche si ACHATS est sélectionné
+                }
+            });
+        }
+
+        // Écouteurs SUR LES DEUX radios
+        document.getElementById('achat').addEventListener('change', toggleRecherche);
+        document.getElementById('vente').addEventListener('change', toggleRecherche);
+
+    });
+</script>
+<script sec:authorize!="isAuthenticated()">
+    document.addEventListener('DOMContentLoaded', function() {
+        function toggleRecherche() {
+            const checkboxes = ['mesVentesEnCours', 'mesVentesNonDebutees', 'mesVentesTerminees', 'encheresOuvertes', 'mesEncheres', 'mesEncheresRemportees'];
+
+            // BIDIRECTIONNEL : désactive si achat, active si vente
+            checkboxes.forEach(id => {
+                const cb = document.getElementById(id);
+                if (cb) {
+                    cb.checked = false;  // coche si VENTES est sélectionné
+                }
+            });
+        }
+    });
+</script>
 </html>

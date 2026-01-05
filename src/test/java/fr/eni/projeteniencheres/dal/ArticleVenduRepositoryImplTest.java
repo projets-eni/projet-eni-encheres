@@ -18,6 +18,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.temporal.TemporalAmount;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -44,6 +45,7 @@ public class ArticleVenduRepositoryImplTests {
 
     static Random random = new Random();
 
+
     @BeforeAll
     static void beforeAll(@Autowired JdbcTemplate jdbcTemplate,  @Autowired UtilisateurRepository utilisateurRepository) {
 
@@ -58,11 +60,20 @@ public class ArticleVenduRepositoryImplTests {
             utilisateurRepository.saveUtilisateur(user);
             utilisateurs.add(user);
         }
+
+        // réinit encheres
+        jdbcTemplate.update("DELETE FROM Encheres");
+        // réinit ventes
+        jdbcTemplate.update("DELETE FROM ArticlesVendus");
     }
 
+    /**
+     * @todo datafaker (user, vente, encheres)
+     */
     @Test
     @Order(1)
     void testArticleVenduSave() {
+
         Long id = random.nextLong(10000);
 
         articleVendu.setNoArticle(id);
@@ -86,6 +97,7 @@ public class ArticleVenduRepositoryImplTests {
         ArticleVendu res = articleVenduRepository.save(articleVendu);
 
         Assertions.assertEquals(id, res.getNoArticle());
+
     }
 
     @Test
@@ -96,4 +108,5 @@ public class ArticleVenduRepositoryImplTests {
         Assertions.assertNotNull(foundArticle);
         Assertions.assertEquals(id, foundArticle.getNoArticle());
     }
+
 }

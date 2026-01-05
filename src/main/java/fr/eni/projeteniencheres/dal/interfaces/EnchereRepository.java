@@ -25,4 +25,6 @@ public interface EnchereRepository {
      */
     public Integer placer(Enchere enchere) throws EnchereImpossible;
 
+    Enchere getMeilleureOffreByArticle(ArticleVendu noArticle);
+    Enchere getLastOffreByArticleAndUserName(ArticleVendu article, String username);
 }

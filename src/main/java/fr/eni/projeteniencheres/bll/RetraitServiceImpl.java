@@ -18,4 +18,14 @@ public class RetraitServiceImpl implements RetraitService {
         retrait.setEstRetire(false);
         return retraitRepository.ajoutRetrait(retrait);
     }
+
+    @Override
+    public Retrait modifierRetrait(int noArticle, Retrait retrait) {
+        return retraitRepository.modifierRetrait(noArticle, retrait);
+    }
+
+    @Override
+    public Retrait afficherRetraitParId(int noArticle) {
+        return retraitRepository.afficherRetraitParId(noArticle);
+    }
 }
