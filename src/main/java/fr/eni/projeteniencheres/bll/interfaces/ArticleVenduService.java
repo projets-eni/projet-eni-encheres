@@ -17,19 +17,19 @@ public interface ArticleVenduService {
     void terminerArticle(ArticleVendu article);
 
 
-//    /**
-//     * Liste des ventes remportées par l'utilisateur
-//     * @param utilisateur
-//     * @return
-//     */
-//    List<ArticleVendu> findByAcquereur(Utilisateur utilisateur);
+    /**
+     * Liste des ventes remportées par l'utilisateur
+     * @param utilisateur
+     * @return
+     */
+    List<ArticleVendu> findByAcquereur(Utilisateur utilisateur);
 
-//    /**
-//     * Liste des ventes auquelles l'utilisateur a enchéri
-//     * @param utilisateur
-//     * @return
-//     */
-//    List<ArticleVendu>  findByEncherisseur(Utilisateur utilisateur);
+    /**
+     * Liste des ventes auquelles l'utilisateur a enchéri
+     * @param utilisateur
+     * @return
+     */
+    List<ArticleVendu>  findByEncherisseur(Utilisateur utilisateur);
 
     /**
      * Filtre une liste de vente par état, catégorie et/ou nom de l'article
