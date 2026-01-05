@@ -24,7 +24,7 @@ public interface ArticleVenduRepository {
 //     * @param utilisateur   Utilisateur ou null
 //     * @return
 //     */
-//    public List<ArticleVendu> findByAcquereur(EtatAchat etat, Utilisateur utilisateur);
+    public List<ArticleVendu> findByAcquereur(EtatAchat etat, Utilisateur utilisateur);
 
     Integer terminerVente(ArticleVendu articleVendu);
 
