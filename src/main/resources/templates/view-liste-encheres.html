@@ -1,10 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
     <title>ENI-Enchères</title>
+    <link rel="stylesheet" th:href="@{/css/form.css}">
 </head>
-<body>
+<section layout:fragment="content">
+    <!--    TODO: insérer le contenu-->
+
     <h1>Liste des enchères</h1>
-</body>
+</section>
 </html>

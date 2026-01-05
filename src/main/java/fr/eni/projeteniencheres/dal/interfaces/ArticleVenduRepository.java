@@ -8,7 +8,7 @@ public interface ArticleVenduRepository {
 
     public List<ArticleVendu> findAll();
 
-    List<ArticleVendu> findEnCours();
+//    List<ArticleVendu> findEnCours();
 
     /**
      * Liste des ventes pour un état ou un utilisateur
@@ -29,7 +29,7 @@ public interface ArticleVenduRepository {
     Integer terminerVente(ArticleVendu articleVendu);
 
     public ArticleVendu findById(int id);
-    public List<ArticleVendu> findById(List<Integer> ids);
+//    public List<ArticleVendu> findById(List<Integer> ids);
 
     public ArticleVendu save(ArticleVendu vente);
 

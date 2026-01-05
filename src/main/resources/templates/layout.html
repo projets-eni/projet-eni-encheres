@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title layout:title-pattern="$CONTENT_TITLE - Enchères">Enchères</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/form.css}">
+</head>
+<body>
+    <div class="page-layout">
+        <!-- HEADER -->
+        <div th:replace="fragments/header :: header"></div>
+
+        <h2 sec:authorize="isAuthenticated()">
+            Bonjour <span sec:authentication="name"></span> !
+        </h2>
+
+        <!-- CONTENU DYNAMIQUE -->
+        <main layout:fragment="content">
+            <!-- contenu remplacé par les pages -->
+        </main>
+
+        <!-- FOOTER -->
+        <div th:replace="fragments/footer :: footer"></div>
+    </div>
+</body>
+</html>

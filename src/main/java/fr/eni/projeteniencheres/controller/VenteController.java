@@ -25,10 +25,10 @@ public class VenteController {
         this.venteService = venteService;
     }
 
-    @GetMapping("/encheres")
-    public String listeEncheres(Model modele) {
-        return "view-liste-encheres";
-    }
+//    @GetMapping("/accueil")
+//    public String listeEncheres(Model modele) {
+//        return "view-liste-encheres";
+//    }
 
     @GetMapping({"/nouvelle-vente"})
     public String afficherPageNouvelleVente(Authentication authentication,

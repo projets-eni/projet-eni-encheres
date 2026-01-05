@@ -1,0 +1,198 @@
+/****************************************
+              RESET
+*****************************************/
+
+*, ::before, ::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/****************************************
+              CONNEXION
+*****************************************/
+
+form, .inscription-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+button {
+    cursor: pointer;
+}
+
+.connexion-container {
+    width: 40vw;
+}
+.connexion-form {
+    width: 100%;
+}
+
+form input,
+form label,
+form button {
+    /*font-size: clamp(14px, 1.2vw + 10px, 22px);*/
+    font-size: clamp(1rem, 2.5vw, 1.375rem);
+    }
+
+form input:focus {
+    outline: none;
+    border: 3px solid black;
+    box-shadow: 0 4px 6px rgba(51, 51, 51, 0.25);
+}
+
+form input {
+    height: 3rem;
+    padding: 0 1rem;
+    line-height: 1;
+    border-radius: 5px;
+}
+
+form label {
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+}
+
+.form-raw {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    width: 100%;
+}
+
+.form-raw label {
+    flex: 1;
+    font-weight: 500;
+}
+
+.field input {
+    width: 100%;
+}
+
+.form-raw .field  {
+    flex: 2;
+}
+
+.btn-connexion-group {
+    display: flex;
+    justify-content: space-between;
+}
+
+.connexion-btn {
+    width: 40%;
+    height: 5rem;
+}
+
+.form-check {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    width: 50%;
+}
+
+.form-check input,
+.form-check label {
+    display: inline;
+}
+
+.form-check input {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-right: 0.5rem;
+}
+
+.lien-btn a {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    border: 1px solid #6b6969;
+    padding: 15px 5px;
+}
+
+.inscription-btn {
+    width: 100%;
+}
+
+.btn {
+    font-size: var(--body-font-size);
+}
+
+.inscription-btn a {
+    height: 5rem;
+}
+
+/****************************************
+              INSCRIPTION
+*****************************************/
+
+#inscription-container {
+    width: 60vw;
+}
+
+#inscription-container .error-msg {
+    margin-top: 7px;
+    color: #f75252;
+    font-weight: 400;
+    display: none;
+}
+
+#inscription-container input.red-border {
+    border: 2px solid red;
+}
+
+#inscription-container input.green-border {
+    border: 2px solid green;
+}
+
+.btn-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+    width: 100%;
+}
+
+.btn-inscription {
+    width: 40%;
+}
+
+/****************************************
+              AFFICHAGE-PROFIL
+*****************************************/
+
+.affichageProfil {
+    width: 50vw;
+    margin: 0 auto;
+}
+
+td, th {
+    font-size: 24px;
+    padding: 15px 5px;
+    text-align: left;
+}
+
+td {
+    width: 60%;;
+}
+
+th {
+    width: 40%;;
+}
+
+/****************************************
+              MEDIA-QUERIES
+*****************************************/
+
+@media screen and (max-width: 1100px){
+    .connexion-container {
+        width: 60vw;
+    }
+
+}
+
+@media screen and (max-width: 768px) {
+    .connexion-container {
+        width: 90vw;
+    }
+}
