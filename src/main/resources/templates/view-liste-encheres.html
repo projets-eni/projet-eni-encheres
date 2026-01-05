@@ -8,113 +8,101 @@
     <link rel="stylesheet" th:href="@{/css/form.css}">
 </head>
 <body>
-<section layout:fragment="content">
-    <!--    TODO: insérer le contenu-->
+    <section layout:fragment="content">
 
+        <h1>Liste des enchères</h1>
 
-
-    <p><a th:href="@{/connexion}">S'inscrire - Se connecter</a></p>
-    <p><a th:href="@{/profil}">Profil</a></p>
-
-    <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
-        <input type="submit" value="Se déconnecter"/>
-    </form>
-
-    <h2 th:if="${pseudo != null}">
-        Bonjour <span th:text="${pseudo}"></span> !
-    </h2>
-
-    <h1>Liste des enchères</h1>
-</section>
-
-    <h5>Filtres</h5>
-    <form th:action="@{/encheres}" method="POST" th:object="${recherche}">
-        <div>
-            <label for="find">Mots-clés : </label>
-            <input id="find" type="text" th:field="*{keywords}" placeholder="Le nom de l'article contient...">
-        </div>
-        <div>
-            <label for="categorie">Catégorie :</label>
-            <select id="categorie" th:field="*{noCategorie}">
-                <option value="0">Toutes</option>
-                <option th:each="cat : ${@categoryService.afficherCategories()}"
-                        th:value="${cat.noCategorie}"
-                        th:text="${cat.libelle}"></option>
-            </select>
-        </div>
-
-        <div sec:authorize="isAuthenticated()">
+        <h5>Filtres</h5>
+        <form th:action="@{/encheres}" method="POST" th:object="${recherche}">
             <div>
-                <input type="radio" id="achat" value="1" th:field="*{achatOuVente}">
-                <label for="achat">Achats</label><br>
-                <input type="checkbox" id="encheresOuvertes" th:field="*{encheresOuvertes}">
-                <label for="encheresOuvertes">enchères ouvertes</label>
-                <input type="checkbox" id="mesEncheres" th:field="*{mesEncheres}">
-                <label for="mesEncheres">mes enchères</label>
-                <input type="checkbox" id="mesEncheresRemportees" th:field="*{mesEncheresRemportees}">
-                <label for="mesEncheresRemportees">mes enchères remportées</label>
+                <label for="find">Mots-clés : </label>
+                <input id="find" type="text" th:field="*{keywords}" placeholder="Le nom de l'article contient...">
             </div>
             <div>
-                <input type="radio" id="vente" value="2" th:field="*{achatOuVente}">
-                <label for="vente">Mes ventes</label><br>
-                <input type="checkbox" id="mesVentesEnCours" th:field="*{mesVentesEnCours}">
-                <label for="mesVentesEnCours">mes ventes en cours</label>
-                <input type="checkbox" id="mesVentesNonDebutees" th:field="*{mesVentesNonDebutees}">
-                <label for="mesVentesNonDebutees">mes ventes non débutées</label>
-                <input type="checkbox" id="mesVentesTerminees" th:field="*{mesVentesTerminees}">
-                <label for="mesVentesTerminees">mes ventes terminées</label>
+                <label for="categorie">Catégorie :</label>
+                <select id="categorie" th:field="*{noCategorie}">
+                    <option value="0">Toutes</option>
+                    <option th:each="cat : ${@categoryService.afficherCategories()}"
+                            th:value="${cat.noCategorie}"
+                            th:text="${cat.libelle}"></option>
+                </select>
             </div>
-        </div>
 
-        <div>
-            <input type="submit" value="Rechercher">
-        </div>
+            <div sec:authorize="isAuthenticated()">
+                <div>
+                    <input type="radio" id="achat" value="1" th:field="*{achatOuVente}">
+                    <label for="achat">Achats</label><br>
+                    <input type="checkbox" id="encheresOuvertes" th:field="*{encheresOuvertes}">
+                    <label for="encheresOuvertes">enchères ouvertes</label>
+                    <input type="checkbox" id="mesEncheres" th:field="*{mesEncheres}">
+                    <label for="mesEncheres">mes enchères</label>
+                    <input type="checkbox" id="mesEncheresRemportees" th:field="*{mesEncheresRemportees}">
+                    <label for="mesEncheresRemportees">mes enchères remportées</label>
+                </div>
+                <div>
+                    <input type="radio" id="vente" value="2" th:field="*{achatOuVente}">
+                    <label for="vente">Mes ventes</label><br>
+                    <input type="checkbox" id="mesVentesEnCours" th:field="*{mesVentesEnCours}">
+                    <label for="mesVentesEnCours">mes ventes en cours</label>
+                    <input type="checkbox" id="mesVentesNonDebutees" th:field="*{mesVentesNonDebutees}">
+                    <label for="mesVentesNonDebutees">mes ventes non débutées</label>
+                    <input type="checkbox" id="mesVentesTerminees" th:field="*{mesVentesTerminees}">
+                    <label for="mesVentesTerminees">mes ventes terminées</label>
+                </div>
+            </div>
 
-    </form>
+            <div>
+                <input type="submit" value="Rechercher">
+            </div>
 
-    <!--    <h2>Détail vente <span th:text="${vente.id}"></span></h2>-->
-    <!--    <p><strong>Nom :</strong> <span th:text="${vente.nom}"></span></p>-->
-    <!--    <p><strong>Description :</strong> <span th:text="${vente.description}"></span></p>-->
-    <!--    <a th:href="@{/}">Retour liste</a>-->
+        </form>
 
-    <!-- Mes achats -->
-    <!-- Mes ventes -->
+        <!--    <h2>Détail vente <span th:text="${vente.id}"></span></h2>-->
+        <!--    <p><strong>Nom :</strong> <span th:text="${vente.nom}"></span></p>-->
+        <!--    <p><strong>Description :</strong> <span th:text="${vente.description}"></span></p>-->
+        <!--    <a th:href="@{/}">Retour liste</a>-->
 
-    <div class="container mt-4">
-        <div class="row g-3">
-            <div th:each="article : ${articles}" class="col-12 col-sm-6 col-md-4 col-lg-3">
-                <div th:classappend="${article.etatVente == 'Non commencée' || article.etatVente == 'Terminée' || article.etatVente == 'Annulée'} ? 'card h-100 opacity-50 bg-light' : 'card h-100'"
-                     th:style="${article.etatVente == 'Non commencée' && !#strings.equals(article.vendeur.pseudo, #authentication.name)} ? 'pointer-events: none; cursor: not-allowed' : ''">
-                    <a th:href="@{/vente/{id}(id=${article.noArticle})}" class="text-decoration-none text-dark">
-                        <img th:src="@{/images/{image}(image=${article.idImage})}"
-                             class="card-img-top img-fluid"
-                             style="height: 180px; object-fit: cover;"
-                             th:alt="${article.nomArticle}">
-                        <!-- Grand badge -->
-                        <span th:if="${article.etatVente == 'Non commencée'}" class="position-absolute top-50 start-50 translate-middle badge text-bg-warning fs-6 px-4 py-2 rotate-45">
+        <!-- Mes achats -->
+        <!-- Mes ventes -->
+
+        <div class="container mt-4">
+            <div class="row g-3">
+                <div th:each="article : ${articles}" class="col-12 col-sm-6 col-md-4 col-lg-3">
+                    <div th:classappend="${article.etatVente == 'Non commencée' || article.etatVente == 'Terminée' || article.etatVente == 'Annulée'} ? 'card h-100 opacity-50 bg-light' : 'card h-100'"
+                         th:style="${article.etatVente == 'Non commencée' && !#strings.equals(article.vendeur.pseudo, #authentication.name)} ? 'pointer-events: none; cursor: not-allowed' : ''">
+                        <a th:href="@{/vente/{id}(id=${article.noArticle})}" class="text-decoration-none text-dark">
+                            <img th:src="@{/images/{image}(image=${article.idImage})}"
+                                 class="card-img-top img-fluid"
+                                 style="height: 180px; object-fit: cover;"
+                                 th:alt="${article.nomArticle}">
+                            <!-- Grand badge -->
+                            <span th:if="${article.etatVente == 'Non commencée'}" class="position-absolute top-50 start-50 translate-middle badge text-bg-warning fs-6 px-4 py-2 rotate-45">
                             A VENIR
                         </span>
-                        <span th:if="${article.etatVente == 'Terminée'}" class="position-absolute top-50 start-50 translate-middle badge text-bg-secondary fs-6 px-4 py-2 rotate-45">
+                            <span th:if="${article.etatVente == 'Terminée'}" class="position-absolute top-50 start-50 translate-middle badge text-bg-secondary fs-6 px-4 py-2 rotate-45">
                             TERMINÉE
                         </span>
-                        <span th:if="${article.etatVente == 'Annulée'}" class="position-absolute top-50 start-50 translate-middle badge text-bg-danger fs-6 px-4 py-2 rotate-45">
+                            <span th:if="${article.etatVente == 'Annulée'}" class="position-absolute top-50 start-50 translate-middle badge text-bg-danger fs-6 px-4 py-2 rotate-45">
                             ANNULEE
                         </span>
-                        <div class="card-body">
-                            <h5 class="card-title" th:text="${article.nomArticle}">Nom produit</h5>
-                            <p class="card-text">
-                                | Prix : <span th:text="${article.prixVente}"></span>
-                                | Début de l'enchère : <span th:text="${#temporals.format(article.dateDebutEncheres, 'dd/MM/yyyy')}"></span>
-                                | Fin de l'enchère : <span th:text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yyyy')}"></span>
-                                | Etat : <span th:text="${article.etatVente}"></span>
-                                | Vendeur : <span><a th:href="@{/profil/{pseudo}(pseudo=${article.vendeur.pseudo})}" th:text="${article.vendeur.pseudo}"></a></span>
-                            </p>
-                        </div>
-                    </a>
+                            <div class="card-body">
+                                <h5 class="card-title" th:text="${article.nomArticle}">Nom produit</h5>
+                                <p class="card-text">
+                                    | Prix : <span th:text="${article.prixVente}"></span>
+                                    | Début de l'enchère : <span th:text="${#temporals.format(article.dateDebutEncheres, 'dd/MM/yyyy')}"></span>
+                                    | Fin de l'enchère : <span th:text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yyyy')}"></span>
+                                    | Etat : <span th:text="${article.etatVente}"></span>
+                                    | Vendeur : <span><a th:href="@{/profil/{pseudo}(pseudo=${article.vendeur.pseudo})}" th:text="${article.vendeur.pseudo}"></a></span>
+                                </p>
+                            </div>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+
+    </section>
+
 </body>
 <script sec:authorize="isAuthenticated()">
     document.addEventListener('DOMContentLoaded', function() {
