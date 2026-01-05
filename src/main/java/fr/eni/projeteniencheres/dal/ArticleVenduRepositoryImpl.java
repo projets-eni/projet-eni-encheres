@@ -16,6 +16,8 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.thymeleaf.expression.Lists;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -43,7 +45,7 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
     @Override
     public List<ArticleVendu> findEnCours() {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("dateDebut", "GETUTCDATE()");
+        params.addValue("dateDebut", Timestamp.from(Instant.now()));
         return jdbcTemplate.query(this.rqtSelect
                 + " WHERE v.date_fin_encheres < :dateDebut and v.date_debut_encheres <= :dateDebut",
                 params, venteRowMapperLazyLoading);
@@ -51,7 +53,7 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
 
     public List<ArticleVendu> findTermines() {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("dateFin", "GETUTCDATE()");
+        params.addValue("dateFin", Timestamp.from(Instant.now()));
         return jdbcTemplate.query(this.rqtSelect
                         + " WHERE v.date_fin_encheres <= :dateFin",
                 params, venteRowMapperLazyLoading);
@@ -152,7 +154,7 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
         paramsArticle.addValue("date_debut_encheres", vente.getDateDebutEncheres());
         paramsArticle.addValue("date_fin_encheres", vente.getDateFinEncheres());
         paramsArticle.addValue("prix_initial", vente.getPrixInitial());
-        paramsArticle.addValue("image_filename", vente.getImageFilename());
+        paramsArticle.addValue("image_filename", vente.getIdImage());
         paramsArticle.addValue("etat_vente", vente.getEtatVente());
         // ajout des relations de FK
         paramsArticle.addValue("no_categorie", vente.getCategorie().getNoCategorie());
@@ -294,7 +296,7 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
         jdbcTemplate.update(sqlArticle, paramsArticle, keyHolder, new String[]{"no_article"});
 
         // ré-injecter l'id dans l'objet retourné
-        long generatedId = keyHolder.getKey().longValue();
+        int generatedId = keyHolder.getKey().intValue();
         article.setNoArticle(generatedId);
 
         // retrait créé dans RetraitRepositoryImpl

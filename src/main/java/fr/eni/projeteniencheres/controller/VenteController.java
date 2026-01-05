@@ -3,30 +3,20 @@ package fr.eni.projeteniencheres.controller;
 import fr.eni.projeteniencheres.bll.interfaces.*;
 import fr.eni.projeteniencheres.bo.ArticleVendu;
 import fr.eni.projeteniencheres.bo.Enchere;
-import fr.eni.projeteniencheres.bo.Retrait;
 import fr.eni.projeteniencheres.dto.NouvelleVenteDto;
-import fr.eni.projeteniencheres.dto.RechercheRecord;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.security.Principal;
 import java.util.List;
 
 import java.time.ZoneId;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 @Controller
 public class VenteController {
@@ -40,26 +30,6 @@ public class VenteController {
         this.venteService = venteService;
         this.enchereService = enchereService;
         this.articleVenduService = articleVenduService;
-    }
-
-    @GetMapping("/encheres")
-    public String listeEncheres(
-            @Valid RechercheRecord recherche, Model modele, Principal user) {
-        List<ArticleVendu> ventesEnCours = articleVenduService.findEnCours();
-        /*
-        if (authenticatedPrincipal != null) {
-            ventesEnCours = ventesEnCours.stream().filter(
-                    v -> v.getVendeur().getPseudo().equals(authenticatedPrincipal.getUsername())
-            ).toList();
-        }
-         */
-
-        /**
-         * @TODO la recherche TH qui plante avec le bricollage de fieldset
-         */
-        modele.addAttribute("recherche", recherche);
-        modele.addAttribute("ventesEnCours", ventesEnCours);
-        return "view-liste-encheres";
     }
 
     @GetMapping({"/vente/creer"})

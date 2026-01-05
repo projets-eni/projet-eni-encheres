@@ -1,37 +1,57 @@
 <div class="recherche" th:fragment="recherche (recherche)" th:object="${recherche}">
-<input type="search" th:field="*{kw}" placeholder="Rechercher..."/>
-<select th:field="*{idCategorie}">
+<form th:action="@{/encheres}" method="post">
+<input type="search" th:field="*{keywords}" placeholder="Rechercher..."/>
+<select th:field="*{noCategorie}">
     <option value="0">Toutes</option>
-    <option th:each="categorie : ${@categoryService.afficherCategories()}" th:value="${categorie.getNoCategorie()}" th:selected="(*{idCategorie} == ${categorie.getNoCategorie()})">
+    <option th:each="categorie : ${@categoryService.afficherCategories()}" th:value="${categorie.getNoCategorie()}" th:text="${categorie.getLibelle()}" th:selected="(*{noCategorie} == ${categorie.getNoCategorie()})">
 </select>
-<fieldset th:disabled="*{(achatOuverts == null or achatOuverts == 0)
-and (achatMesEncheres == null or achatMesEncheres == 0)
-and (achatMesAcquis == null or achatMesAcquis)}">
-<input type="radio" th:field="*{type}" th:value="achat"><label th:text="achat">Achats</label>
+<fieldset id="achat">
+<input type="radio" th:field="*{achatOuVente}" th:value="1"><label th:text="achat">Achats</label>
 <ul>
-    <li><input type="checkbox" th:field="*{achatOuverts}" th:checked="*{(achatOuverts == 0 ? '':'checked')}"><label th:for="achatOuverts">enchères ouvertes</label></li>
-    <li><input type="checkbox" th:field="*{achatMesEncheres}" th:checked="*{(achatMesEncheres == 0 ? '':'checked')}"><label th:for="achatMesEncheres">mes enchères</label></li>
-    <li><input type="checkbox" th:field="*{achatMesAcquis}" th:checked="*{(achatMesAcquis ? '':'checked')}"><label th:for="achatMesAcquis">mes enchères remportées</label></li>
+    <li><input type="checkbox" th:field="*{encheresOuvertes}" value="1"><label th:for="achatOuverts">enchères ouvertes</label></li>
+    <li><input type="checkbox" th:field="*{mesEncheres}" value="1"><label th:for="achatMesEncheres">mes enchères</label></li>
+    <li><input type="checkbox" th:field="*{mesEncheresRemportees}" value="1"><label th:for="achatMesAcquis">mes enchères remportées</label></li>
 </ul>
 </fieldset>
-<fieldset th:disabled="${#fields.field('achatOuverts').isEmpty()
-and #fields.hasError('achatMesEncheres').isEmpty() and #fields.field('achatMesAcquis').isEmpty()}">
-<input type="radio" th:field="*{type}" th:value="vente"><label th:text="vente">Ventes</label>
+<fieldset id="vente">
+<input type="radio" th:field="*{achatOuVente}" th:value="2"><label th:text="vente">Ventes</label>
     <ul>
-        <li><input type="checkbox" th:field="*{venteOuvertes}" th:checked="*{(#fields.field('venteOuvertes').isEmpty() ? '':'checked')}"><label th:for="venteOuvertes">mes ventes en cours</label></li>
-        <li><input type="checkbox" th:field="*{venteAttentes}" th:checked="*{(#fields.field('venteAttentes').isEmpty() ? '':'checked')}"><label th:for="venteAttentes">ventes non débutées</label></li>
-        <li><input type="checkbox" th:field="*{venteTermines}" th:checked="*{(#fields.field('venteTermines').isEmpty() ? '':'checked')}"><label th:for="venteTermines">ventes terminées</label></li>
+        <li><input type="checkbox" th:field="*{mesVentesEnCours}" value="1"><label th:for="venteOuvertes">mes ventes en cours</label></li>
+        <li><input type="checkbox" th:field="*{mesVentesNonDebutees}" value="1"><label th:for="venteAttentes">ventes non débutées</label></li>
+        <li><input type="checkbox" th:field="*{mesVentesTerminees}" value="1"><label th:for="venteTermines">ventes terminées</label></li>
     </ul>
 </fieldset>
 <input type="submit" value="Rechercher"/>
+</form>
 </div>
 
-<div class="vente card" th:fragment="vente-card (articleVendu)">
-    <div class="card-body"><img th:src="${articleVendu.imageFilename}" class="card-img-left" alt="...">
-    <h3 th:text="${articleVendu.nom}"></h3></div>
-    <ul class="list-group list-group-flush">
-        <li class="list-group-item" th:text="${'Prix : ' + articleVendu.prixVente + ' points'}"></li>
-        <li class="list-group-item" th:text="${'Date : ' + articleVendu.dateFinEncheres}"></li>
-        <li class="list-group-item" th:text="${'Vendeur : ' + articleVendu.getVendeur().getPseudo()}"></li>
-    </ul>
+
+<div th:fragment="vente-card (article)" th:classappend="card h-100 ${article.etatVente == 'Non commencée' || article.etatVente == 'Terminée' || article.etatVente == 'Annulée'} ? 'opacity-50 bg-light' : ''"
+     th:style="${article.etatVente == 'Non commencée' && !#strings.equals(article.vendeur.pseudo, #authentication.name)} ? 'pointer-events: none; cursor: not-allowed' : ''">
+    <a th:href="@{/vente/{id}(id=${article.noArticle})}" class="text-decoration-none text-dark">
+        <img th:src="@{/images/{image}(image=${article.idImage})}"
+             class="card-img-top img-fluid"
+             style="height: 180px; object-fit: cover;"
+             th:alt="${article.nomArticle}">
+        <!-- Grand badge -->
+        <span th:if="${article.etatVente == 'Non commencée'}" class="position-absolute top-50 start-50 translate-middle badge text-bg-warning fs-6 px-4 py-2 rotate-45">
+                        A VENIR
+                    </span>
+        <span th:if="${article.etatVente == 'Terminée'}" class="position-absolute top-50 start-50 translate-middle badge text-bg-secondary fs-6 px-4 py-2 rotate-45">
+                        TERMINÉE
+                    </span>
+        <span th:if="${article.etatVente == 'Annulée'}" class="position-absolute top-50 start-50 translate-middle badge text-bg-danger fs-6 px-4 py-2 rotate-45">
+                        ANNULEE
+                    </span>
+        <div class="card-body">
+            <h5 class="card-title" th:text="${article.nomArticle}">Nom produit</h5>
+            <p class="card-text">
+                | Prix : <span th:text="${article.prixVente}"></span>
+                | Début de l'enchère : <span th:text="${#temporals.format(article.dateDebutEncheres, 'dd/MM/yyyy')}"></span>
+                | Fin de l'enchère : <span th:text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yyyy')}"></span>
+                | Etat : <span th:text="${article.etatVente}"></span>
+                | Vendeur : <span><a th:href="@{/profil/{pseudo}(pseudo=${article.vendeur.pseudo})}" th:text="${article.vendeur.pseudo}"></a></span>
+            </p>
+        </div>
+    </a>
 </div>

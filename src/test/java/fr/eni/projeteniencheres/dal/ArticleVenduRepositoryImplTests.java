@@ -5,7 +5,6 @@ import fr.eni.projeteniencheres.bo.Retrait;
 import fr.eni.projeteniencheres.bo.Utilisateur;
 import fr.eni.projeteniencheres.dal.interfaces.ArticleVenduRepository;
 import fr.eni.projeteniencheres.dal.interfaces.UtilisateurRepository;
-import fr.eni.projeteniencheres.dal.populateFakeDatas;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -18,7 +17,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.time.temporal.TemporalAmount;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -74,7 +72,7 @@ public class ArticleVenduRepositoryImplTests {
     @Order(1)
     void testArticleVenduSave() {
 
-        Long id = random.nextLong(10000);
+        int id = random.nextInt(10000);
 
         articleVendu.setNoArticle(id);
         articleVendu.setVendeur(utilisateurs.get(random.nextInt(utilisateurs.size())));
@@ -103,7 +101,7 @@ public class ArticleVenduRepositoryImplTests {
     @Test
     @Order(2)
     void testArticleVenduFindById() {
-        Long id = articleVendu.getNoArticle();
+        int id = articleVendu.getNoArticle();
         ArticleVendu foundArticle = articleVenduRepository.findById(id);
         Assertions.assertNotNull(foundArticle);
         Assertions.assertEquals(id, foundArticle.getNoArticle());

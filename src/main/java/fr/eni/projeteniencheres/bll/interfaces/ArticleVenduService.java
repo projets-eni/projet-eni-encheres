@@ -4,6 +4,7 @@ import fr.eni.projeteniencheres.bo.ArticleVendu;
 import fr.eni.projeteniencheres.bo.Categorie;
 import fr.eni.projeteniencheres.bo.EtatVente;
 import fr.eni.projeteniencheres.bo.Utilisateur;
+import fr.eni.projeteniencheres.dto.RechercheDto;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ public interface ArticleVenduService {
     List<ArticleVendu> afficherArticles();
     ArticleVendu afficherArticleParId(int id);
     ArticleVendu ajoutArticle(ArticleVendu article);
-    ArticleVendu modifierArticle(ArticleVendu article);
+    ArticleVendu modifierArticle(int noArticle, ArticleVendu article);
     void supprimerArticle(ArticleVendu article);
 
     void terminerArticle(ArticleVendu article);

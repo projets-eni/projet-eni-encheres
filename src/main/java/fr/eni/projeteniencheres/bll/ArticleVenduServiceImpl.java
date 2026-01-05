@@ -57,8 +57,8 @@ public class ArticleVenduServiceImpl implements ArticleVenduService {
     }
 
     @Override
-    public ArticleVendu modifierArticle(ArticleVendu article) {
-        return articleVenduRepository.modifierArticle(article.getNoArticle(), article);
+    public ArticleVendu modifierArticle(int noArt, ArticleVendu article) {
+        return articleVenduRepository.modifierArticle(noArt, article);
     }
 
     @Override
