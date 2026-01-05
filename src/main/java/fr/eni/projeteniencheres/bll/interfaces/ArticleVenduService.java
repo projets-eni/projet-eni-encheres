@@ -15,8 +15,6 @@ public interface ArticleVenduService {
     ArticleVendu modifierArticle(int noArticle, ArticleVendu article);
     void supprimerArticle(ArticleVendu article);
 
-    void terminerArticle(ArticleVendu article);
-
 
 //    /**
 //     * Liste des ventes remportées par l'utilisateur
@@ -45,9 +43,8 @@ public interface ArticleVenduService {
     /**
      * Mise à jour des statuts des ventes
      * @see EtatVente pour les status
-     * @param article
      */
-    void updaterEtat(ArticleVendu article);
+    void updaterEtat();
 
     List<ArticleVendu> findEnCours();
 
