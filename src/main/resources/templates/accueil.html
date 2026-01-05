@@ -1,30 +1,17 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"  xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
     <title>Accueil</title>
 </head>
-<body>
-<p><a th:href="@{/connexion}">S'inscrire - Se connecter</a></p>
-<p><a th:href="@{/profil}">Profil</a></p>
 
-<form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
-    <input type="submit" value="Se déconnecter"/>
-</form>
+<section layout:fragment="content">
 
-<h2 th:if="${pseudo != null}">
-    Bonjour <span th:text="${pseudo}"></span> !
-</h2>
+<h1>Liste des enchères</h1>
 
-    <h1>Liste des enchères</h1>
-    <h2>Ceci est un test pour la fonctionnalité Afficher le détail d'une vente</h2>
-    <a th:href="@{/vente/4}">Afficher le détail pour la vente numéro 4 (martin.dupond)</a>
-
-<!--    <h2>Détail vente <span th:text="${vente.id}"></span></h2>-->
-<!--    <p><strong>Nom :</strong> <span th:text="${vente.nom}"></span></p>-->
-<!--    <p><strong>Description :</strong> <span th:text="${vente.description}"></span></p>-->
-<!--    <a th:href="@{/}">Retour liste</a>-->
+</section>
 
 
-</body>
 </html>
