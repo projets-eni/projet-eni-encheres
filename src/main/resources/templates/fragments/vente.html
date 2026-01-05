@@ -1,0 +1,57 @@
+<div class="recherche" th:fragment="recherche (recherche)" th:object="${recherche}">
+<form th:action="@{/encheres}" method="post">
+<input type="search" th:field="*{keywords}" placeholder="Rechercher..."/>
+<select th:field="*{noCategorie}">
+    <option value="0">Toutes</option>
+    <option th:each="categorie : ${@categoryService.afficherCategories()}" th:value="${categorie.getNoCategorie()}" th:text="${categorie.getLibelle()}" th:selected="(*{noCategorie} == ${categorie.getNoCategorie()})">
+</select>
+<fieldset id="achat">
+<input type="radio" th:field="*{achatOuVente}" th:value="1"><label th:text="achat">Achats</label>
+<ul>
+    <li><input type="checkbox" th:field="*{encheresOuvertes}" value="1"><label th:for="achatOuverts">enchères ouvertes</label></li>
+    <li><input type="checkbox" th:field="*{mesEncheres}" value="1"><label th:for="achatMesEncheres">mes enchères</label></li>
+    <li><input type="checkbox" th:field="*{mesEncheresRemportees}" value="1"><label th:for="achatMesAcquis">mes enchères remportées</label></li>
+</ul>
+</fieldset>
+<fieldset id="vente">
+<input type="radio" th:field="*{achatOuVente}" th:value="2"><label th:text="vente">Ventes</label>
+    <ul>
+        <li><input type="checkbox" th:field="*{mesVentesEnCours}" value="1"><label th:for="venteOuvertes">mes ventes en cours</label></li>
+        <li><input type="checkbox" th:field="*{mesVentesNonDebutees}" value="1"><label th:for="venteAttentes">ventes non débutées</label></li>
+        <li><input type="checkbox" th:field="*{mesVentesTerminees}" value="1"><label th:for="venteTermines">ventes terminées</label></li>
+    </ul>
+</fieldset>
+<input type="submit" value="Rechercher"/>
+</form>
+</div>
+
+
+<div th:fragment="vente-card (article)" th:classappend="card h-100 ${article.etatVente == 'Non commencée' || article.etatVente == 'Terminée' || article.etatVente == 'Annulée'} ? 'opacity-50 bg-light' : ''"
+     th:style="${article.etatVente == 'Non commencée' && !#strings.equals(article.vendeur.pseudo, #authentication.name)} ? 'pointer-events: none; cursor: not-allowed' : ''">
+    <a th:href="@{/vente/{id}(id=${article.noArticle})}" class="text-decoration-none text-dark">
+        <img th:src="@{/images/{image}(image=${article.idImage})}"
+             class="card-img-top img-fluid"
+             style="height: 180px; object-fit: cover;"
+             th:alt="${article.nomArticle}">
+        <!-- Grand badge -->
+        <span th:if="${article.etatVente == 'Non commencée'}" class="position-absolute top-50 start-50 translate-middle badge text-bg-warning fs-6 px-4 py-2 rotate-45">
+                        A VENIR
+                    </span>
+        <span th:if="${article.etatVente == 'Terminée'}" class="position-absolute top-50 start-50 translate-middle badge text-bg-secondary fs-6 px-4 py-2 rotate-45">
+                        TERMINÉE
+                    </span>
+        <span th:if="${article.etatVente == 'Annulée'}" class="position-absolute top-50 start-50 translate-middle badge text-bg-danger fs-6 px-4 py-2 rotate-45">
+                        ANNULEE
+                    </span>
+        <div class="card-body">
+            <h5 class="card-title" th:text="${article.nomArticle}">Nom produit</h5>
+            <p class="card-text">
+                | Prix : <span th:text="${article.prixVente}"></span>
+                | Début de l'enchère : <span th:text="${#temporals.format(article.dateDebutEncheres, 'dd/MM/yyyy')}"></span>
+                | Fin de l'enchère : <span th:text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yyyy')}"></span>
+                | Etat : <span th:text="${article.etatVente}"></span>
+                | Vendeur : <span><a th:href="@{/profil/{pseudo}(pseudo=${article.vendeur.pseudo})}" th:text="${article.vendeur.pseudo}"></a></span>
+            </p>
+        </div>
+    </a>
+</div>

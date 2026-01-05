@@ -14,5 +14,4 @@ public interface UtilisateurRepository {
     Optional<Utilisateur> findUtilisateurByPseudoOrEmail(String pseudo, String email);
     void saveUtilisateur(Utilisateur utilisateur);
     void deleteUtilisateurById(long no_utilisateur);
-    Utilisateur updateUtilisateur(Utilisateur utilisateur);
 }

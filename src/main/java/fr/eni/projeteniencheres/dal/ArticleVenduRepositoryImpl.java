@@ -4,7 +4,9 @@ import fr.eni.projeteniencheres.bll.interfaces.UtilisateurService;
 import fr.eni.projeteniencheres.bo.*;
 import fr.eni.projeteniencheres.dal.interfaces.ArticleVenduRepository;
 import fr.eni.projeteniencheres.dal.interfaces.EnchereRepository;
+import fr.eni.projeteniencheres.exception.EnchereImpossible;
 import fr.eni.projeteniencheres.exception.EtatVenteErreur;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -14,6 +16,8 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.thymeleaf.expression.Lists;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -35,13 +39,13 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
 
     @Override
     public List<ArticleVendu> findAll() {
-        return jdbcTemplate.query(this.rqtSelect, Map.of(), venteRowMapperLazyLoading);
+        return jdbcTemplate.query(this.rqtSelect + " ORDER BY date_fin_encheres ", Map.of(), venteRowMapper);
     }
 
     @Override
     public List<ArticleVendu> findEnCours() {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("dateDebut", "GETUTCDATE()");
+        params.addValue("dateDebut", Timestamp.from(Instant.now()));
         return jdbcTemplate.query(this.rqtSelect
                 + " WHERE v.date_fin_encheres < :dateDebut and v.date_debut_encheres <= :dateDebut",
                 params, venteRowMapperLazyLoading);
@@ -49,7 +53,7 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
 
     public List<ArticleVendu> findTermines() {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("dateFin", "GETUTCDATE()");
+        params.addValue("dateFin", Timestamp.from(Instant.now()));
         return jdbcTemplate.query(this.rqtSelect
                         + " WHERE v.date_fin_encheres <= :dateFin",
                 params, venteRowMapperLazyLoading);
@@ -67,7 +71,7 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
             params.addValue("utilisateur", utilisateur.getNoUtilisateur());
             where.append(" AND v.no_utilisateur = :utilisateur");
         }
-        return jdbcTemplate.query(this.rqtSelect + " WHERE 1 " + where.toString(), params, venteRowMapperLazyLoading);
+        return jdbcTemplate.query(this.rqtSelect + " WHERE 1 " + where.toString() + " ORDER BY date_fin_encheres ", params, venteRowMapperLazyLoading);
     }
 
     @Override
@@ -93,23 +97,6 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
             throw new EtatVenteErreur(ex.getMessage());
         }
         return res;
-    }
-
-    @Override
-    public List<ArticleVendu> findById(List<Integer> ids) {
-        return jdbcTemplate.query(rqtSelect + " WHERE v.no_article IN ("
-                + ids.stream().map(String::valueOf).collect(Collectors.joining(", "))
-                + ")", new MapSqlParameterSource(), venteRowMapperLazyLoading);
-    }
-
-    @Override
-    public ArticleVendu save(ArticleVendu vente) {
-        return null;
-    }
-
-    @Override
-    public void delete(ArticleVendu vente) {
-
     }
 
 
@@ -139,6 +126,69 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
         return article;
 
     }
+
+    @Override
+    public List<ArticleVendu> findById(List<Integer> ids) {
+        return jdbcTemplate.query(rqtSelect + " WHERE v.no_article IN ("
+                + ids.stream().map(String::valueOf).collect(Collectors.joining(", "))
+                + ")", new MapSqlParameterSource(), venteRowMapper);
+    }
+
+    @Override
+    public ArticleVendu save(ArticleVendu vente) {
+
+        if (Long.valueOf(vente.getNoArticle()) == 0) {
+            // pas de no_article, c'est un ajout
+            return this.ajoutArticle(vente);
+        }
+
+        String sqlArticle = "UPDATE ArticlesVendus SET nom_article=:nom_article, description=:description, " +
+            "date_debut_encheres=:date_debut_encheres, date_fin_encheres=:date_fin_encheres, prix_initial=:prix_initial, " +
+            "image_filename=:image_filename, etat_vente=:etat_vente, no_categorie=:no_categorie, no_utilisateur=:no_utilisateur " +
+            "WHERE no_article = :noArticle";
+
+        MapSqlParameterSource paramsArticle = new MapSqlParameterSource();
+        paramsArticle.addValue("noArticle", vente.getNoArticle());
+        paramsArticle.addValue("nom_article", vente.getNomArticle());
+        paramsArticle.addValue("description", vente.getDescription());
+        paramsArticle.addValue("date_debut_encheres", vente.getDateDebutEncheres());
+        paramsArticle.addValue("date_fin_encheres", vente.getDateFinEncheres());
+        paramsArticle.addValue("prix_initial", vente.getPrixInitial());
+        paramsArticle.addValue("image_filename", vente.getIdImage());
+        paramsArticle.addValue("etat_vente", vente.getEtatVente());
+        // ajout des relations de FK
+        paramsArticle.addValue("no_categorie", vente.getCategorie().getNoCategorie());
+        paramsArticle.addValue("no_utilisateur", vente.getVendeur().getNoUtilisateur());
+
+        int res = jdbcTemplate.update(sqlArticle, paramsArticle);
+        if (res > 0) {
+            vente = this.findById(vente.getNoArticle());
+        }
+
+        return vente;
+    }
+
+    @Override
+    public void delete(ArticleVendu vente) {
+
+    }
+
+    private final RowMapper<ArticleVendu> venteRowMapper = (rs, rowNum) -> {
+        ArticleVendu articleVendu = new ArticleVendu();
+
+        BeanUtils.copyProperties(rs, articleVendu);
+
+        Utilisateur vendeur = new Utilisateur();
+        vendeur.setNoUtilisateur(rs.getInt("no_utilisateur"));
+        articleVendu.setVendeur(vendeur);
+
+        Retrait retrait = new Retrait();
+        retrait.setNoArticle(rs.getInt("no_article"));
+        articleVendu.setRetrait(retrait);
+
+        return articleVendu;
+    };
+
 
     private final RowMapper<ArticleVendu> venteRowMapperLazyLoading = (rs, rowNum) -> {
         ArticleVendu article = new ArticleVendu();
@@ -214,7 +264,6 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
         return enchere;
     };
 
-
     @Override
     public ArticleVendu ajoutArticle(ArticleVendu article) {
 
@@ -247,7 +296,7 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
         jdbcTemplate.update(sqlArticle, paramsArticle, keyHolder, new String[]{"no_article"});
 
         // ré-injecter l'id dans l'objet retourné
-        long generatedId = keyHolder.getKey().longValue();
+        int generatedId = keyHolder.getKey().intValue();
         article.setNoArticle(generatedId);
 
         // retrait créé dans RetraitRepositoryImpl

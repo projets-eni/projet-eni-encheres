@@ -16,7 +16,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -37,7 +38,17 @@ public class ArticleVenduServiceImpl implements ArticleVenduService {
 
     @Override
     public List<ArticleVendu> afficherArticles() {
-        return articleVenduRepository.findAll();
+        return findEnCours();
+    }
+
+    @Override
+    public List<ArticleVendu> findEnCours() {
+        return articleVenduRepository.findEnCours();
+    }
+
+    @Override
+    public ArticleVendu afficherArticleParId(int id) {
+        return null;
     }
 
     @Override
@@ -46,8 +57,8 @@ public class ArticleVenduServiceImpl implements ArticleVenduService {
     }
 
     @Override
-    public ArticleVendu modifierArticle(int noArticle, ArticleVendu article) {
-        return articleVenduRepository.modifierArticle(noArticle, article);
+    public ArticleVendu modifierArticle(int noArt, ArticleVendu article) {
+        return articleVenduRepository.modifierArticle(noArt, article);
     }
 
     @Override
