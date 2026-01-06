@@ -23,5 +23,61 @@
                 </div>
             </div>
         </section>
+        <script>
+            // Durée d'inactivité autorisée (en ms)
+            // const SESSION_TIMEOUT_MS = 5 * 60 * 1000;       // 5 minutes
+            // const WARNING_BEFORE_MS  = 30 * 1000;           // 30 secondes
+            const SESSION_TIMEOUT_MS = 0.5 * 60 * 1000;       // 5 minutes
+            const WARNING_BEFORE_MS  = 10 * 1000;           // 30 secondes
+
+            let lastActivity = Date.now();
+            let warningTimeout;
+            let logoutTimeout;
+
+            function resetTimers() {
+                lastActivity = Date.now();
+
+                // Annule les anciens timeouts
+                clearTimeout(warningTimeout);
+                clearTimeout(logoutTimeout);
+
+                // Programme l'affichage du message 30s avant la fin
+                warningTimeout = setTimeout(showWarning,
+                    SESSION_TIMEOUT_MS - WARNING_BEFORE_MS
+                );
+
+                // Programme la déconnexion à la vraie fin
+                logoutTimeout = setTimeout(logoutUser, SESSION_TIMEOUT_MS);
+            }
+
+            function showWarning() {
+                const stay = confirm("Vous allez être déconnecté pour inactivité dans 30 secondes. Cliquer sur OK pour rester connecté.");
+                if (stay) {
+                    // L'utilisateur veut rester -> on « réveille » le serveur (requête Ajax) et on reset les timers
+                    fetch('/keep-alive', { method: 'POST', credentials: 'include' })
+                        .then(() => resetTimers())
+                        .catch(() => logoutUser());
+                } else {
+                    logoutUser();
+                }
+            }
+
+            function logoutUser() {
+                // Appelle ton endpoint de logout puis redirige vers /encheres
+                fetch('/logout', { method: 'POST', credentials: 'include' })
+                    .finally(() => {
+                        window.location.href = '/encheres';
+                    });
+            }
+
+            // Événements qui comptent comme activité
+            ['click', 'keydown', 'mousemove', 'scroll'].forEach(evt => {
+                window.addEventListener(evt, resetTimers);
+            });
+
+            // Initialisation des timers au chargement de la page
+            resetTimers();
+        </script>
+
     </body>
 </html>
