@@ -40,14 +40,14 @@ public class UtilisateurRepositoryImpl implements UtilisateurRepository {
 
     @Override
     public List<Utilisateur> findAllUtilisateurs() {
-        String sql = "SELECT no_utilisateur, pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur FROM Utilisateurs";
+        String sql = "SELECT no_utilisateur, pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur FROM Utilisateurs WHERE deleted_at IS NULL";
         List<Utilisateur> utilisateurs = jdbcTemplate.query(sql, new UtilisateurRowMapper());
         return utilisateurs;
     }
 
     @Override
     public Utilisateur findUtilisateurById(long id) {
-        String sql = "SELECT no_utilisateur, pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur FROM Utilisateurs WHERE no_utilisateur = ?";
+        String sql = "SELECT no_utilisateur, pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur FROM Utilisateurs WHERE no_utilisateur = ? AND deleted_at IS NULL";
 
         Utilisateur utilisateur = null;
 
@@ -61,7 +61,7 @@ public class UtilisateurRepositoryImpl implements UtilisateurRepository {
 
     @Override
     public Utilisateur findUtilisateurByPseudo(String pseudo) {
-        String sql = "SELECT no_utilisateur, pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur FROM Utilisateurs WHERE pseudo = ?";
+        String sql = "SELECT no_utilisateur, pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur FROM Utilisateurs WHERE pseudo = ? AND deleted_at IS NULL";
 
         Utilisateur utilisateur = null;
 
@@ -75,7 +75,7 @@ public class UtilisateurRepositoryImpl implements UtilisateurRepository {
 
     @Override
     public Utilisateur findUtilisateurByEmail(String email) {
-        String sql = "SELECT no_utilisateur, pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur FROM Utilisateurs where email = ?";
+        String sql = "SELECT no_utilisateur, pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur FROM Utilisateurs where email = ? AND deleted_at IS NULL";
         try {
             Utilisateur vendeur = jdbcTemplate.queryForObject(sql, new UtilisateurRowMapper(), email);
             return vendeur;
@@ -88,7 +88,7 @@ public class UtilisateurRepositoryImpl implements UtilisateurRepository {
 
     @Override
     public Optional<Utilisateur> findUtilisateurByPseudoOrEmail(String pseudo, String email) {
-        String sql = "SELECT no_utilisateur, pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur FROM Utilisateurs WHERE pseudo = :pseudo OR email = :email";
+        String sql = "SELECT no_utilisateur, pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur FROM Utilisateurs WHERE (pseudo = :pseudo OR email = :email) AND deleted_at IS NULL";
         Utilisateur utilisateur = null;
         Map<String, Object> params = new HashMap<>();
         params.put("pseudo", pseudo);
@@ -161,9 +161,9 @@ public class UtilisateurRepositoryImpl implements UtilisateurRepository {
 
     @Override
     public void deleteUtilisateurById(long no_utilisateur) {
-        String sql = "DELETE FROM Utilisateurs WHERE no_utilisateur = ?";
+        // Soft delete
+        String sql = "UPDATE Utilisateurs SET deleted_at = GETDATE() WHERE no_utilisateur = ?";
         jdbcTemplate.update(sql, no_utilisateur);
-
     }
 
 

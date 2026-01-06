@@ -191,3 +191,6 @@ alter table Retraits
 --     no_utilisateur,
 --     no_categorie
 -- from ArticlesVendus
+
+ALTER TABLE Utilisateurs ADD deleted_at DATETIME2 DEFAULT NULL ;
+GO
