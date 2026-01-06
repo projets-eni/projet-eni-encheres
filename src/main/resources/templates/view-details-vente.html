@@ -7,6 +7,7 @@
     <link th:href="@{/css/countdown.css}" rel="stylesheet">
 </head>
 <body>
+
     <!-- Vente terminée -->
     <th:block th:if="${article.etatVente == 'Terminée' and meilleureOffre != null}">
         <th:block th:if="${#strings.equals(meilleureOffre.acheteur.pseudo, #authentication.name)}">
@@ -42,6 +43,11 @@
             </div>
         </div>
     </th:block>
+
+
+    <div th:if="${succes != null and succes.isEmpty() == false}" class="alert alert-success" role="alert" th:text="${succes}"></div>
+    <div th:if="${erreur != null and erreur.isEmpty() == false}" class="alert alert-warning" role="alert" th:text="${erreur}"></div>
+
 
     <th:block th:if="${article.etatVente == 'En cours'
                      || article.etatVente == 'Terminée'

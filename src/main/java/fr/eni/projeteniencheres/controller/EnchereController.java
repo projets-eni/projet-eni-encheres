@@ -8,6 +8,7 @@ import fr.eni.projeteniencheres.bo.Enchere;
 import fr.eni.projeteniencheres.bo.Utilisateur;
 import fr.eni.projeteniencheres.dto.NouvelleVenteDto;
 import fr.eni.projeteniencheres.dto.RechercheDto;
+import fr.eni.projeteniencheres.exception.EnchereImpossible;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
@@ -15,8 +16,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,13 +37,18 @@ public class EnchereController {
     }
 
     @PostMapping("/vente/{noArticle}/encherir")
-    public String encherir(Authentication authentication, @PathVariable int noArticle, @RequestParam("nouveauMontantEnchere") int nouveauMontantEnchere) {
+    public String encherir(Authentication authentication, @PathVariable int noArticle, @RequestParam("nouveauMontantEnchere") int nouveauMontantEnchere, RedirectAttributes redirectAttributes, Model model) {
 
-//        ArticleVendu article = articleVenduService.findById(noArticle);
-//        Utilisateur acheteur = utilisateurService.findUtilisateurByPseudo(authentication.getName());
-//        // appel de la méthode placerEnchère à insérer
-//        enchereService.placer(new Enchere(LocalDateTime.now(),nouveauMontantEnchere,article,acheteur));
-        enchereService.encherir(noArticle, authentication.getName(), nouveauMontantEnchere);
+        ArticleVendu article = articleVenduService.findById(noArticle);
+        Utilisateur acheteur = utilisateurService.findUtilisateurByPseudo(authentication.getName());
+        // appel de la méthode placerEnchère à insérer
+        try {
+            Enchere enchere = enchereService.placer(new Enchere(LocalDateTime.now(), nouveauMontantEnchere, article, acheteur));
+            redirectAttributes.addFlashAttribute("succes", "Votre enchère a été placée.");
+        } catch (EnchereImpossible e) {
+            redirectAttributes.addFlashAttribute("erreur", e.getMessage());
+        }
+        //enchereService.encherir(noArticle, authentication.getName(), nouveauMontantEnchere);
 
         return "redirect:/vente/" + noArticle;
     }

@@ -4,20 +4,27 @@ import fr.eni.projeteniencheres.bo.*;
 import fr.eni.projeteniencheres.dal.interfaces.EnchereRepository;
 import fr.eni.projeteniencheres.exception.EnchereImpossible;
 import org.springframework.beans.BeanUtils;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.*;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
-import java.util.Comparator;
-import java.util.List;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.util.*;
 
 @Repository("enchereRepository")
 public class EnchereRepositoryImpl implements EnchereRepository {
 
     NamedParameterJdbcTemplate jdbcTemplate;
+    JdbcTemplate sJdbcTemplate;
+
     public EnchereRepositoryImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.sJdbcTemplate = new JdbcTemplate(jdbcTemplate.getJdbcTemplate().getDataSource());  // Création d'un JdbcTemplate à partir du DataSource de NamedParameterJdbcTemplate
     }
 
     public final RowMapper<Enchere> rowMapper = (rs, rowNum) -> {
@@ -78,17 +85,38 @@ public class EnchereRepositoryImpl implements EnchereRepository {
      */
     @Override
     public Integer placer(Enchere enchere) {
-        Integer res = null;
-        MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("montantEnchere", enchere.getMontantEnchere())
-                .addValue("noArticle", enchere.getArticleVendu().getNoArticle())
-                .addValue("noUtilisateur", enchere.getAcheteur().getNoUtilisateur());
-        try {
-            res = jdbcTemplate.update("EXEC placerEnchere :montantEnchere, :noArticle, :noUtilisateur", params);
-        } catch (RuntimeException ex) {
-            throw new EnchereImpossible(ex.getMessage());
+        // Créer une instance de SimpleJdbcCall pour appeler la procédure stockée
+        SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(sJdbcTemplate)
+                .withProcedureName("placerEnchere") // Le nom de la procédure stockée
+                .declareParameters(
+                        new SqlParameter("montantEnchere", Types.INTEGER),  // Paramètre d'entrée
+                        new SqlParameter("noArticle", Types.INTEGER),      // Paramètre d'entrée
+                        new SqlParameter("noUtilisateur", Types.INTEGER),  // Paramètre d'entrée
+                        new SqlOutParameter("EnchereId", Types.INTEGER),   // Paramètre de sortie pour l'IDENTITY
+                        new SqlOutParameter("errorMessage", Types.VARCHAR) // Paramètre de sortie pour le message d'erreur
+                );
+
+        // Créer un Map pour passer les paramètres d'entrée
+        Map<String, Object> inParams = new HashMap<>();
+        inParams.put("montantEnchere", enchere.getMontantEnchere());
+        inParams.put("noArticle", enchere.getArticleVendu().getNoArticle());
+        inParams.put("noUtilisateur", enchere.getAcheteur().getNoUtilisateur());
+
+        // Appeler la procédure stockée
+        Map<String, Object> outParams = simpleJdbcCall.execute(new MapSqlParameterSource(inParams));
+
+        // Récupérer l'IDENTITY (le ID de l'enchère insérée) et le message d'erreur
+        Integer enchereId = (Integer) outParams.get("EnchereId");
+        String errorMessage = (String) outParams.get("errorMessage");
+
+        // Gérer l'erreur si nécessaire
+        if (errorMessage != null && !errorMessage.isEmpty()) {
+            System.out.println("Erreur : " + errorMessage);
+            throw new EnchereImpossible("Erreur : " + errorMessage);
         }
-        return res;
+
+        // Retourner l'IDENTITY de l'enchère insérée
+        return enchereId;
     }
 
     @Override
