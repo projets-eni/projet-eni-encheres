@@ -1,3 +1,4 @@
+CREATE PROCEDURE placerEnchere
         @montantEnchere INT,
         @noArticle INT,
     @noUtilisateur INT,

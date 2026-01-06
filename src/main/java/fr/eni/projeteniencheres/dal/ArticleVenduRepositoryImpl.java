@@ -82,7 +82,7 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
 
     /**
      * Pour modifier le statut d'une vente avec la procédure stockée updaterEtatVentes
-     * si articleVendu est null, prend toutes les ventes avec etat_vente différent de "Terminée"
+     * si articleVendu est null, prend toutes les ventes avec etat_vente différent de "Terminée" et "Annulée"
      * @return Nombre de vente impactée
      */
     @Override
