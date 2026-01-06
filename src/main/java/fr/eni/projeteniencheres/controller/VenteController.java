@@ -4,6 +4,7 @@ import fr.eni.projeteniencheres.bll.interfaces.*;
 import fr.eni.projeteniencheres.bo.ArticleVendu;
 import fr.eni.projeteniencheres.bo.Enchere;
 import fr.eni.projeteniencheres.dto.NouvelleVenteDto;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,10 +14,12 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 import java.util.List;
 
 import java.time.ZoneId;
+import java.util.Map;
 
 @Controller
 public class VenteController {
@@ -66,7 +69,14 @@ public class VenteController {
 
     @GetMapping("/vente/{noArticle}")
     public String afficherDetailsVente(@PathVariable int noArticle, Authentication authentication,
-                                       Model modele) {
+                                       Model modele, HttpServletRequest request) {
+
+        // Récupérer les Flash attributes erreur ou succces du retour de "encherir"
+        Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
+        if (inputFlashMap != null) {
+            modele.addAttribute("succes", inputFlashMap.get("succes"));
+            modele.addAttribute("erreur", inputFlashMap.get("erreur"));
+        }
 
         // Récupérer les infos de l'article depuis le service et ajout au modèle pour la vue
         ArticleVendu article = articleVenduService.findById(noArticle);

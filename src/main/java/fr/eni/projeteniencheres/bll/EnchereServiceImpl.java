@@ -61,37 +61,18 @@ public class EnchereServiceImpl implements EnchereService {
 
     @Override
     public Enchere placer(Enchere enchere) {
+
+        Integer res = null;
         Enchere nouvelle = null;
-        Integer res = this.enchereRepository.placer(enchere);
-        if (res > 0) {
-            nouvelle = this.enchereRepository.findById(res);
-        } else {
-            String msg = "Enchère impossible : ";
-            switch(res)
-                {
-                case -1:
-                    msg += "vendeur inconnu";
-                    break;
-                case -2:
-                    msg += "vente fermée";
-                    break;
-                case -3:
-                    msg += "vous êtes le vendeur";
-                    break;
-                case -4:
-                    msg += "enchérisseur inconnu";
-                    break;
-                case -5:
-                    msg += "vous êtes déjà le meilleur enchérisseur";
-                    break;
-                case -6:
-                    msg += "crédit insuffisant";
-                    break;
-                default:
-                    msg += "raison inconnue";
-                }
-                throw new EnchereImpossible(msg);
+        try {
+            res = this.enchereRepository.placer(enchere);
+            if (res != null) {
+                nouvelle = this.enchereRepository.findById(res);
+            }
+        } catch (EnchereImpossible e) {
+            throw e;
         }
+
         return nouvelle;
     }
 

@@ -8,7 +8,7 @@ import java.util.Objects;
 public class Utilisateur implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private long noUtilisateur;
+    private int noUtilisateur;
     private String pseudo;
     private String nom;
     private String prenom;
@@ -44,7 +44,7 @@ public class Utilisateur implements Serializable {
         this.encheres = new ArrayList<>();
     }
 
-    public Utilisateur(long noUtilisateur, String pseudo, String nom, String prenom, String email, String telephone, String rue, String codePostal, String ville, String motDePasse, long credit, boolean administrateur, List<ArticleVendu> acquisitions, List<ArticleVendu> ventes, List<Enchere> encheres) {
+    public Utilisateur(int noUtilisateur, String pseudo, String nom, String prenom, String email, String telephone, String rue, String codePostal, String ville, String motDePasse, long credit, boolean administrateur, List<ArticleVendu> acquisitions, List<ArticleVendu> ventes, List<Enchere> encheres) {
         this.noUtilisateur = noUtilisateur;
         this.pseudo = pseudo;
         this.nom = nom;
@@ -62,11 +62,11 @@ public class Utilisateur implements Serializable {
         this.encheres = encheres;
     }
 
-    public long getNoUtilisateur() {
+    public int getNoUtilisateur() {
         return noUtilisateur;
     }
 
-    public void setNoUtilisateur(long noUtilisateur) {
+    public void setNoUtilisateur(int noUtilisateur) {
         this.noUtilisateur = noUtilisateur;
     }
 

@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout}">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>ENI-Enchères</title>
@@ -12,18 +10,18 @@
     <link th:href="@{/css/countdown.css}" rel="stylesheet">
 
     <body>
-        <!-- Vente terminée -->
-        <th:block th:if="${article.etatVente == 'Terminée' and meilleureOffre != null}">
-            <th:block th:if="${#strings.equals(meilleureOffre.acheteur.pseudo, #authentication.name)}">
-                <h1>Vous avez remporté la vente !</h1>
-            </th:block>
-            <th:block th:if="${!#strings.equals(meilleureOffre.acheteur.pseudo, #authentication.name)}">
-                <h1><span th:text="${meilleureOffre.acheteur.pseudo}"></span> a remporté l'enchère</h1>
-            </th:block>
+    <!-- Vente terminée -->
+    <th:block th:if="${article.etatVente == 'Terminée' and meilleureOffre != null}">
+        <th:block th:if="${#strings.equals(meilleureOffre.acheteur.pseudo, #authentication.name)}">
+            <h1>Vous avez remporté la vente !</h1>
         </th:block>
-        <th:block th:if="${article.etatVente == 'Terminée' and meilleureOffre == null}">
-            <h1>Aucune proposition n'a été émise pendant la période d'enchère.</h1>
+        <th:block th:if="${!#strings.equals(meilleureOffre.acheteur.pseudo, #authentication.name)}">
+            <h1><span th:text="${meilleureOffre.acheteur.pseudo}"></span> a remporté l'enchère</h1>
         </th:block>
+    </th:block>
+    <th:block th:if="${article.etatVente == 'Terminée' and meilleureOffre == null}">
+        <h1>Aucune proposition n'a été émise pendant la période d'enchère.</h1>
+    </th:block>
 
         <!-- Vente en cours -->
         <th:block th:if="${article.etatVente == 'En cours'}">
@@ -50,6 +48,25 @@
             <br>
         </th:block>
 
+
+    <div th:if="${succes != null and succes.isEmpty() == false}" class="alert alert-success" role="alert" th:text="${succes}"></div>
+    <div th:if="${erreur != null and erreur.isEmpty() == false}" class="alert alert-warning" role="alert" th:text="${erreur}"></div>
+
+
+    <th:block th:if="${article.etatVente == 'En cours'
+                     || article.etatVente == 'Terminée'
+                     || #strings.equals(article.vendeur.pseudo, #authentication.name)}">
+        <!-- Une vente non commencée n'est visible que par le vendeur -->
+        <div>
+            <span>
+                <img th:src="@{'/images/' + ${article.idImage}}"
+                     th:alt="${article.idImage != null ? 'Image de ' + article.nomArticle : 'Aucune image sélectionnée'}"
+                     th:if="${article.idImage != null}"
+                     style="max-width: 200px; max-height: 200px;" />
+                <span th:if="${article.idImage == null}" class="text-muted">
+                    Aucune image sélectionnée
+                </span>
+            </span>
         <th:block th:if="${article.etatVente == 'En cours'
                          || article.etatVente == 'Terminée'
                          || #strings.equals(article.vendeur.pseudo, #authentication.name)}">

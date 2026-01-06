@@ -132,7 +132,7 @@ public class UtilisateurRepositoryImpl implements UtilisateurRepository {
                 throw new UtilisateurExisteDeja("Utilisateur déjà existant");
             }
 
-            utilisateur.setNoUtilisateur(keyHolder.getKey().longValue());
+            utilisateur.setNoUtilisateur(keyHolder.getKey().intValue());
 
         } else {
 
@@ -173,7 +173,7 @@ public class UtilisateurRepositoryImpl implements UtilisateurRepository {
         public Utilisateur mapRow(ResultSet rs, int rowNum) throws SQLException {
 
             Utilisateur utilisateur = new Utilisateur();
-            utilisateur.setNoUtilisateur(rs.getLong("no_utilisateur"));
+            utilisateur.setNoUtilisateur(rs.getInt("no_utilisateur"));
             utilisateur.setPseudo(rs.getString("pseudo"));
             utilisateur.setNom(rs.getString("nom"));
             utilisateur.setPrenom(rs.getString("prenom"));
