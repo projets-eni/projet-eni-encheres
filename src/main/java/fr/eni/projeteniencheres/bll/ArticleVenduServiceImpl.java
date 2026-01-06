@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.text.Normalizer;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -220,11 +221,15 @@ public class ArticleVenduServiceImpl implements ArticleVenduService {
         // Filtre sur les mots clés
         if (!dto.getKeywords().isEmpty()){
             articles = articles.stream().filter(article -> {
-                    return article.getNomArticle().toLowerCase().contains(dto.getKeywords()) || article.getNomArticle().toLowerCase().contains(dto.getKeywords());
+                return normalize(article.getNomArticle()).toLowerCase().contains(normalize(dto.getKeywords())) || normalize(article.getDescription()).toLowerCase().contains(normalize(dto.getKeywords()));
             }).toList();
         }
 
         return articles ;
+    }
+
+    private static String normalize(String input) {
+        return input == null ? null : Normalizer.normalize(input, Normalizer.Form.NFKD).replaceAll("\\p{M}", "");
     }
 
 }
