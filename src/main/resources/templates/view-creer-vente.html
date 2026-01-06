@@ -9,12 +9,11 @@
 </head>
 <section layout:fragment="content">
 
-<h1>Nouvelle vente</h1>
 <body>
 <h1 th:if="${nouvelleVente.nomArticle == null}">Nouvelle vente</h1>
 <h1 th:if="${nouvelleVente.nomArticle != null}">Modifier vente</h1>
 
-    <div>
+    <div class="inscription-form">
         <th:block th:object="${nouvelleVente}">
 
             <span>
@@ -40,120 +39,142 @@
 <!--                                </ul>-->
 <!--                            </span>-->
 <!--                        </li>-->
-                    <li>
+                    <li class="form-raw">
                         <label for="nomArticle">Article</label>
-                        <input type="text" id="nomArticle" th:field="*{nomArticle}" required>
-                        <span style="color: red;" th:if="${#fields.hasErrors('nomArticle')}">
-                            <ul>
-                                <li th:each="erreur: ${#fields.errors('nomArticle')}" th:text="${erreur}"></li>
-                            </ul>
-                        </span>
+                        <div class="field">
+                            <input type="text" id="nomArticle" th:field="*{nomArticle}" required>
+                            <span style="color: red;" th:if="${#fields.hasErrors('nomArticle')}">
+                                <ul>
+                                    <li th:each="erreur: ${#fields.errors('nomArticle')}" th:text="${erreur}"></li>
+                                </ul>
+                            </span>
+                        </div>
                     </li>
-                    <li>
+                    <li class="form-raw">
                         <label for="description">Description</label>
-                        <input type="text" id="description" th:field="*{description}" required>
-                        <span style="color: red;" th:if="${#fields.hasErrors('description')}">
-                            <ul>
-                                <li th:each="erreur: ${#fields.errors('description')}" th:text="${erreur}"></li>
-                            </ul>
-                        </span>
+                        <div class="field">
+                            <input type="text" id="description" th:field="*{description}" required>
+                            <span style="color: red;" th:if="${#fields.hasErrors('description')}">
+                                <ul>
+                                    <li th:each="erreur: ${#fields.errors('description')}" th:text="${erreur}"></li>
+                                </ul>
+                            </span>
+                        </div>
                     </li>
-                    <li>
+                    <li class="form-raw">
                         <label for="categorie">Catégorie</label>
-                        <select id="categorie" th:field="*{noCategorie}">
-                            <option value=0>-- Sélectionner une catégorie --</option>
-                            <option th:each="cat : ${@categoryService.afficherCategories()}"
-                                    th:value="${cat.noCategorie}"
-                                    th:text="${cat.libelle}"></option>
-                        </select>
-                        <span style="color: red;" th:if="${#fields.hasErrors('noCategorie')}">
-                            <ul>
-                                <li th:each="erreur: ${#fields.errors('noCategorie')}" th:text="${erreur}"></li>
-                            </ul>
-                        </span>
+                        <div class="field">
+                            <select id="categorie" th:field="*{noCategorie}" class="form-control">
+                                <option value=0>-- Sélectionner une catégorie --</option>
+                                <option th:each="cat : ${@categoryService.afficherCategories()}"
+                                        th:value="${cat.noCategorie}"
+                                        th:text="${cat.libelle}"></option>
+                            </select>
+                            <span style="color: red;" th:if="${#fields.hasErrors('noCategorie')}">
+                                <ul>
+                                    <li th:each="erreur: ${#fields.errors('noCategorie')}" th:text="${erreur}"></li>
+                                </ul>
+                            </span>
+                        </div>
                     </li>
                     <!-- Fonctionnalité Upload de l'image -> à faire à l'itération 2 -->
-                    <li>
+                    <li class="form-raw">
                         <label for="getimg">Photo de l'article</label>
-                        <button type="button" id="getimg" class="btn btn-primary">UPLOADER</button>
+                        <div class="field">
+                            <button type="button" id="getimg" class="btn btn-inscription">UPLOADER</button>
 
-                        <!-- Input file caché -->
-                        <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                            <!-- Input file caché -->
+                            <input type="file" id="fileInput" accept="image/*" style="display: none;">
 
-                        <!-- Champ qui recevra l'image -->
-                        <input type="text" th:field="*{idImage}" id="idImageField" class="form-control" readonly
-                               placeholder="Aucune image sélectionnée">
+                            <!-- Champ qui recevra l'image -->
+                            <input type="text" th:field="*{idImage}" id="idImageField" class="form-control" readonly
+                                   placeholder="Aucune image sélectionnée">
 
-                        <span style="color: red;" th:if="${#fields.hasErrors('idImage')}">
-                           <ul>
-                             <li th:each="erreur: ${#fields.errors('idImage')}" th:text="${erreur}"></li>
-                           </ul>
-                        </span>
+                            <span style="color: red;" th:if="${#fields.hasErrors('idImage')}">
+                               <ul>
+                                 <li th:each="erreur: ${#fields.errors('idImage')}" th:text="${erreur}"></li>
+                               </ul>
+                            </span>
+                        </div>
                     </li>
                     <!-- Fin fonctionnalité -->
-                    <li>
+                    <li class="form-raw">
                         <label for="prixDepart">Mise à prix</label>
-                        <input type="number" id="prixDepart" th:field="*{prixInitial}">
-                        <span style="color: red;" th:if="${#fields.hasErrors('prixInitial')}">
-                            <ul>
-                                <li th:each="erreur: ${#fields.errors('prixInitial')}" th:text="${erreur}"></li>
-                            </ul>
-                        </span>
+                        <div class="field">
+                            <input type="number" id="prixDepart" th:field="*{prixInitial}">
+                            <span style="color: red;" th:if="${#fields.hasErrors('prixInitial')}">
+                                <ul>
+                                    <li th:each="erreur: ${#fields.errors('prixInitial')}" th:text="${erreur}"></li>
+                                </ul>
+                            </span>
+                        </div>
                     </li>
-                    <li>
+                    <li class="form-raw">
                         <label for="dateDebEnchere">Début de l'enchère</label>
-                        <input type="datetime-local" id="dateDebEnchere" th:field="*{dateDebutEncheres}" step="60">
-                        <span style="color: red;" th:if="${#fields.hasErrors('dateDebutEncheres')}">
-                            <ul>
-                                <li th:each="erreur: ${#fields.errors('dateDebutEncheres')}" th:text="${erreur}"></li>
-                            </ul>
-                        </span>
+                        <div class="field">
+                            <input type="datetime-local" id="dateDebEnchere" th:field="*{dateDebutEncheres}" step="60">
+                            <span style="color: red;" th:if="${#fields.hasErrors('dateDebutEncheres')}">
+                                <ul>
+                                    <li th:each="erreur: ${#fields.errors('dateDebutEncheres')}" th:text="${erreur}"></li>
+                                </ul>
+                            </span>
+                        </div>
                     </li>
-                    <li>
+                    <li class="form-raw">
                         <label for="dateFinEnchere">Fin de l'enchère</label>
-                        <input type="datetime-local" id="dateFinEnchere" th:field="*{dateFinEncheres}" step="60">
-                        <span style="color: red;" th:if="${#fields.hasErrors('dateFinEncheres')}">
-                            <ul>
-                                <li th:each="erreur: ${#fields.errors('dateFinEncheres')}" th:text="${erreur}"></li>
-                            </ul>
-                        </span>
-                        <!-- Erreurs de champ @AssertTrue -->
-                        <span style="color: red;" th:if="${#fields.hasErrors('dateFinValide')}">
-                            <ul>
-                                <li th:each="erreur: ${#fields.errors('dateFinValide')}" th:text="${erreur}"></li>
-                            </ul>
-                        </span>
+                        <div class="field">
+                            <input type="datetime-local" id="dateFinEnchere" th:field="*{dateFinEncheres}" step="60">
+                            <span style="color: red;" th:if="${#fields.hasErrors('dateFinEncheres')}">
+                                <ul>
+                                    <li th:each="erreur: ${#fields.errors('dateFinEncheres')}" th:text="${erreur}"></li>
+                                </ul>
+                            </span>
+                            <!-- Erreurs de champ @AssertTrue -->
+                            <span style="color: red;" th:if="${#fields.hasErrors('dateFinValide')}">
+                                <ul>
+                                    <li th:each="erreur: ${#fields.errors('dateFinValide')}" th:text="${erreur}"></li>
+                                </ul>
+                            </span>
+                        </div>
                     </li>
-                    <li>
+                    <li class="form-raw">
                         <label for="rue">Rue</label>
-                        <input type="text" id="rue" th:field="*{rue}" required>
-                        <span style="color: red;" th:if="${#fields.hasErrors('rue')}">
+                        <div class="field">
+                            <input type="text" id="rue" th:field="*{rue}" required>
+                            <span style="color: red;" th:if="${#fields.hasErrors('rue')}">
+                                                <ul>
+                                                    <li th:each="erreur: ${#fields.errors('rue')}" th:text="${erreur}"></li>
+                                                </ul>
+                                            </span>
+                        </div>
+                    </li>
+                    <li class="form-raw">
+                        <label for="codePostal">Code Postal</label>
+                        <div class="field">
+                            <input type="text" id="codePostal" th:field="*{codePostal}" required>
+                            <span style="color: red;" th:if="${#fields.hasErrors('codePostal')}">
                                             <ul>
-                                                <li th:each="erreur: ${#fields.errors('rue')}" th:text="${erreur}"></li>
+                                                <li th:each="erreur: ${#fields.errors('codePostal')}" th:text="${erreur}"></li>
                                             </ul>
                                         </span>
+                        </div>
                     </li>
-                    <li>
-                        <label for="codePostal">Code Postal</label>
-                        <input type="text" id="codePostal" th:field="*{codePostal}" required>
-                        <span style="color: red;" th:if="${#fields.hasErrors('codePostal')}">
-                                        <ul>
-                                            <li th:each="erreur: ${#fields.errors('codePostal')}" th:text="${erreur}"></li>
-                                        </ul>
-                                    </span>
-                    </li>
-                    <li>
+                    <li class="form-raw">
                         <label for="ville">Ville</label>
-                        <input type="text" id="ville" th:field="*{ville}" required>
-                        <span style="color: red;" th:if="${#fields.hasErrors('ville')}">
-                                        <ul>
-                                            <li th:each="erreur: ${#fields.errors('ville')}" th:text="${erreur}"></li>
-                                        </ul>
-                                    </span>
+                        <div class="field">
+                            <input type="text" id="ville" th:field="*{ville}" required>
+                            <span style="color: red;" th:if="${#fields.hasErrors('ville')}">
+                                            <ul>
+                                                <li th:each="erreur: ${#fields.errors('ville')}" th:text="${erreur}"></li>
+                                            </ul>
+                                        </span>
+                        </div>
                     </li>
-                    <li>
-                        <input type="submit" value="Enregistrer">
-                        <a href="/encheres">Annuler</a>
+                    <li class="btn-group">
+                        <input type="submit" value="Enregistrer" class="btn btn-inscription">
+                        <div class="lien-btn btn-inscription">
+                            <a href="/encheres" class="btn">Annuler</a>
+                        </div>
                     </li>
                 </ul>
             </form>

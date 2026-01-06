@@ -4,10 +4,16 @@ import fr.eni.projeteniencheres.bll.interfaces.UtilisateurService;
 import fr.eni.projeteniencheres.bo.Utilisateur;
 import fr.eni.projeteniencheres.dto.UtilisateurAffichageDTO;
 import fr.eni.projeteniencheres.dto.UtilisateurFormDTO;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -92,6 +98,39 @@ public String inscription(@Valid @ModelAttribute("utilisateurFormDTO") Utilisate
     @PostMapping("/profil/modifier")
     public String modifierProfil(){
     return"modifierProfilUtilisateur";
+    }
+
+
+    @PostMapping("/profil/supprimer")
+    public String supprimerCompte(@AuthenticationPrincipal UserDetails userDetails,
+                                  HttpServletRequest request, HttpServletResponse response,
+                                  Model model){
+        long getUserId = utilisateurService.findUtilisateurByPseudo(userDetails.getUsername()).getNoUtilisateur();
+        utilisateurService.deleteUtilisateurById(getUserId);
+
+        // Déconnexion Spring Security manuelle
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        new SecurityContextLogoutHandler().logout(request, response, auth);
+
+        SecurityContextHolder.clearContext();
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+
+        return "redirect:/encheres";
+
+        // Pour aller plus loin ...
+//        return "redirect:/login?compte-supprime"; -> on pourrait imaginer modifier
+        // A mettre dans la méthode GET mappée sur la route /login : ... permettrait d'afficher un message à l'utilisateur
+//        @GetMapping("/login")
+//        public String login(@RequestParam(value = "compte-supprime", required = false) String message,
+//                Model model) {
+//            if ("compte-supprime".equals(message)) {
+//                model.addAttribute("success", "Compte supprimé avec succès. Vous pouvez créer un nouveau compte.");
+//            }
+//            return "login";
+//        }
     }
 
 

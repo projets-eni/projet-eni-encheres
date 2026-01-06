@@ -172,3 +172,5 @@ FROM Encheres e JOIN Utilisateurs u ON e.no_utilisateur = u.no_utilisateur
 WHERE e.no_article = 3
 ORDER BY e.date_enchere;
 GO
+
+UPDATE Utilisateurs SET deleted_at = NULL WHERE no_utilisateur = 2;

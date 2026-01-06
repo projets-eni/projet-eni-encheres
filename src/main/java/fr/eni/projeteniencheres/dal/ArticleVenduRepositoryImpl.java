@@ -29,7 +29,7 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
 
     private NamedParameterJdbcTemplate jdbcTemplate;
 
-    private final String rqtSelect = "select v.*, u.pseudo from ArticlesVendus v inner join (select no_utilisateur, pseudo from Utilisateurs) u on v.no_utilisateur=u.no_utilisateur ";
+    private final String rqtSelect = "select v.*, u.pseudo from ArticlesVendus v inner join (select no_utilisateur, pseudo from Utilisateurs where deleted_at IS NULL) u on v.no_utilisateur=u.no_utilisateur ";
     @Autowired
     private UtilisateurService utilisateurService;
 
@@ -108,10 +108,10 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
                 "LEFT JOIN Categories AS c ON a.no_categorie = c.no_categorie " +
                 "LEFT JOIN Utilisateurs AS u ON a.no_utilisateur = u.no_utilisateur " +
                 "LEFT JOIN Retraits AS r ON a.no_article = r.no_article " +
-                "WHERE a.no_article = :id";
+                "WHERE a.no_article = :id and deleted_at IS NULL";
         ArticleVendu article = jdbcTemplate.queryForObject(sql, params, venteRowMapperEagerLoading);
 
-        sql = "SELECT e.*, u.pseudo FROM Encheres AS e INNER JOIN Utilisateurs AS u ON e.no_utilisateur=u.no_utilisateur WHERE no_article= :id" ;
+        sql = "SELECT e.*, u.pseudo FROM Encheres AS e INNER JOIN Utilisateurs AS u ON e.no_utilisateur=u.no_utilisateur WHERE no_article= :id and deleted_at IS NULL" ;
         List<Enchere> encheres = jdbcTemplate.query(sql, params, enchereRowMapper);
 
 //        try {
