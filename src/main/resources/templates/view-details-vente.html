@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>ENI-Enchères</title>
-</head>
-<section layout:fragment="content">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/form.css}">
     <link th:href="@{/css/countdown.css}" rel="stylesheet">
+</head>
+<section layout:fragment="content">
+
 
     <body>
     <!-- Vente terminée -->
@@ -53,20 +54,6 @@
     <div th:if="${erreur != null and erreur.isEmpty() == false}" class="alert alert-warning" role="alert" th:text="${erreur}"></div>
 
 
-    <th:block th:if="${article.etatVente == 'En cours'
-                     || article.etatVente == 'Terminée'
-                     || #strings.equals(article.vendeur.pseudo, #authentication.name)}">
-        <!-- Une vente non commencée n'est visible que par le vendeur -->
-        <div>
-            <span>
-                <img th:src="@{'/images/' + ${article.idImage}}"
-                     th:alt="${article.idImage != null ? 'Image de ' + article.nomArticle : 'Aucune image sélectionnée'}"
-                     th:if="${article.idImage != null}"
-                     style="max-width: 200px; max-height: 200px;" />
-                <span th:if="${article.idImage == null}" class="text-muted">
-                    Aucune image sélectionnée
-                </span>
-            </span>
         <th:block th:if="${article.etatVente == 'En cours'
                          || article.etatVente == 'Terminée'
                          || #strings.equals(article.vendeur.pseudo, #authentication.name)}">
