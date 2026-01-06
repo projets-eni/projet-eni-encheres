@@ -64,7 +64,7 @@
                     <li class="form-raw">
                         <label for="categorie">Catégorie</label>
                         <div class="field">
-                            <select id="categorie" th:field="*{noCategorie}">
+                            <select id="categorie" th:field="*{noCategorie}" class="form-control">
                                 <option value=0>-- Sélectionner une catégorie --</option>
                                 <option th:each="cat : ${@categoryService.afficherCategories()}"
                                         th:value="${cat.noCategorie}"
@@ -80,20 +80,22 @@
                     <!-- Fonctionnalité Upload de l'image -> à faire à l'itération 2 -->
                     <li class="form-raw">
                         <label for="getimg">Photo de l'article</label>
-                        <button type="button" id="getimg" class="btn btn-primary">UPLOADER</button>
+                        <div class="field">
+                            <button type="button" id="getimg" class="btn btn-inscription">UPLOADER</button>
 
-                        <!-- Input file caché -->
-                        <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                            <!-- Input file caché -->
+                            <input type="file" id="fileInput" accept="image/*" style="display: none;">
 
-                        <!-- Champ qui recevra l'image -->
-                        <input type="text" th:field="*{idImage}" id="idImageField" class="form-control" readonly
-                               placeholder="Aucune image sélectionnée">
+                            <!-- Champ qui recevra l'image -->
+                            <input type="text" th:field="*{idImage}" id="idImageField" class="form-control" readonly
+                                   placeholder="Aucune image sélectionnée">
 
-                        <span style="color: red;" th:if="${#fields.hasErrors('idImage')}">
-                           <ul>
-                             <li th:each="erreur: ${#fields.errors('idImage')}" th:text="${erreur}"></li>
-                           </ul>
-                        </span>
+                            <span style="color: red;" th:if="${#fields.hasErrors('idImage')}">
+                               <ul>
+                                 <li th:each="erreur: ${#fields.errors('idImage')}" th:text="${erreur}"></li>
+                               </ul>
+                            </span>
+                        </div>
                     </li>
                     <!-- Fin fonctionnalité -->
                     <li class="form-raw">
@@ -168,9 +170,11 @@
                                         </span>
                         </div>
                     </li>
-                    <li class="form-raw">
-                        <input type="submit" value="Enregistrer">
-                        <a href="/encheres" class="btn">Annuler</a>
+                    <li class="btn-group">
+                        <input type="submit" value="Enregistrer" class="btn btn-inscription">
+                        <div class="lien-btn btn-inscription">
+                            <a href="/encheres" class="btn">Annuler</a>
+                        </div>
                     </li>
                 </ul>
             </form>
