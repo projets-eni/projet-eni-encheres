@@ -21,13 +21,14 @@ BEGIN
         @EnchereMaxMontant INT,
         @NAffectedVente INT = 0,
         @NouvelEtatVente VARCHAR(50),
+        @PrixInitial INT,
         @Now DATETIME2 = GETUTCDATE();
 
     -- Déclaration du curseur en dehors des conditions (c'est ici que la portée du curseur est correcte)
     DECLARE vente_cursor CURSOR FOR
         -- Si @noArticle est NULL, on sélectionne toutes les ventes
         -- Sinon, on sélectionne la vente spécifiée par @noArticle
-        SELECT no_article, date_fin_encheres, date_debut_encheres, etat_vente, no_utilisateur
+        SELECT no_article, date_fin_encheres, date_debut_encheres, etat_vente, no_utilisateur, prix_initial
         FROM ArticlesVendus
         WHERE
             (@noArticle IS NULL OR no_article = @noArticle)  -- Si @noArticle est NULL, il sélectionne toutes les ventes
@@ -38,7 +39,7 @@ BEGIN
     OPEN vente_cursor;
 
     -- Lire la première ligne
-    FETCH NEXT FROM vente_cursor INTO @noArticleParam, @dateFinEnchere, @dateDebutEnchere, @etatVente, @VendeurId;
+    FETCH NEXT FROM vente_cursor INTO @noArticleParam, @dateFinEnchere, @dateDebutEnchere, @etatVente, @VendeurId, @PrixInitial;
 
     -- Boucle sur chaque vente
     WHILE @@FETCH_STATUS = 0
@@ -69,30 +70,42 @@ BEGIN
 
             UPDATE ArticlesVendus
             SET etat_vente = @NouvelEtatVente,
-                prix_vente = @EnchereMaxMontant
+                prix_vente = coalesce(@EnchereMaxMontant, @PrixInitial)
             WHERE no_article = @noArticleParam;
 
-            IF @etatVente <> 'Terminée' AND @NouvelEtatVente = 'Terminée'
+            PRINT 'no_article: ' + CAST(@noArticleParam AS VARCHAR);
+            PRINT 'NouvelEtatVente: ' + @NouvelEtatVente;
+            PRINT 'EnchereMax : ' + CAST(@EnchereMaxMontant as varchar);
+
+
+            IF @etatVente <> 'Terminée' AND @NouvelEtatVente = 'Terminée' and @EnchereMaxUID IS NOT NULL
                 BEGIN
                     -- cloture de vente, on ajuste les credits acheteur / vendeur
+
+                    PRINT 'VendeurId: ' + CAST(@VendeurId AS VARCHAR);
+                    PRINT 'AcheteurId: ' + CAST(@EnchereMaxUID AS VARCHAR);
+
                     UPDATE Utilisateurs
                     SET credit = credit + ISNULL(@EnchereMaxMontant, 0)
                     WHERE no_utilisateur = @VendeurId;
 
-                    IF @EnchereMaxUID IS NOT NULL
-                        BEGIN
-                            UPDATE Utilisateurs
-                            SET credit = credit - @EnchereMaxMontant
-                            WHERE no_utilisateur = @EnchereMaxUID;
-                        END
+                    PRINT 'Vendeur crédit : ' + CAST(@@ROWCOUNT AS VARCHAR);
+
+                    UPDATE Utilisateurs
+                    SET credit = credit - @EnchereMaxMontant
+                    WHERE no_utilisateur = @EnchereMaxUID;
+
+                    PRINT 'Acheteur crédit : ' + CAST(@@ROWCOUNT AS VARCHAR);
                 END
 
             COMMIT TRANSACTION;
 
+            PRINT 'Lignes affectées: ' + CAST(@@ROWCOUNT AS VARCHAR);
+
             set @NAffectedVente += 1;
 
             -- Lire la prochaine ligne
-            FETCH NEXT FROM vente_cursor INTO @noArticleParam, @dateFinEnchere, @dateDebutEnchere, @etatVente, @VendeurId;
+            FETCH NEXT FROM vente_cursor INTO @noArticleParam, @dateFinEnchere, @dateDebutEnchere, @etatVente, @VendeurId, @PrixInitial;
         END;
 
     -- Fermer et libérer les ressources du curseur
@@ -101,3 +114,4 @@ BEGIN
 
     return @NAffectedVente;
 END;
+
