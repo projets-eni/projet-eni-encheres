@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
     <title>ENI-Enchères</title>
@@ -7,6 +9,7 @@
     <link rel="stylesheet" th:href="@{/css/form.css}">
     <link th:href="@{/css/countdown.css}" rel="stylesheet">
 </head>
+
 <section layout:fragment="content">
 
 
@@ -24,41 +27,41 @@
         <h1>Aucune proposition n'a été émise pendant la période d'enchère.</h1>
     </th:block>
 
-        <!-- Vente en cours -->
-        <th:block th:if="${article.etatVente == 'En cours'}">
-            <h1>Détails vente</h1>
-            <div id="countdown" th:data-timestamp="${dateFinTimestamp}">
-                <div class="tag">
-                    <span class="value">-</span>
-                    <span class="label">jours</span>
-                </div>
-                <div class="tag">
-                    <span class="value">-</span>
-                    <span class="label">heures</span>
-                </div>
-                <div class="tag">
-                    <span class="value">-</span>
-                    <span class="label">minutes</span>
-                </div>
-                <div class="tag">
-                    <span class="value">-</span>
-                    <span class="label">secondes</span>
-                </div>
+    <!-- Vente en cours -->
+    <th:block th:if="${article.etatVente == 'En cours'}">
+        <h1>Détails vente</h1>
+        <div id="countdown" th:data-timestamp="${dateFinTimestamp}">
+            <div class="tag">
+                <span class="value">-</span>
+                <span class="label">jours</span>
             </div>
-            <br>
-            <br>
-        </th:block>
+            <div class="tag">
+                <span class="value">-</span>
+                <span class="label">heures</span>
+            </div>
+            <div class="tag">
+                <span class="value">-</span>
+                <span class="label">minutes</span>
+            </div>
+            <div class="tag">
+                <span class="value">-</span>
+                <span class="label">secondes</span>
+            </div>
+        </div>
+        <br>
+        <br>
+    </th:block>
 
 
     <div th:if="${succes != null and succes.isEmpty() == false}" class="alert alert-success" role="alert" th:text="${succes}"></div>
     <div th:if="${erreur != null and erreur.isEmpty() == false}" class="alert alert-warning" role="alert" th:text="${erreur}"></div>
 
 
-        <th:block th:if="${article.etatVente == 'En cours'
+    <th:block th:if="${article.etatVente == 'En cours'
                          || article.etatVente == 'Terminée'
                          || #strings.equals(article.vendeur.pseudo, #authentication.name)}">
-            <!-- Une vente non commencée n'est visible que par le vendeur -->
-            <div>
+        <!-- Une vente non commencée n'est visible que par le vendeur -->
+        <div>
                 <span>
                     <img th:src="@{'/images/' + ${article.idImage}}"
                          th:alt="${article.idImage != null ? 'Image de ' + article.nomArticle : 'Aucune image sélectionnée'}"
@@ -69,94 +72,94 @@
                     </span>
                 </span>
 
-                <p>Article : <span th:text="${article.nomArticle}"></span></p>
-                <p>Description : <span th:text="${article.description}"></span></p>
-                <p>Catégorie : <span th:text="${article.categorie.libelle}"></span></p>
+            <p>Article : <span th:text="${article.nomArticle}"></span></p>
+            <p>Description : <span th:text="${article.description}"></span></p>
+            <p>Catégorie : <span th:text="${article.categorie.libelle}"></span></p>
 
-                <p>Meilleure offre :
-                    <th:block th:if="${meilleureOffre != null}">
-                        <span th:text="${meilleureOffre.montantEnchere}"></span>
-                        points par
-                        <a th:href="@{/profil/{pseudo}(pseudo=${meilleureOffre.acheteur.pseudo})}" th:text="${meilleureOffre.acheteur.pseudo}"></a>
+            <p>Meilleure offre :
+                <th:block th:if="${meilleureOffre != null}">
+                    <span th:text="${meilleureOffre.montantEnchere}"></span>
+                    points par
+                    <a th:href="@{/profil/{pseudo}(pseudo=${meilleureOffre.acheteur.pseudo})}" th:text="${meilleureOffre.acheteur.pseudo}"></a>
 
-                        <div th:if="${#strings.equals(article.vendeur.pseudo, #authentication.name) and encheres.size() > 0}">
-                            <p>Enchères reçues : </p>
-                            <div th:each="enchere : ${encheres}">
-                                <span th:text="${enchere.montantEnchere}"></span>
-                                points proposée par
-                                <a th:href="@{/profil/{pseudo}(pseudo=${enchere.acheteur.pseudo})}" th:text="${enchere.acheteur.pseudo}"></a>
-                                le <span th:text="${#temporals.format(enchere.dateEnchere, 'dd/MM/yyyy')}"></span>
-                                à <span th:text="${#temporals.format(enchere.dateEnchere, 'hh:mm')}"></span>
-                            </div>
+                    <div th:if="${#strings.equals(article.vendeur.pseudo, #authentication.name) and encheres.size() > 0}">
+                        <p>Enchères reçues : </p>
+                        <div th:each="enchere : ${encheres}">
+                            <span th:text="${enchere.montantEnchere}"></span>
+                            points proposée par
+                            <a th:href="@{/profil/{pseudo}(pseudo=${enchere.acheteur.pseudo})}" th:text="${enchere.acheteur.pseudo}"></a>
+                            le <span th:text="${#temporals.format(enchere.dateEnchere, 'dd/MM/yyyy')}"></span>
+                            à <span th:text="${#temporals.format(enchere.dateEnchere, 'hh:mm')}"></span>
                         </div>
-                    </th:block>
-                    <th:block th:unless="${meilleureOffre != null}">
-                        Aucune offre pour le moment.
-                    </th:block>
-                </p>
+                    </div>
+                </th:block>
+                <th:block th:unless="${meilleureOffre != null}">
+                    Aucune offre pour le moment.
+                </th:block>
+            </p>
 
-                <p>Mise à prix : <span th:text="${article.prixInitial}"></span> points</p>
-                <p>Début de l'enchère :
-                    le <span th:text="${#temporals.format(article.dateDebutEncheres, 'dd/MM/yyyy')}"></span>
-                    à <span th:text="${#temporals.format(article.dateDebutEncheres, 'hh:mm')}"></span>
-                </p>
-                <p>Fin de l'enchère :
-                    le <span th:text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yyyy')}"></span>
-                    à <span th:text="${#temporals.format(article.dateFinEncheres, 'hh:mm')}"></span>
+            <p>Mise à prix : <span th:text="${article.prixInitial}"></span> points</p>
+            <p>Début de l'enchère :
+                le <span th:text="${#temporals.format(article.dateDebutEncheres, 'dd/MM/yyyy')}"></span>
+                à <span th:text="${#temporals.format(article.dateDebutEncheres, 'hh:mm')}"></span>
+            </p>
+            <p>Fin de l'enchère :
+                le <span th:text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yyyy')}"></span>
+                à <span th:text="${#temporals.format(article.dateFinEncheres, 'hh:mm')}"></span>
 
-                </p>
-                <p>
-                    <span>Retrait: </span>
-                    <span th:text="${article.retrait?.rue} ?: ''">
+            </p>
+            <p>
+                <span>Retrait: </span>
+                <span th:text="${article.retrait?.rue} ?: ''">
                         <p> <span th:text="${article.retrait?.codePostal} ?: ''"></span>
                             <span th:text="${article.retrait?.ville} ?: ''"></span>
                         </p>
                     </span>
-                </p>
-                <p>Vendeur :
-                    <a th:href="@{/profil/{pseudo}(pseudo=${article.vendeur.pseudo})}" th:text="${article.vendeur.pseudo}"></a>
-                </p>
+            </p>
+            <p>Vendeur :
+                <a th:href="@{/profil/{pseudo}(pseudo=${article.vendeur.pseudo})}" th:text="${article.vendeur.pseudo}"></a>
+            </p>
 
-                <!-- Un acheteur peut enchérir tant que la vente est encore en cours -->
-                <form th:if="${article.etatVente == 'En cours'}" th:action="@{/vente/{id}/encherir(id=${article.noArticle})}" method="POST">
-                    <p>Ma proposition :
-                        <input th:if="${meilleureOffre == null}" type="number" name="nouveauMontantEnchere" th:value="${article.prixInitial}" required th:min="${article.prixInitial}" step="10">
-                        <input th:if="${meilleureOffre != null}" type="number" name="nouveauMontantEnchere" th:value="${meilleureOffre.montantEnchere+10}" required th:min="${meilleureOffre.montantEnchere+10}" step="10">
-                        points
-                        <input type="submit" value="Enchérir">
-                    </p>
-                </form>
+            <!-- Un acheteur peut enchérir tant que la vente est encore en cours -->
+            <form th:if="${article.etatVente == 'En cours'}" th:action="@{/vente/{id}/encherir(id=${article.noArticle})}" method="POST">
+                <p>Ma proposition :
+                    <input th:if="${meilleureOffre == null}" type="number" name="nouveauMontantEnchere" th:value="${article.prixInitial}" required th:min="${article.prixInitial}" step="10">
+                    <input th:if="${meilleureOffre != null}" type="number" name="nouveauMontantEnchere" th:value="${meilleureOffre.montantEnchere+10}" required th:min="${meilleureOffre.montantEnchere+10}" step="10">
+                    points
+                    <input type="submit" value="Enchérir">
+                </p>
+            </form>
 
-    <!--             Si la vente est terminée, impossible de renchérir -->
-                <div th:if="${article.etatVente == 'Terminée'}">
-                    <div th:if="${monOffre != null}">
+            <!--             Si la vente est terminée, impossible de renchérir -->
+            <div th:if="${article.etatVente == 'Terminée'}">
+                <div th:if="${monOffre != null}">
                         <span>Ma proposition :
                             <span th:text="${monOffre.montantEnchere}"></span>
                             points
                         </span>
-                    </div>
                 </div>
-
-                <!-- Si la vente n'est pas encore commencée : possibilité de modifier et d'annuler la vente pour le vendeur -->
-                <div th:if="${article.etatVente == 'Non commencée' && #strings.equals(article.vendeur.pseudo, #authentication.name)}" class="d-flex gap-2">
-                    <a th:href="@{/vente/{id}/modifier(id=${article.noArticle})}" class="btn btn-primary" >Modifier</a>
-                    <form th:action="@{/vente/{id}/annuler(id=${article.noArticle})}" method="POST">
-                        <button type="submit" class="btn btn-warning" onclick="return confirm('Voulez-vous vraiment annuler la vente de ?');">
-                            Annuler la vente
-                        </button>
-                    </form>
-                </div>
-
             </div>
-        </th:block>
-        <!-- Appel du script qui génère le timer pour décompter le temps restant avant la clôture de la vente -->
-        <script th:src="@{/js/countdown.js}"></script>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const timestamp = parseInt(document.getElementById('countdown').dataset.timestamp);
-                initCountdown(timestamp);
-            });
-        </script>
+
+            <!-- Si la vente n'est pas encore commencée : possibilité de modifier et d'annuler la vente pour le vendeur -->
+            <div th:if="${article.etatVente == 'Non commencée' && #strings.equals(article.vendeur.pseudo, #authentication.name)}" class="d-flex gap-2">
+                <a th:href="@{/vente/{id}/modifier(id=${article.noArticle})}" class="btn btn-primary" >Modifier</a>
+                <form th:action="@{/vente/{id}/annuler(id=${article.noArticle})}" method="POST">
+                    <button type="submit" class="btn btn-warning" onclick="return confirm('Voulez-vous vraiment annuler la vente de ?');">
+                        Annuler la vente
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </th:block>
+    <!-- Appel du script qui génère le timer pour décompter le temps restant avant la clôture de la vente -->
+    <script th:src="@{/js/countdown.js}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const timestamp = parseInt(document.getElementById('countdown').dataset.timestamp);
+            initCountdown(timestamp);
+        });
+    </script>
     </body>
 </section>
 </html>
