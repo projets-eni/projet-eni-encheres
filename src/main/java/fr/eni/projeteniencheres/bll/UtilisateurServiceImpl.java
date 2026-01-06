@@ -88,6 +88,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     }
 
     @Override
+    @Transactional
     public void deleteUtilisateurById(long no_utilisateur) {
         utilisateurRepository.deleteUtilisateurById(no_utilisateur);
     }

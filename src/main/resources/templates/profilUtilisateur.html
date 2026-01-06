@@ -50,6 +50,12 @@
         <a href="/profil/modifier" class="btn">Modifier</a>
     </div>
 
+    <form sec:authorize="hasRole('USER')" th:action="@{/profil/supprimer}" method="POST">
+        <button type="submit" class="btn" onclick="return confirm('Voulez-vous vraiment supprimer votre compte ?');">
+            Supprimer mon compte
+        </button>
+    </form>
+
 </section>
 
 </html>
