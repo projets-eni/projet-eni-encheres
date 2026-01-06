@@ -97,7 +97,7 @@ public String inscription(@Valid @ModelAttribute("utilisateurFormDTO") Utilisate
 
     @PostMapping("/profil/modifier")
     public String modifierProfil(){
-    return"modifierProfilUtilisateur";
+    return "modifierProfilUtilisateur";
     }
 
 
