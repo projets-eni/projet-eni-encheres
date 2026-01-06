@@ -46,6 +46,8 @@
                     <span class="label">secondes</span>
                 </div>
             </div>
+            <br>
+            <br>
         </th:block>
 
         <th:block th:if="${article.etatVente == 'En cours'
@@ -84,7 +86,6 @@
                             </div>
                         </div>
                     </th:block>
-
                     <th:block th:unless="${meilleureOffre != null}">
                         Aucune offre pour le moment.
                     </th:block>
@@ -144,8 +145,6 @@
 
             </div>
         </th:block>
-        <!-- Appel du script qui rappelle qu'il va y avoir une éconnexion en cas d'inactivity -->
-        <script th:src="@{/js/inactivity.js}"></script>
         <!-- Appel du script qui génère le timer pour décompter le temps restant avant la clôture de la vente -->
         <script th:src="@{/js/countdown.js}"></script>
         <script>
