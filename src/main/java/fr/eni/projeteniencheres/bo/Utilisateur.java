@@ -1,6 +1,7 @@
 package fr.eni.projeteniencheres.bo;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -20,6 +21,7 @@ public class Utilisateur implements Serializable {
     private String motDePasse;
     private long credit;
     private boolean administrateur;
+    private LocalDateTime deletedAt;
     List<ArticleVendu> acquisitions;
     List<ArticleVendu> ventes;
     List<Enchere> encheres;
@@ -182,16 +184,33 @@ public class Utilisateur implements Serializable {
         this.encheres = encheres;
     }
 
+
+    public LocalDateTime getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void setDeletedAt(LocalDateTime deletedAt) {
+        this.deletedAt = deletedAt;
+    }
+
+    public boolean isDeleted() {
+        return deletedAt != null;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Utilisateur that = (Utilisateur) o;
-        return noUtilisateur == that.noUtilisateur && credit == that.credit && administrateur == that.administrateur && Objects.equals(pseudo, that.pseudo) && Objects.equals(nom, that.nom) && Objects.equals(prenom, that.prenom) && Objects.equals(email, that.email) && Objects.equals(telephone, that.telephone) && Objects.equals(rue, that.rue) && Objects.equals(codePostal, that.codePostal) && Objects.equals(ville, that.ville) && Objects.equals(motDePasse, that.motDePasse) && Objects.equals(acquisitions, that.acquisitions) && Objects.equals(ventes, that.ventes) && Objects.equals(encheres, that.encheres);
+        return noUtilisateur == that.noUtilisateur && credit == that.credit && administrateur == that.administrateur && deletedAt == that.deletedAt
+                && Objects.equals(pseudo, that.pseudo) && Objects.equals(nom, that.nom) && Objects.equals(prenom, that.prenom)
+                && Objects.equals(email, that.email) && Objects.equals(telephone, that.telephone) && Objects.equals(rue, that.rue)
+                && Objects.equals(codePostal, that.codePostal) && Objects.equals(ville, that.ville) && Objects.equals(motDePasse, that.motDePasse)
+                && Objects.equals(acquisitions, that.acquisitions) && Objects.equals(ventes, that.ventes) && Objects.equals(encheres, that.encheres);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(noUtilisateur, pseudo, nom, prenom, email, telephone, rue, codePostal, ville, motDePasse, credit, administrateur, acquisitions, ventes, encheres);
+        return Objects.hash(noUtilisateur, pseudo, nom, prenom, email, telephone, rue, codePostal, ville, motDePasse, credit, administrateur, deletedAt, acquisitions, ventes, encheres);
     }
 
     @Override
@@ -206,12 +225,9 @@ public class Utilisateur implements Serializable {
                 ", rue='" + rue + '\'' +
                 ", codePostal='" + codePostal + '\'' +
                 ", ville='" + ville + '\'' +
-                ", motDePasse='" + motDePasse + '\'' +
                 ", credit=" + credit +
                 ", administrateur=" + administrateur +
-                ", acquisitions=" + acquisitions +
-                ", ventes=" + ventes +
-                ", encheres=" + encheres +
+                ", isDeleted=" + isDeleted() +
                 '}';
     }
 }

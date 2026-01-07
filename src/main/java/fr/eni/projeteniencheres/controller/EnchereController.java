@@ -11,6 +11,8 @@ import fr.eni.projeteniencheres.dto.RechercheDto;
 import fr.eni.projeteniencheres.exception.EnchereImpossible;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +20,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContext;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,6 +33,8 @@ public class EnchereController {
     private final EnchereService enchereService;
     private final UtilisateurService utilisateurService;
 
+    Logger logger = LoggerFactory.getLogger(EnchereController.class);
+
     public EnchereController(ArticleVenduService articleVenduService, EnchereService enchereService, UtilisateurService utilisateurService) {
         this.articleVenduService = articleVenduService;
         this.enchereService = enchereService;
@@ -41,12 +46,15 @@ public class EnchereController {
 
         ArticleVendu article = articleVenduService.findById(noArticle);
         Utilisateur acheteur = utilisateurService.findUtilisateurByPseudo(authentication.getName());
+        Enchere enchereTmp = new Enchere(LocalDateTime.now(), nouveauMontantEnchere, article, acheteur);
         // appel de la méthode placerEnchère à insérer
         try {
-            Enchere enchere = enchereService.placer(new Enchere(LocalDateTime.now(), nouveauMontantEnchere, article, acheteur));
+            Enchere enchere = enchereService.placer(enchereTmp);
             redirectAttributes.addFlashAttribute("succes", "Votre enchère a été placée.");
         } catch (EnchereImpossible e) {
             redirectAttributes.addFlashAttribute("erreur", e.getMessage());
+            // log des placements d'enchère en échec
+            logger.info("ENCHERIR - " + e.getMessage() + "\n\t" + enchereTmp.toString());
         }
         //enchereService.encherir(noArticle, authentication.getName(), nouveauMontantEnchere);
 

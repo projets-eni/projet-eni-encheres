@@ -4,7 +4,8 @@ public enum EtatVente {
 
     ATTENTE("Non commencée"),
     ACTIVE("En cours"),
-    FIN("Terminée");
+    FIN("Terminée"),
+    ANNULE("Annulée");
 
     private String label;
 
