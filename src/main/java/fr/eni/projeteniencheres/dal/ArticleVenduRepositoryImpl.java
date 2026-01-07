@@ -43,6 +43,18 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
     }
 
     @Override
+    public List<ArticleVendu> findAllByAcheteur(long no_utilisateur) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("noAcheteur", no_utilisateur);
+        String sql = "select v.*, u.pseudo " +
+                "from ArticlesVendus v " +
+                "inner join (select no_utilisateur, pseudo from Utilisateurs where deleted_at IS NULL) u on v.no_utilisateur=u.no_utilisateur " +
+                "inner join Encheres as e on e.no_article=v.no_article and e.no_utilisateur= :no_utilisateur_acheteur ";
+        ;
+        return jdbcTemplate.query(sql, params, venteRowMapperLazyLoading);
+    }
+
+    @Override
     public List<ArticleVendu> findEnCours() {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("dateDebut", Timestamp.from(Instant.now()));

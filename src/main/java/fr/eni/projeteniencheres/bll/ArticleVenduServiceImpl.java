@@ -1,7 +1,9 @@
 package fr.eni.projeteniencheres.bll;
 
 import fr.eni.projeteniencheres.bll.interfaces.ArticleVenduService;
+import fr.eni.projeteniencheres.bll.interfaces.EnchereService;
 import fr.eni.projeteniencheres.bll.interfaces.RetraitService;
+import fr.eni.projeteniencheres.bll.interfaces.UtilisateurService;
 import fr.eni.projeteniencheres.bo.*;
 import fr.eni.projeteniencheres.dal.ArticleVenduRepositoryImpl;
 import fr.eni.projeteniencheres.dal.interfaces.ArticleVenduRepository;
@@ -26,14 +28,18 @@ public class ArticleVenduServiceImpl implements ArticleVenduService {
 
     private final ArticleVenduRepository articleVenduRepository;
     private final RetraitService retraitService;
+    private final UtilisateurService utilisateurService;
+    private final EnchereService enchereService;
     private EnchereRepository enchereRepository;
 
     private Logger logger = LoggerFactory.getLogger(ArticleVenduServiceImpl.class);
 
-    public ArticleVenduServiceImpl(ArticleVenduRepository articleVenduRepository, RetraitService retraitService, EnchereRepository enchereRepository) {
+    public ArticleVenduServiceImpl(ArticleVenduRepository articleVenduRepository, RetraitService retraitService, EnchereRepository enchereRepository, UtilisateurService utilisateurService, EnchereService enchereService) {
         this.articleVenduRepository = articleVenduRepository;
         this.retraitService = retraitService;
         this.enchereRepository = enchereRepository;
+        this.utilisateurService = utilisateurService;
+        this.enchereService = enchereService;
     }
 
     @Override
@@ -144,6 +150,10 @@ public class ArticleVenduServiceImpl implements ArticleVenduService {
     public List<ArticleVendu> rechercher(RechercheDto dto, String pseudo) {
 
         List<ArticleVendu> articles = articleVenduRepository.findAll();
+        Utilisateur user = utilisateurService.findUtilisateurByPseudo(pseudo);
+        long noUser = user.getNoUtilisateur();
+        List<ArticleVendu> myArticles = articleVenduRepository.findAllByAcheteur(noUser);
+
         List<ArticleVendu> result =  new ArrayList<ArticleVendu>();
 
         if (!pseudo.isEmpty() && dto.getAchatOuVente() != null) {
@@ -160,7 +170,7 @@ public class ArticleVenduServiceImpl implements ArticleVenduService {
                 // Filtre sur MES ENCHERES = articles dont je suis dans la liste des acheteurs potentiels
                 List<ArticleVendu> listeMesEncheres = new ArrayList<ArticleVendu>();
                 if (dto.getMesEncheres()) {
-                    listeMesEncheres = articles.stream().filter(article ->
+                    listeMesEncheres = myArticles.stream().filter(article ->
                             article.getEncheres() != null &&
                                     article.getEncheres().stream().anyMatch(enchere -> enchere.getAcheteur().getPseudo().equals(pseudo))).toList();
                 }
