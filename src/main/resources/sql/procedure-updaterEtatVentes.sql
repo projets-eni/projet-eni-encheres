@@ -22,7 +22,7 @@ BEGIN
         @NAffectedVente INT = 0,
         @NouvelEtatVente VARCHAR(50),
         @PrixInitial INT,
-        @Now DATETIME2 = GETUTCDATE();
+        @Now DATETIME2 = GETDATE();
 
     -- Déclaration du curseur en dehors des conditions (c'est ici que la portée du curseur est correcte)
     DECLARE vente_cursor CURSOR FOR
