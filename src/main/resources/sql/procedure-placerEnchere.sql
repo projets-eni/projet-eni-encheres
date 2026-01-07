@@ -70,7 +70,7 @@ BEGIN
             SET @EnchereInvalide = -5;
         END
 
-    IF @EncherisseurCredit < @montantEnchere OR @montantEnchere <= @MaxEnchereMontant
+    IF @EncherisseurCredit < @montantEnchere OR @montantEnchere <= COALESCE(@MaxEnchereMontant, @PrixInit)
         BEGIN
             -- Pas assez de crédit ou enchère trop faible
             SET @EnchereInvalide = -6;

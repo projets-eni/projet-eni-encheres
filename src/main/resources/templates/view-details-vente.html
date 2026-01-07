@@ -89,7 +89,7 @@
                             points proposée par
                             <a th:href="@{/profil/{pseudo}(pseudo=${enchere.acheteur.pseudo})}" th:text="${enchere.acheteur.pseudo}"></a>
                             le <span th:text="${#temporals.format(enchere.dateEnchere, 'dd/MM/yyyy')}"></span>
-                            à <span th:text="${#temporals.format(enchere.dateEnchere, 'hh:mm')}"></span>
+                            à <span th:text="${#temporals.format(enchere.dateEnchere, 'HH:mm')}"></span>
                         </div>
                     </div>
                 </th:block>
@@ -101,11 +101,11 @@
             <p>Mise à prix : <span th:text="${article.prixInitial}"></span> points</p>
             <p>Début de l'enchère :
                 le <span th:text="${#temporals.format(article.dateDebutEncheres, 'dd/MM/yyyy')}"></span>
-                à <span th:text="${#temporals.format(article.dateDebutEncheres, 'hh:mm')}"></span>
+                à <span th:text="${#temporals.format(article.dateDebutEncheres, 'HH:mm')}"></span>
             </p>
             <p>Fin de l'enchère :
                 le <span th:text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yyyy')}"></span>
-                à <span th:text="${#temporals.format(article.dateFinEncheres, 'hh:mm')}"></span>
+                à <span th:text="${#temporals.format(article.dateFinEncheres, 'HH:mm')}"></span>
 
             </p>
             <p>
@@ -121,8 +121,8 @@
             <!-- Un acheteur peut enchérir tant que la vente est encore en cours -->
             <form th:if="${article.etatVente == 'En cours'}" th:action="@{/vente/{id}/encherir(id=${article.noArticle})}" method="POST">
                 <p>Ma proposition :
-                    <input th:if="${meilleureOffre == null}" type="number" name="nouveauMontantEnchere" th:value="${article.prixInitial}" required th:min="${article.prixInitial}" step="10">
-                    <input th:if="${meilleureOffre != null}" type="number" name="nouveauMontantEnchere" th:value="${meilleureOffre.montantEnchere+10}" required th:min="${meilleureOffre.montantEnchere+10}" step="10">
+                    <input th:if="${meilleureOffre == null}" type="number" name="nouveauMontantEnchere" th:value="${article.prixInitial+1}" required th:min="${article.prixInitial+1}">
+                    <input th:if="${meilleureOffre != null}" type="number" name="nouveauMontantEnchere" th:value="${meilleureOffre.montantEnchere+1}" required th:min="${meilleureOffre.montantEnchere+1}">
                     points
                     <input type="submit" value="Enchérir">
                 </p>

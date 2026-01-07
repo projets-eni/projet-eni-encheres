@@ -51,7 +51,7 @@ public class EnchereRepositoryImpl implements EnchereRepository {
     public Enchere findById(int id) {
         MapSqlParameterSource paramSource = new MapSqlParameterSource();
         paramSource.addValue("id", id);
-        return jdbcTemplate.queryForObject("select e.* from Encheres AS e INNER JOIN (select * from Utilisateurs where deleted_at IS NULL) AS u ON e.no_utilisateur=u.no_utilisateur where no_enchere = :id", paramSource, rowMapper);
+        return jdbcTemplate.queryForObject("select e.*, u.pseudo from Encheres AS e INNER JOIN (select * from Utilisateurs where deleted_at IS NULL) AS u ON e.no_utilisateur=u.no_utilisateur where no_enchere = :id", paramSource, rowMapper);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class EnchereRepositoryImpl implements EnchereRepository {
     public List<Enchere> findByEncherisseur(Utilisateur utilisateur) {
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
         parameterSource.addValue("noUtilisateur", utilisateur.getNoUtilisateur());
-        return jdbcTemplate.query("select e.* from Encheres AS e INNER JOIN (select * from Utilisateurs where deleted_at IS NULL) AS u ON e.no_utilisateur=u.no_utilisateur where e.no_utilisateur=:noUtilisateur", parameterSource, rowMapper);
+        return jdbcTemplate.query("select e.*, u.pseudo from Encheres AS e INNER JOIN (select * from Utilisateurs where deleted_at IS NULL) AS u ON e.no_utilisateur=u.no_utilisateur where e.no_utilisateur=:noUtilisateur", parameterSource, rowMapper);
     }
 
     @Override
@@ -73,7 +73,7 @@ public class EnchereRepositoryImpl implements EnchereRepository {
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
         parameterSource.addValue("noUtilisateur", utilisateur.getNoUtilisateur());
         //parameterSource.addValue("etat_vente", EtatVente.FIN);
-        return jdbcTemplate.query("select e.* from Encheres e INNER JOIN (select * from Utilisateurs where deleted_at IS NULL) AS u ON e.no_utilisateur=u.no_utilisateur " +
+        return jdbcTemplate.query("select e.*, u.pseudo from Encheres e INNER JOIN (select * from Utilisateurs where deleted_at IS NULL) AS u ON e.no_utilisateur=u.no_utilisateur " +
                 //"inner join ArticlesVendus a on a.no_article = e.no_article and e.etat_vente=:etat_vente " +
                 "where e.montant_enchere = MAX(e.montant_enchere) and e.no_utilisateur=:noUtilisateur group by e.no_article", parameterSource, rowMapper);
     }
