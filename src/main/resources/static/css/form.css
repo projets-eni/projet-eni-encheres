@@ -20,6 +20,8 @@ form, .inscription-form {
 
 button {
     cursor: pointer;
+    background-color: var(--bg-green);
+    border: 2px solid var(--bg-border);
 }
 
 .connexion-container {
@@ -34,7 +36,7 @@ form label,
 form button {
     /*font-size: clamp(14px, 1.2vw + 10px, 22px);*/
     font-size: clamp(1rem, 2.5vw, 1.375rem);
-    }
+}
 
 form input:focus {
     outline: none;
@@ -103,12 +105,22 @@ form label {
     margin-right: 0.5rem;
 }
 
+.lien-btn {
+    background-color: var(--bg-green);
+    border: 2px solid var(--bg-border);
+}
+
 .lien-btn a {
     display: block;
     text-align: center;
     text-decoration: none;
-    border: 1px solid #6b6969;
     padding: 15px 5px;
+    color: black;
+}
+
+.mdp-oublie a {
+    text-decoration: none;
+    color: black;
 }
 
 .inscription-btn {
@@ -121,6 +133,7 @@ form label {
 
 .inscription-btn a {
     height: 5rem;
+    padding: 25px 5px 10px 5px;
 }
 
 /****************************************

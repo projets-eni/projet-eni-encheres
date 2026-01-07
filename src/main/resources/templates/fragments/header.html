@@ -5,13 +5,21 @@
 
     <nav>
         <div class="navbar">
-            <div class="navbar-main-title"><a th:href="@{/}">ENI-Enchères</a></div>
+            <div class="navbar-main-title"><a th:href="@{/}"><img th:src="@{/images/logo/marteau_logo_eni.png}"
+                                                                  alt="Logo du site de vente aux enchères"
+                                                                  class="navbar-logo">
+                <span class="navbar-title">ENI-Enchères</span></a></div>
+
             <div class="navbar-items">
 
                 <ul>
-                    <li sec:authorize="!isAuthenticated()"><a th:href="@{/connexion}">S'inscrire - Se connecter</a></li> <!--TODO : condition d'affichage-->
-                    <li><a th:href="@{/encheres}">Enchères</a></li>
-                    <li><a th:href="@{/vente/creer}">Vendre un article</a></li>
+                    <!--                    si l'utilisateur n'est pas connecté-->
+                    <li sec:authorize="!isAuthenticated()">
+                        <a th:href="@{/connexion}">S'inscrire - Se connecter</a>
+                    </li>
+                    <!--                    s'il est connecté-->
+                    <li sec:authorize="isAuthenticated()"><!--ou sec:authorize="hasRole('ROLE_USER')"--><a th:href="@{/encheres}">Enchères</a></li>
+                    <li sec:authorize="isAuthenticated()"><a th:href="@{/vente/creer}">Vendre un article</a></li>
                     <li sec:authorize="isAuthenticated()"><a th:href="@{/profil}">Mon profil</a></li>
                     <li>
                         <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">

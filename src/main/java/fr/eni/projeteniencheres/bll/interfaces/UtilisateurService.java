@@ -16,4 +16,6 @@ public interface UtilisateurService {
     void createUtilisateur(UtilisateurFormDTO dto);
     void deleteUtilisateurById(long no_utilisateur);
     Utilisateur updateUtilisateur(Utilisateur utilisateur);
+    UtilisateurFormDTO getUtilisateurFormByPseudo(String pseudo);
+    void updateUtilisateur(String pseudo, UtilisateurFormDTO dto);
 }

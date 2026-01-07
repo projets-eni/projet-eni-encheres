@@ -34,8 +34,10 @@ public UtilisateurController(UtilisateurService utilisateurService) {
 public String affichageFormInscription(Model model) {
 
     if (!model.containsAttribute("utilisateurFormDTO")) {
-        model.addAttribute("utilisateurDTO", new UtilisateurFormDTO());
+        model.addAttribute("utilisateurFormDTO", new UtilisateurFormDTO());
     }
+    //Mode creation du formulaire pour voir s'afficher le bouton Créer
+    model.addAttribute("mode", "CREATION");
 
     return "inscription";
 }
@@ -48,6 +50,9 @@ public String inscription(@Valid @ModelAttribute("utilisateurFormDTO") Utilisate
     if (result.hasErrors()) {
         redirectAttr.addFlashAttribute( "org.springframework.validation.BindingResult.utilisateurFormDTO", result);
         redirectAttr.addFlashAttribute("utilisateurFormDTO", utilisateurFormDTO);
+
+        redirectAttr.addFlashAttribute("mode", "CREATION");
+
         return "redirect:/inscription";
     }
 
@@ -60,16 +65,6 @@ public String inscription(@Valid @ModelAttribute("utilisateurFormDTO") Utilisate
     public String acces(Model model) {
         return "connexion";
     }
-
-//    @PostMapping("/connexion")
-//    public String connexion(@RequestParam String pseudo,
-//                            @RequestParam String motDePasse,
-//                            RedirectAttributes redirectAttr) {
-//        System.out.println("appel méthode connexion");
-//        Utilisateur utilisateur = utilisateurService.findUtilisateurByPseudo(pseudo);
-//        System.out.println("utilisateur: " + utilisateur);
-//        return "accueil";
-//    }
 
     @GetMapping("/profil")
     //(name= "id") = nom dans la requête http
@@ -95,11 +90,45 @@ public String inscription(@Valid @ModelAttribute("utilisateurFormDTO") Utilisate
         return "profilUtilisateur";
     }
 
-    @PostMapping("/profil/modifier")
-    public String modifierProfil(){
-    return "modifierProfilUtilisateur";
+    @GetMapping("/profil/modifier")
+    public String afficherFormulaireModification(
+            @AuthenticationPrincipal UserDetails userDetails,
+            Model model) {
+
+        if (!model.containsAttribute("utilisateurFormDTO")) {
+
+            UtilisateurFormDTO dto =
+                    utilisateurService.getUtilisateurFormByPseudo(
+                            userDetails.getUsername());
+
+            model.addAttribute("utilisateurFormDTO", dto);
+        }
+        //Mode modification du formulaire pour voir s'afficher le bouton Enregistrer
+        model.addAttribute("mode", "MODIFICATION");
+
+        return "modifierProfilUtilisateur";
     }
 
+    @PostMapping("/profil/modifier")
+    public String modifierProfil(@Valid @ModelAttribute("utilisateurFormDTO") UtilisateurFormDTO dto,
+                                 BindingResult result,
+                                 RedirectAttributes redirectAttr,
+                                 @AuthenticationPrincipal UserDetails userDetails) {
+
+        if (result.hasErrors()) {
+            redirectAttr.addFlashAttribute(
+                    "org.springframework.validation.BindingResult.utilisateurFormDTO", result);
+            redirectAttr.addFlashAttribute("utilisateurFormDTO", dto);
+
+            redirectAttr.addFlashAttribute("mode", "MODIFICATION");
+
+            return "modifierProfilUtilisateur";
+        }
+
+        utilisateurService.updateUtilisateur(userDetails.getUsername(), dto);
+
+        return "redirect:/profil";
+    }
 
     @PostMapping("/profil/supprimer")
     public String supprimerCompte(@AuthenticationPrincipal UserDetails userDetails,

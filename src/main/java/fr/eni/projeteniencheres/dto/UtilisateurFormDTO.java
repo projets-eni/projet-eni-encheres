@@ -1,41 +1,42 @@
 package fr.eni.projeteniencheres.dto;
 
 import fr.eni.projeteniencheres.validation.PasswordMatches;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 @PasswordMatches
 public class UtilisateurFormDTO {
 
     private long noUtilisateur;
-    @NotBlank
+    @NotNull
     @Size(min = 2, max = 30)
+    @Pattern(
+            regexp = "^[a-zA-Z0-9]+$",
+            message = "essaie"
+    )
     private String pseudo;
-    @NotBlank
+    @NotNull
     @Size(min = 2, max = 50)
     private String nom;
-    @NotBlank
+    @NotNull
     @Size(min = 2, max = 50)
     private String prenom;
-    @NotBlank
+    @NotNull
     @Email
     private String email;
     @Pattern(
             regexp = "^0[1-9](?:[ .-]?\\d{2}){4}$"
     )
     private String telephone;
-    @NotBlank
+    @NotNull
     @Size(min = 2, max = 100)
     private String rue;
-    @NotBlank
+    @NotNull
     @Size(min = 2, max = 50)
     private String codePostal;
-    @NotBlank
+    @NotNull
     @Size(min = 2, max = 50)
     private String ville;
-    @NotBlank
+    @NotNull
     @Pattern(
             regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&,.])[A-Za-z\\d@$!%*#?&,.]{8,}$"
     )

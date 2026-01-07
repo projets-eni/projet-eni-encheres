@@ -98,4 +98,49 @@ public class UtilisateurServiceImpl implements UtilisateurService {
         utilisateurRepository.saveUtilisateur(utilisateur);
         return utilisateurRepository.findUtilisateurById(utilisateur.getNoUtilisateur());
     }
+
+    @Override
+    public UtilisateurFormDTO getUtilisateurFormByPseudo(String pseudo) {
+
+        Utilisateur utilisateur = utilisateurRepository.findUtilisateurByPseudo(pseudo);
+
+        UtilisateurFormDTO dto = new UtilisateurFormDTO();
+        //je récupère les données objet de la BDD et je les convertis en DTO pour pré remplir le formulaire
+        dto.setPseudo(utilisateur.getPseudo());
+        dto.setNom(utilisateur.getNom());
+        dto.setPrenom(utilisateur.getPrenom());
+        dto.setTelephone(utilisateur.getTelephone());
+        dto.setEmail(utilisateur.getEmail());
+        dto.setRue(utilisateur.getRue());
+        dto.setCodePostal(utilisateur.getCodePostal());
+        dto.setVille(utilisateur.getVille());
+
+        //pour des raisons de sécurité, je n'affiche pas le mot de passe
+        dto.setMotDePasse(null);
+        dto.setConfirmationMotDePasse(null);
+
+        return dto;
+    }
+
+    @Override
+    public void updateUtilisateur(String pseudo, UtilisateurFormDTO dto) {
+        Utilisateur utilisateur = utilisateurRepository.findUtilisateurByPseudo(pseudo);
+
+        //pour des raisons de cohérence, je ne permets pas à l'utilisateur de modifier le pseudo, celui-ci est unique
+        utilisateur.setNom(dto.getNom());
+        utilisateur.setPrenom(dto.getPrenom());
+        utilisateur.setTelephone(dto.getTelephone());
+        utilisateur.setEmail(dto.getEmail());
+        utilisateur.setRue(dto.getRue());
+        utilisateur.setCodePostal(dto.getCodePostal());
+        utilisateur.setVille(dto.getVille());
+
+        if (dto.getMotDePasse() != null && !dto.getMotDePasse().isBlank()) {
+            utilisateur.setMotDePasse(passwordEncoder.encode(dto.getMotDePasse()));
+        }
+
+        utilisateurRepository.saveUtilisateur(utilisateur);
+
+    }
+
 }
