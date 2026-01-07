@@ -7,120 +7,108 @@ SET QUOTED_IDENTIFIER ON
 GO
 -- pour terminer les ventes et refaire les soldes de vendeurs et acquéreurs
 CREATE PROCEDURE updaterEtatVentes
-@noArticle INT = NULL -- Paramètre nullable
+@noArticle INT = NULL
 AS
 BEGIN
-    -- Déclaration des variables
-    DECLARE
-        @noArticleParam INT,
-        @dateFinEnchere DATETIME2,
-        @dateDebutEnchere DATETIME2,
-        @etatVente VARCHAR(50),
-        @VendeurId INT,
-        @EnchereMaxID INT,
-        @EnchereMaxUID INT,
-        @EnchereMaxUCredit INT,
-        @EnchereMaxMontant INT,
-        @NAffectedVente INT = 0,
-        @NouvelEtatVente VARCHAR(50),
-        @PrixInitial INT,
-        @Now DATETIME2 = GETDATE();
+    SET NOCOUNT ON;
 
-    -- Déclaration du curseur en dehors des conditions (c'est ici que la portée du curseur est correcte)
-    DECLARE vente_cursor CURSOR FOR
-        -- Si @noArticle est NULL, on sélectionne toutes les ventes
-        -- Sinon, on sélectionne la vente spécifiée par @noArticle
-        SELECT no_article, date_fin_encheres, date_debut_encheres, etat_vente, no_utilisateur, prix_initial
-        FROM ArticlesVendus
-        WHERE
-            (@noArticle IS NULL OR no_article = @noArticle)  -- Si @noArticle est NULL, il sélectionne toutes les ventes
-          AND etat_vente not in ('Terminée', 'Annulée');  -- Seules les ventes non terminées
-    --AND date_fin_encheres <= GETDATE();  -- Date de fin passée
+    DECLARE @Now DATETIME2 = SYSDATETIME();
 
-    -- Ouvrir le curseur
-    OPEN vente_cursor;
+    -------------------------------------------------------------------
+    -- 1️⃣ Ventes qui VIENNENT de passer à Terminée
+    -------------------------------------------------------------------
+    DECLARE @VentesTerminees TABLE (
+                                       no_article INT PRIMARY KEY,
+                                       vendeur_id INT
+                                   );
 
-    -- Lire la première ligne
-    FETCH NEXT FROM vente_cursor INTO @noArticleParam, @dateFinEnchere, @dateDebutEnchere, @etatVente, @VendeurId, @PrixInitial;
+    UPDATE ArticlesVendus
+    SET etat_vente = 'Terminée'
+    OUTPUT
+        inserted.no_article,
+        inserted.no_utilisateur
+        INTO @VentesTerminees (no_article, vendeur_id)
+    WHERE
+        (@noArticle IS NULL OR ArticlesVendus.no_article = @noArticle)
+      AND ArticlesVendus.etat_vente NOT IN ('Terminée', 'Annulée')
+      AND ArticlesVendus.date_fin_encheres <= @Now;
 
-    -- Boucle sur chaque vente
-    WHILE @@FETCH_STATUS = 0
-        BEGIN
-            -- Mise à jour de l'état de la vente
-            SET @NouvelEtatVente =
-                    CASE
-                        WHEN @dateFinEnchere <= @Now THEN 'Terminée'
-                        WHEN @dateDebutEnchere > @Now THEN 'Non commencée'
-                        ELSE 'En cours'
-                        END;
+    IF NOT EXISTS (SELECT 1 FROM @VentesTerminees)
+        RETURN 0;
 
-            BEGIN TRANSACTION;
+        -------------------------------------------------------------------
+        -- 2️⃣ Enchère max par vente
+        -------------------------------------------------------------------
+        ;WITH EnchereMax AS (
+        SELECT
+            e.no_article,
+            e.no_utilisateur AS acheteur_id,
+            e.montant_enchere,
+            ROW_NUMBER() OVER (
+                PARTITION BY e.no_article
+                ORDER BY e.montant_enchere DESC
+                ) AS rn
+        FROM Encheres e
+                 JOIN @VentesTerminees vt ON vt.no_article = e.no_article
+    )
+         SELECT
+             em.no_article,
+             vt.vendeur_id,
+             em.acheteur_id,
+             em.montant_enchere,
+             u.credit AS credit_acheteur
+         INTO #VentesAnalyse
+         FROM EnchereMax em
+                  JOIN @VentesTerminees vt ON vt.no_article = em.no_article
+                  LEFT JOIN Utilisateurs u ON u.no_utilisateur = em.acheteur_id
+         WHERE em.rn = 1;
 
-            SELECT TOP 1
-                @EnchereMaxID = e.no_enchere,
-                @EnchereMaxMontant = e.montant_enchere,
-                @EnchereMaxUID = e.no_utilisateur,
-                @EnchereMaxUCredit = u.credit
-            FROM Encheres e
-            LEFT JOIN Utilisateurs u ON u.no_utilisateur = e.no_utilisateur
-            WHERE e.no_article = @noArticleParam
-            ORDER BY e.montant_enchere DESC;
+    -------------------------------------------------------------------
+    -- 3️⃣ Séparation : soldables / non soldables
+    -------------------------------------------------------------------
+    SELECT *
+    INTO #VentesASolder
+    FROM #VentesAnalyse
+    WHERE credit_acheteur >= montant_enchere;
 
+    SELECT *
+    INTO #VentesCreditInsuffisant
+    FROM #VentesAnalyse
+    WHERE credit_acheteur < montant_enchere
+       OR acheteur_id IS NULL;
 
-            PRINT 'no_article: ' + CAST(@noArticleParam AS VARCHAR);
-            PRINT 'EtatVente: ' + @etatVente;
-            PRINT 'NouvelEtatVente: ' + @NouvelEtatVente;
-            PRINT 'PrixInitial : ' + cast(@PrixInitial as varchar);
-            PRINT 'EnchereMax : ' + CAST(@EnchereMaxMontant as varchar);
+    -------------------------------------------------------------------
+    -- 4️⃣ Solde (transaction)
+    -------------------------------------------------------------------
+    BEGIN TRAN;
 
-            UPDATE ArticlesVendus
-            SET etat_vente = @NouvelEtatVente
-            --, prix_vente = coalesce(@EnchereMaxMontant, @PrixInitial)
-            WHERE no_article = @noArticleParam;
+    -- Crédit vendeur
+    UPDATE u
+    SET credit = credit + v.montant_enchere
+    FROM Utilisateurs u
+             JOIN #VentesASolder v ON v.vendeur_id = u.no_utilisateur;
 
+    -- Débit acheteur
+    UPDATE u
+    SET credit = credit - v.montant_enchere
+    FROM Utilisateurs u
+             JOIN #VentesASolder v ON v.acheteur_id = u.no_utilisateur;
 
-            IF @etatVente <> 'Terminée' AND @NouvelEtatVente = 'Terminée' and @EnchereMaxUID IS NOT NULL
-                BEGIN
+    COMMIT;
 
-                    -- le meilleur enchérisseur a t'il assez de crédit ?
-                    IF @EnchereMaxMontant > @EnchereMaxUCredit
-                    BEGIN
-                        PRINT concat('crédit insuffisant pour solder enchere #', @EnchereMaxID);
-                        -- faudrait ajouter un param OUTPUT pour gérer ce cas d'erreur pour pouvoir les traiter (notifier les acheteur/vendeur...)
-                        RETURN @NAffectedVente
-                    end
+    -------------------------------------------------------------------
+    -- 5️⃣ Résultat
+    -------------------------------------------------------------------
+    -- Ventes soldées
+    DECLARE @NbSoldees INT = (SELECT COUNT(*) FROM #VentesASolder);
 
-                    -- cloture de vente, on ajuste les credits acheteur / vendeur
+    -- (optionnel) exposer les ventes non soldées
+    SELECT
+        no_article,
+        acheteur_id,
+        montant_enchere,
+        credit_acheteur
+    FROM #VentesCreditInsuffisant;
 
-                    PRINT 'VendeurId: ' + CAST(@VendeurId AS VARCHAR);
-                    PRINT 'AcheteurId: ' + CAST(@EnchereMaxUID AS VARCHAR);
-
-                    UPDATE Utilisateurs
-                    SET credit = credit + ISNULL(@EnchereMaxMontant, 0)
-                    WHERE no_utilisateur = @VendeurId;
-
-                    PRINT 'Vendeur crédit : ' + CAST(@@ROWCOUNT AS VARCHAR);
-
-                    UPDATE Utilisateurs
-                    SET credit = credit - @EnchereMaxMontant
-                    WHERE no_utilisateur = @EnchereMaxUID;
-
-                    PRINT 'Acheteur crédit : ' + CAST(@@ROWCOUNT AS VARCHAR);
-                END
-
-            COMMIT TRANSACTION;
-
-            PRINT 'Lignes affectées: ' + CAST(@@ROWCOUNT AS VARCHAR);
-
-            set @NAffectedVente += 1;
-
-            -- Lire la prochaine ligne
-            FETCH NEXT FROM vente_cursor INTO @noArticleParam, @dateFinEnchere, @dateDebutEnchere, @etatVente, @VendeurId, @PrixInitial;
-        END;
-
-    -- Fermer et libérer les ressources du curseur
-    CLOSE vente_cursor;
-    DEALLOCATE vente_cursor;
-
-    return @NAffectedVente;
+    RETURN @NbSoldees;
 END;
