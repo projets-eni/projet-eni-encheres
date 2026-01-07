@@ -11,18 +11,14 @@
 
     <h1>Mon profil</h1>
     <div id="inscription-container">
-<div th:replace="fragments/formulaire-utilisateur :: form(
+        <div th:replace="fragments/formulaire-utilisateur :: form(
     action=@{/profil/modifier},
     cancelUrl=@{/profil},
-    utilisateurDTO=${utilisateurFormDTO})">
-</div>
-        <div class="btn-group">
-            <button class="btn btn-inscription" id="submit-button" type="submit" disabled aria-disabled="false">Enregistrer</button>
-            <div class=" lien-btn btn-inscription">
-                <a th:href="@{/encheres}" class="btn">Supprimer mon compte</a>
-            </div>
+    utilisateurFormDTO=${utilisateurFormDTO},
+    mode =${mode})">
         </div>
+
     </div>
-    <script th:src="@{/js/registration.js}" defer></script>
+<!--    <script th:src="@{/js/registration.js}" defer></script>-->
 </section>
 </html>

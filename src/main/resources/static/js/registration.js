@@ -1,5 +1,3 @@
-
-
 document.addEventListener('DOMContentLoaded', function() {
     const registrationForm = document.getElementById('inscription-container');
     if (registrationForm) {
@@ -15,233 +13,201 @@ document.addEventListener('DOMContentLoaded', function() {
         const confirmationMotDePasseInput = document.getElementById("confirmationMotDePasse");
         const submitButton = document.getElementById("submit-button");
 
+        // État de validation
+        const inputsValidity = {
+            pseudo: false, nom: false, prenom: false, email: false,
+            telephone: false, rue: false, codePostal: false, ville: false,
+            motDePasse: false, confirmationMotDePasse: false
+        };
+
         // Fonction pour masquer TOUS les messages d'erreur au chargement
         const hideAllErrorMessages = () => {
             document.querySelectorAll('#inscription-container .error-msg').forEach(span => {
                 span.style.display = 'none';
             });
-            // Reset des bordures
             document.querySelectorAll('#inscription-container input').forEach(input => {
                 input.classList.remove('red-border', 'green-border');
             });
         };
 
-        const inputsValidity = {
-            pseudo: false,
-            nom: false,
-            prenom: false,
-            email: false,
-            telephone: false,
-            rue: false,
-            codePostal: false,
-            ville: false,
-            motDePasse: false,
-            confirmationMotDePasse: false
-        }
-        // Fonction pour récupérer le span d'erreur associé à l'input
+        // Récupérer le span d'erreur associé à l'input
         const getErrorSpan = (input) => input.parentElement.querySelector(".error-msg");
 
+        // Fonction showValidation EXACTEMENT comme vous l'aviez
         const showValidation = ({input, validation}) => {
-
             const errorSpan = getErrorSpan(input);
 
             if (!input.value) {
                 errorSpan.style.display = "block";
                 input.classList.remove("green-border");
                 input.classList.add("red-border");
-                return;
+                return false;
             }
 
             if (validation) {
                 errorSpan.style.display = "none";
                 input.classList.remove("red-border");
                 input.classList.add("green-border");
+                return true;
             } else {
                 errorSpan.style.display = "block";
                 input.classList.remove("green-border");
                 input.classList.add("red-border");
+                return false;
             }
         };
 
-        const pseudoCheck = () => {
-            if (pseudoInput.value.length >= 2) {
-                showValidation({input: pseudoInput, validation: true});
-                inputsValidity.pseudo = true;
+        // Vérification globale du formulaire
+        const checkAllInputs = () => {
+            const isFormValid = Object.values(inputsValidity).every(valid => valid);
+            submitButton.disabled = !isFormValid;
+            if (isFormValid) {
+                submitButton.classList.remove("disabled");
             } else {
-                showValidation({input: pseudoInput, validation: false});
-                inputsValidity.pseudo = false;
+                submitButton.classList.add("disabled");
             }
+        };
+
+        // VALIDATIONS INDIVIDUELLES (utilisant showValidation({input, validation}))
+        const pseudoCheck = () => {
+            const regexPseudo = /^[a-zA-Z0-9]+$/;
+            const pseudo = pseudoInput.value.trim();
+            const isValid = regexPseudo.test(pseudo) && pseudo.length >= 2;
+            inputsValidity.pseudo = showValidation({input: pseudoInput, validation: isValid});
+            checkAllInputs();
             return inputsValidity.pseudo;
         };
 
         const nomCheck = () => {
-            if (nomInput.value.length >= 2) {
-                showValidation({input: nomInput, validation: true});
-                inputsValidity.nom = true;
-            } else {
-                showValidation({input: nomInput, validation: false});
-                inputsValidity.nom = false;
-            }
+            const isValid = nomInput.value.trim().length >= 2;
+            inputsValidity.nom = showValidation({input: nomInput, validation: isValid});
+            checkAllInputs();
+            return inputsValidity.nom;
         };
 
         const prenomCheck = () => {
-            if (prenomInput.value.length >= 2) {
-                showValidation({input: prenomInput, validation: true});
-                inputsValidity.prenom = true;
-            } else {
-                showValidation({input: prenomInput, validation: false});
-                inputsValidity.prenom = false;
-            }
+            const isValid = prenomInput.value.trim().length >= 2;
+            inputsValidity.prenom = showValidation({input: prenomInput, validation: isValid});
+            checkAllInputs();
+            return inputsValidity.prenom;
         };
 
         const emailCheck = () => {
             const regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-            if (regexEmail.test(emailInput.value.trim())) {
-                showValidation({input: emailInput, validation: true});
-                inputsValidity.email = true;
-            } else {
-                showValidation({input: emailInput, validation: false});
-                inputsValidity.email = false;
-            }
+            const isValid = regexEmail.test(emailInput.value.trim());
+            inputsValidity.email = showValidation({input: emailInput, validation: isValid});
+            checkAllInputs();
+            return inputsValidity.email;
         };
 
         const telephoneCheck = () => {
             const regexTelephone = /^[0-9]+$/;
-            if (regexTelephone.test(telephoneInput.value.trim())) {
-                showValidation({input: telephoneInput, validation: true});
-                inputsValidity.telephone = true;
-            } else {
-                showValidation({input: telephoneInput, validation: false});
-                inputsValidity.telephone = false;
-            }
+            const isValid = regexTelephone.test(telephoneInput.value.trim());
+            inputsValidity.telephone = showValidation({input: telephoneInput, validation: isValid});
+            checkAllInputs();
+            return inputsValidity.telephone;
         };
 
         const rueCheck = () => {
-            if (rueInput.value.length >= 2) {
-                showValidation({input: rueInput, validation: true});
-                inputsValidity.rue = true;
-            } else {
-                showValidation({input: rueInput, validation: false});
-                inputsValidity.rue = false;
-            }
+            const isValid = rueInput.value.trim().length >= 2;
+            inputsValidity.rue = showValidation({input: rueInput, validation: isValid});
+            checkAllInputs();
+            return inputsValidity.rue;
         };
 
         const codePostalCheck = () => {
-            if (codePostalInput.value.length >= 2) {
-                showValidation({input: codePostalInput, validation: true});
-                inputsValidity.codePostal = true;
-            } else {
-                showValidation({input: codePostalInput, validation: false});
-                inputsValidity.codePostal = false;
-            }
+            const isValid = codePostalInput.value.trim().length >= 2;
+            inputsValidity.codePostal = showValidation({input: codePostalInput, validation: isValid});
+            checkAllInputs();
+            return inputsValidity.codePostal;
         };
 
         const villeCheck = () => {
-            if (villeInput.value.length >= 2) {
-                showValidation({input: villeInput, validation: true});
-                inputsValidity.ville = true;
-            } else {
-                showValidation({input: villeInput, validation: false});
-                inputsValidity.ville = false;
-            }
+            const isValid = villeInput.value.trim().length >= 2;
+            inputsValidity.ville = showValidation({input: villeInput, validation: isValid});
+            checkAllInputs();
+            return inputsValidity.ville;
         };
 
-        // MOT DE PASSE
-        const motDePasseCheck = function () {
-
+        const motDePasseCheck = () => {
             const regexMotDePasse = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&,.])[A-Za-z\d@$!%*#?&,.]{8,}$/;
-            if (regexMotDePasse.test(motDePasseInput.value.trim())) {
-                showValidation({input: motDePasseInput, validation: true});
-                inputsValidity.motDePasse = true;
-            } else {
-                showValidation({input: motDePasseInput, validation: false});
-                inputsValidity.motDePasse = false;
-            }
+            const isValid = regexMotDePasse.test(motDePasseInput.value);
+            inputsValidity.motDePasse = showValidation({input: motDePasseInput, validation: isValid});
+            checkAllInputs();
+            return inputsValidity.motDePasse;
         };
 
-        const confirmationMotDePasseCheck = function () {
-            let motDePasseValue = motDePasseInput.value;
-            //je récupère la valeur de la confirmation du mot de passe
-            let confirmationMotDePasseValue = confirmationMotDePasseInput.value;
+        const confirmationMotDePasseCheck = () => {
+            const motDePasseValue = motDePasseInput.value;
+            const confirmationValue = confirmationMotDePasseInput.value;
 
-            if (!confirmationMotDePasseValue && !motDePasseValue) {
-                confirmationMotDePasseInput.classList.remove("red-border", "green-border");
+            if (!confirmationValue) {
                 const errorSpan = getErrorSpan(confirmationMotDePasseInput);
                 errorSpan.style.display = "none";
-                inputsValidity.confirmationMotDePasse = false;
-            } else if (confirmationMotDePasseValue !== motDePasseValue) {
-                showValidation({input: confirmationMotDePasseInput, validation: false})
+                confirmationMotDePasseInput.classList.remove("red-border", "green-border");
                 inputsValidity.confirmationMotDePasse = false;
             } else {
-                showValidation({input: confirmationMotDePasseInput, validation: true})
-                inputsValidity.confirmationMotDePasse = true;
+                const isValid = confirmationValue === motDePasseValue && motDePasseValue !== "";
+                inputsValidity.confirmationMotDePasse = showValidation({input: confirmationMotDePasseInput, validation: isValid});
             }
-        }
+            checkAllInputs();
+            return inputsValidity.confirmationMotDePasse;
+        };
 
-        pseudoInput.addEventListener("blur", pseudoCheck);
-        pseudoInput.addEventListener("input", pseudoCheck);
+        // Événements pour chaque champ
+        [pseudoInput, nomInput, prenomInput, emailInput, telephoneInput, rueInput,
+            codePostalInput, villeInput, motDePasseInput, confirmationMotDePasseInput].forEach(input => {
+            if (input) {
+                input.addEventListener("input", () => {
+                    switch(input.id) {
+                        case "pseudo": pseudoCheck(); break;
+                        case "nom": nomCheck(); break;
+                        case "prenom": prenomCheck(); break;
+                        case "email": emailCheck(); break;
+                        case "telephone": telephoneCheck(); break;
+                        case "rue": rueCheck(); break;
+                        case "codePostal": codePostalCheck(); break;
+                        case "ville": villeCheck(); break;
+                        case "motDePasse": motDePasseCheck(); break;
+                        case "confirmationMotDePasse": confirmationMotDePasseCheck(); break;
+                    }
+                });
 
-        nomInput.addEventListener("blur", nomCheck);
-        nomInput.addEventListener("input", nomCheck);
-
-        prenomInput.addEventListener("blur", prenomCheck);
-        prenomInput.addEventListener("input", prenomCheck);
-
-        emailInput.addEventListener("blur", emailCheck);
-        emailInput.addEventListener("input", emailCheck);
-
-        telephoneInput.addEventListener("blur", telephoneCheck);
-        telephoneInput.addEventListener("input", telephoneCheck);
-
-        rueInput.addEventListener("blur", rueCheck);
-        rueInput.addEventListener("input", rueCheck);
-
-        codePostalInput.addEventListener("blur", codePostalCheck);
-        codePostalInput.addEventListener("input", codePostalCheck);
-
-        villeInput.addEventListener("blur", villeCheck);
-        villeInput.addEventListener("input", villeCheck);
-
-        motDePasseInput.addEventListener("blur", motDePasseCheck);
-        motDePasseInput.addEventListener("input", motDePasseCheck);
-
-        confirmationMotDePasseInput.addEventListener("blur", confirmationMotDePasseCheck);
-        confirmationMotDePasseInput.addEventListener("input", confirmationMotDePasseCheck);
-
-        const allInputsCheck = function () {
-
-            if (inputsValidity.pseudo &&
-                inputsValidity.nom &&
-                inputsValidity.prenom &&
-                inputsValidity.email &&
-                inputsValidity.telephone &&
-                inputsValidity.rue &&
-                inputsValidity.codePostal &&
-                inputsValidity.ville &&
-                inputsValidity.motDePasse &&
-                inputsValidity.confirmationMotDePasse
-            ) {
-
-                submitButton.disabled = false;
-                submitButton.classList.remove("disabled");
-            } else {
-                submitButton.disabled = true;
-                submitButton.classList.add("disabled");
+                input.addEventListener("blur", () => {
+                    switch(input.id) {
+                        case "pseudo": pseudoCheck(); break;
+                        case "nom": nomCheck(); break;
+                        case "prenom": prenomCheck(); break;
+                        case "email": emailCheck(); break;
+                        case "telephone": telephoneCheck(); break;
+                        case "rue": rueCheck(); break;
+                        case "codePostal": codePostalCheck(); break;
+                        case "ville": villeCheck(); break;
+                        case "motDePasse": motDePasseCheck(); break;
+                        case "confirmationMotDePasse": confirmationMotDePasseCheck(); break;
+                    }
+                });
             }
-        }
-        registrationForm.addEventListener("input", allInputsCheck);
+        });
 
+        // SUBMISSION DU FORMULAIRE
         const handleForm = function (e) {
-            if (pseudoCheck() && nomCheck() && prenomCheck() && emailCheck() && telephoneCheck() && rueCheck() && codePostalCheck() && villeCheck() && motDePasseCheck() && confirmationMotDePasseCheck()) {
-                alert("Vos données ont été envoyées avec succès !")
-            } else {
-                e.preventDefault()
+            const isFormValid = Object.values(inputsValidity).every(valid => valid);
+
+            if (!isFormValid) {
+                e.preventDefault();
+                alert("Veuillez corriger les erreurs dans le formulaire.");
+                return false;
             }
-        }
+            console.log("✅ Formulaire soumis avec succès !");
+            return true;
+        };
+
         registrationForm.addEventListener("submit", handleForm);
+
+        // Initialisation
+        hideAllErrorMessages();
+        submitButton.disabled = true;
+        submitButton.classList.add("disabled");
     }
 });
-
-
-
-

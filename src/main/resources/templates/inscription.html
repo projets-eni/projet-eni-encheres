@@ -9,19 +9,15 @@
 </head>
 
 <section layout:fragment="content">
-        <h1>Mon profil</h1>
+    <h1>Mon profil</h1>
     <div id="inscription-container">
-<div th:replace="fragments/formulaire-utilisateur :: form(
+        <div th:replace="fragments/formulaire-utilisateur :: form(
     action=@{/inscription},
     cancelUrl=@{/accueil},
-    utilisateurDTO=${utilisateurFormDTO})">
-</div>
-        <div class="btn-group">
-            <button class="btn btn-inscription" id="submit-button" type="submit" disabled aria-disabled="false">Créer</button>
-            <div class=" lien-btn btn-inscription">
-                <a th:href="@{/encheres}" class="btn">Annuler</a>
-            </div>
+    utilisateurFormDTO=${utilisateurFormDTO},
+    mode=${mode})">
         </div>
+
     </div>
     <script th:src="@{/js/registration.js}" defer></script>
 </section>
