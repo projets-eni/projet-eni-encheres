@@ -25,9 +25,11 @@ public class WebSecurityConfig {
                 )
                 .formLogin(form -> form
                         .loginPage("/connexion")
-//                        .loginProcessingUrl("/connexion")
                         .usernameParameter("pseudo")
                         .passwordParameter("motDePasse")
+                        /*.failureHandler((request, response, exception) -> {
+                            System.out.println(exception.getMessage());
+                        })*/
                         .defaultSuccessUrl("/encheres", true)
                         .permitAll())
                 .rememberMe(rememberMe -> rememberMe

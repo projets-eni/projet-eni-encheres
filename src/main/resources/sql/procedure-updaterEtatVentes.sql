@@ -17,7 +17,9 @@ BEGIN
         @dateDebutEnchere DATETIME2,
         @etatVente VARCHAR(50),
         @VendeurId INT,
+        @EnchereMaxID INT,
         @EnchereMaxUID INT,
+        @EnchereMaxUCredit INT,
         @EnchereMaxMontant INT,
         @NAffectedVente INT = 0,
         @NouvelEtatVente VARCHAR(50),
@@ -55,11 +57,14 @@ BEGIN
             BEGIN TRANSACTION;
 
             SELECT TOP 1
-                @EnchereMaxMontant = montant_enchere,
-                @EnchereMaxUID = no_utilisateur
-            FROM Encheres
-            WHERE no_article = @noArticleParam
-            ORDER BY montant_enchere DESC;
+                @EnchereMaxID = e.no_enchere,
+                @EnchereMaxMontant = e.montant_enchere,
+                @EnchereMaxUID = e.no_utilisateur,
+                @EnchereMaxUCredit = u.credit
+            FROM Encheres e
+            LEFT JOIN Utilisateurs u ON u.no_utilisateur = e.no_utilisateur
+            WHERE e.no_article = @noArticleParam
+            ORDER BY e.montant_enchere DESC;
 
 
             PRINT 'no_article: ' + CAST(@noArticleParam AS VARCHAR);
@@ -74,9 +79,17 @@ BEGIN
             WHERE no_article = @noArticleParam;
 
 
-
             IF @etatVente <> 'Terminée' AND @NouvelEtatVente = 'Terminée' and @EnchereMaxUID IS NOT NULL
                 BEGIN
+
+                    -- le meilleur enchérisseur a t'il assez de crédit ?
+                    IF @EnchereMaxMontant > @EnchereMaxUCredit
+                    BEGIN
+                        PRINT concat('crédit insuffisant pour solder enchere #', @EnchereMaxID);
+                        -- faudrait ajouter un param OUTPUT pour gérer ce cas d'erreur pour pouvoir les traiter (notifier les acheteur/vendeur...)
+                        RETURN @NAffectedVente
+                    end
+
                     -- cloture de vente, on ajuste les credits acheteur / vendeur
 
                     PRINT 'VendeurId: ' + CAST(@VendeurId AS VARCHAR);

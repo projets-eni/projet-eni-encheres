@@ -1,12 +1,17 @@
 package fr.eni.projeteniencheres.bo;
 
+import org.jspecify.annotations.Nullable;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-public class Utilisateur implements Serializable {
+public class Utilisateur implements Serializable, UserDetails {
 
     private static final long serialVersionUID = 1L;
     private int noUtilisateur;
@@ -195,6 +200,35 @@ public class Utilisateur implements Serializable {
 
     public boolean isDeleted() {
         return deletedAt != null;
+    }
+
+    public boolean isEnabled() {
+        return !isDeleted();
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
+
+    @Override
+    public @Nullable String getPassword() {
+        return getMotDePasse();
+    }
+
+    @Override
+    public String getUsername() {
+        return getPseudo();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return UserDetails.super.isAccountNonExpired();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return isEnabled();
     }
 
     @Override
