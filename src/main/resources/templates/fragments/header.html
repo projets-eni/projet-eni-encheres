@@ -9,10 +9,10 @@
             <div class="navbar-items">
 
                 <ul>
-                    <li><a th:href="@{/connexion}">S'inscrire - Se connecter</a></li> <!--TODO : condition d'affichage-->
+                    <li sec:authorize="!isAuthenticated()"><a th:href="@{/connexion}">S'inscrire - Se connecter</a></li> <!--TODO : condition d'affichage-->
                     <li><a th:href="@{/encheres}">Enchères</a></li>
                     <li><a th:href="@{/vente/creer}">Vendre un article</a></li>
-                    <li><a th:href="@{/profil}">Mon profil</a></li>
+                    <li sec:authorize="isAuthenticated()"><a th:href="@{/profil}">Mon profil</a></li>
                     <li>
                         <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
                             <input type="submit" value="Déconnexion"/>
