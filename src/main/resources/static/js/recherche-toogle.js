@@ -5,29 +5,45 @@ document.addEventListener('DOMContentLoaded', function() {
         const ventesCheckboxes = ['mesVentesEnCours', 'mesVentesNonDebutees', 'mesVentesTerminees'];
         const achatsCheckboxes = ['encheresOuvertes', 'mesEncheres', 'mesEncheresRemportees'];
 
-        // BIDIRECTIONNEL : désactive si achat, active si vente
-        ventesCheckboxes.forEach(id => {
-            const cb = document.getElementById(id);
-            if (cb) {
-                cb.disabled = achatChecked;  // désactive si ACHATS est coché, et active si ACHATS n'est pas coché
-                cb.checked = venteChecked;  // coche si VENTES est sélectionné
-            }
-        });
+        // Si ACHAT est sélectionné : désactive ET décoche TOUTES les ventes
+        if (achatChecked) {
+            ventesCheckboxes.forEach(id => {
+                const cb = document.getElementById(id);
+                if (cb) {
+                    cb.disabled = true;
+                    cb.checked = false;  // DÉCOCHe systématiquement
+                }
+            });
+        }
+        // Si VENTE est sélectionné : désactive ET décoche TOUS les achats
+        if (venteChecked) {
+            achatsCheckboxes.forEach(id => {
+                const cb = document.getElementById(id);
+                if (cb) {
+                    cb.disabled = true;
+                    cb.checked = false;  // DÉCOCHe systématiquement
+                }
+            });
+        }
 
-        // BIDIRECTIONNEL : désactive si vente, active si achat
-        achatsCheckboxes.forEach(id => {
-            const cb = document.getElementById(id);
-            if (cb) {
-                cb.disabled = venteChecked;  // désactive si VENTES est coché, et active si VENTES n'est pas coché
-                cb.checked = achatChecked;  // coche si ACHATS est sélectionné
-            }
-        });
+        // Active les checkboxes du groupe sélectionné (sans les cocher forcement)
+        if (achatChecked) {
+            achatsCheckboxes.forEach(id => {
+                const cb = document.getElementById(id);
+                if (cb) cb.disabled = false;  // Active seulement
+            });
+        }
+
+        if (venteChecked) {
+            ventesCheckboxes.forEach(id => {
+                const cb = document.getElementById(id);
+                if (cb) cb.disabled = false;  // Active seulement
+            });
+        }
     }
 
-    // Écouteurs SUR LES DEUX radios
     document.getElementById('achat').addEventListener('change', toggleRecherche);
     document.getElementById('vente').addEventListener('change', toggleRecherche);
 
-    toggleRecherche();
-
+    toggleRecherche(); // Initialisation
 });
