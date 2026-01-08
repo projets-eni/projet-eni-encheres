@@ -170,21 +170,19 @@ public class ArticleVenduServiceImpl implements ArticleVenduService {
                 // Filtre sur MES ENCHERES = articles dont je suis dans la liste des acheteurs potentiels
                 List<ArticleVendu> listeMesEncheres = new ArrayList<ArticleVendu>();
                 if (dto.getMesEncheres()) {
-                    listeMesEncheres = myArticles.stream().filter(article ->
-                            article.getEncheres() != null &&
-                                    article.getEncheres().stream().anyMatch(enchere -> enchere.getAcheteur().getPseudo().equals(pseudo))).toList();
+                    listeMesEncheres = myArticles ;
                 }
 
                 // Filtre sur MES ENCHERES REMPORTEES = articles dont je suis dans l'acquéreur
                 List<ArticleVendu> listeMesEncheresRemportees = new ArrayList<ArticleVendu>();
-                if (dto.getMesEncheresRemportees()) {
-                    listeMesEncheresRemportees = articles.stream().filter(article -> {
-                                if (article.getEncheres() == null) return false;
-                                Optional<Enchere> meilleureEnchere = article.getEncheres().stream().max(Comparator.comparingInt(Enchere::getMontantEnchere));
-                                return meilleureEnchere.isPresent() && meilleureEnchere.get().getAcheteur().getPseudo().equals(pseudo);
-                            })
-                            .toList();
-                }
+//                if (dto.getMesEncheresRemportees()) {
+//                    listeMesEncheresRemportees = articles.stream().filter(article -> {
+//                                if (article.getEncheres() == null) return false;
+//                                Optional<Enchere> meilleureEnchere = article.getEncheres().stream().max(Comparator.comparingInt(Enchere::getMontantEnchere));
+//                                return meilleureEnchere.isPresent() && meilleureEnchere.get().getAcheteur().getPseudo().equals(pseudo);
+//                            })
+//                            .toList();
+//                }
 
                 articles = Stream.of(listeEncheresOuvertes, listeMesEncheres, listeMesEncheresRemportees)
                         .flatMap(List::stream)
