@@ -206,6 +206,11 @@ th {
 .tableau-afficher-profil .btn a {
     padding-top: 25px;
 }
+button.btn.btn-primary.btn-lg {
+    background-color: var(--bg-green);
+    border: var(--bg-border);
+    color: black;
+}
 
 /****************************************
               MEDIA-QUERIES

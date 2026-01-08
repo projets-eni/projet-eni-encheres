@@ -75,7 +75,6 @@ public class UtilisateurServiceImpl implements UtilisateurService {
         utilisateur.setCodePostal(dto.getCodePostal());
         utilisateur.setVille(dto.getVille());
         utilisateur.setMotDePasse(dto.getMotDePasse());
-        //TODO : comparaison confirmation de mot de passe et mot de passe
 
         //règles métier
         utilisateur.setCredit(100L);
