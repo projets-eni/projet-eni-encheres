@@ -63,7 +63,7 @@
         <!-- Une vente non commencée n'est visible que par le vendeur -->
         <div>
                 <span>
-                    <img th:src="@{'/images/' + ${article.idImage}}"
+                    <img th:src="@{${article.idImage}}"
                          th:alt="${article.idImage != null ? 'Image de ' + article.nomArticle : 'Aucune image sélectionnée'}"
                          th:if="${article.idImage != null}"
                          style="max-width: 200px; max-height: 200px;" />

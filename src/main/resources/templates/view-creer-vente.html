@@ -17,11 +17,8 @@
         <th:block th:object="${nouvelleVente}">
 
             <span>
-                <img th:src="@{'/images/' + ${nouvelleVente.idImage}}"
-                     th:alt="${nouvelleVente.idImage != null ? 'Image de ' + nouvelleVente.nomArticle : 'Aucune image sélectionnée'}"
-                     th:if="${nouvelleVente.idImage != null}"
-                     style="max-width: 200px; max-height: 200px;" />
-                <span th:if="${nouvelleVente.idImage == null}" class="text-muted">
+                <img th:src="@{*{idImage}}" alt="article" style="max-width: 200px; max-height: 200px;"/>
+            <span id="imagePreview" th:if="*{idImage == null}" class="text-muted">
                     Aucune image sélectionnée
                 </span>
             </span>
@@ -84,7 +81,7 @@
                             <button type="button" id="getimg" class="btn btn-inscription">UPLOADER</button>
 
                             <!-- Input file caché -->
-                            <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                            <input type="file" name="imageFile" id="fileInput" accept="image/*" style="display: none;">
 
                             <!-- Champ qui recevra l'image -->
                             <input type="text" th:field="*{idImage}" id="idImageField" class="form-control" readonly
@@ -230,7 +227,7 @@
 
         function chargerImageServeur(filename) {
             const img = document.getElementById('previewImg');
-            img.src = '/images/' + filename + '?t=' + new Date().getTime(); // Cache busting
+            img.src = filename + '?t=' + new Date().getTime(); // Cache busting
             img.style.display = 'block';
             img.onerror = function() {
                 img.style.display = 'none';

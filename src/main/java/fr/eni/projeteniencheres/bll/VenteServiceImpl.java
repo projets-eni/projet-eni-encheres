@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -34,12 +35,14 @@ public class VenteServiceImpl implements VenteService {
     private final CategorieService categorieService;
     private final UtilisateurService utilisateurService;
     private final ArticleVenduService articleVenduService;
+    private final ImageStorageService imageStorageService;
 
-    public VenteServiceImpl(RetraitService retraitService, CategorieService categorieService, UtilisateurService utilisateurService, ArticleVenduService articleVenduService) {
+    public VenteServiceImpl(RetraitService retraitService, CategorieService categorieService, UtilisateurService utilisateurService, ArticleVenduService articleVenduService, ImageStorageService imageStorageService) {
         this.retraitService = retraitService;
         this.categorieService = categorieService;
         this.utilisateurService = utilisateurService;
         this.articleVenduService = articleVenduService;
+        this.imageStorageService = imageStorageService;
     }
 
     @Override
@@ -99,6 +102,13 @@ public class VenteServiceImpl implements VenteService {
         // Etat de la vente au départ = Non commencée
         nouvelarticle.setEtatVente("Non commencée");
 
+        // attacher l'image uploadée
+        try {
+            nouvelarticle.setIdImage(this.imageStorageService.saveVenteImage(dto.getImageFile()));
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
         // Par défaut, si non renseigné, le retrait se fait à l'adresse du vendeur
         Retrait retraitSaisie = new Retrait();
         BeanUtils.copyProperties(dto, retraitSaisie);
@@ -132,6 +142,16 @@ public class VenteServiceImpl implements VenteService {
         return articleSaved;
     }
 
+    private String attachImge(MultipartFile image) {
+        String imageName = null;
+        try {
+            imageName = this.imageStorageService.saveVenteImage(image);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return imageName;
+    }
+
     @Transactional
     @Override
     public ArticleVendu creerNouvelleVente(NouvelleVenteDto dto, String pseudo) {
@@ -156,6 +176,13 @@ public class VenteServiceImpl implements VenteService {
         if (retraitSaisie.getRue().isEmpty() || retraitSaisie.getVille().isEmpty() || retraitSaisie.getCodePostal().isEmpty()) {
             Retrait retraitChezVendeur = new Retrait(vendeur.getRue(), vendeur.getCodePostal(), vendeur.getVille());
             nouvelarticle.setRetrait(retraitChezVendeur);
+        }
+
+        // attacher l'image uploadée
+        try {
+            nouvelarticle.setIdImage(this.imageStorageService.saveVenteImage(dto.getImageFile()));
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
         }
 
         // on appelle le service qui enregistre l'article en BDD

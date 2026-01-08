@@ -33,7 +33,8 @@ public class EncheresUserDetailsService implements UserDetailsService {
         String role = utilisateur.isAdministrateur() ? "ADMIN" : "USER";
         User.UserBuilder builder = User.withUsername(utilisateur.getPseudo())
                 .password(utilisateur.getMotDePasse())
-                .roles(role);
+                .roles(role)
+                .disabled(!utilisateur.isAccountNonExpired() &&  !utilisateur.isEnabled() && !utilisateur.isAccountNonLocked());
 
         return builder.build();
     }
