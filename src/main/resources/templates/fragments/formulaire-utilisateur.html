@@ -14,6 +14,9 @@
             <label for="pseudo">Pseudo :</label>
             <div class="field">
                 <input type="text" id="pseudo" th:field="*{pseudo}" />
+                <ul style="color:red">
+                    <li th:each="erreur: ${#fields.errors('pseudo')}" th:text="${erreur}"></li>
+                </ul>
                 <span class="error-msg">Choisissez un pseudo contenant au moins 2 caractères.</span>
             </div>
         </div>
@@ -22,6 +25,9 @@
             <label for="nom">Nom :</label>
             <div class="field">
                 <input type="text" id="nom" th:field="*{nom}" />
+                <ul style="color:red">
+                    <li th:each="erreur: ${#fields.errors('nom')}" th:text="${erreur}"></li>
+                </ul>
                 <span class="error-msg">Choisissez un nom contenant au moins 2 caractères.</span>
             </div>
         </div>
@@ -30,6 +36,9 @@
             <label for="prenom">Prénom :</label>
             <div class="field">
                 <input type="text" id="prenom" th:field="*{prenom}" />
+                <ul style="color:red">
+                    <li th:each="erreur: ${#fields.errors('prenom')}" th:text="${erreur}"></li>
+                </ul>
                 <span class="error-msg">Choisissez un prénom contenant au moins 2 caractères.</span>
             </div>
         </div>
@@ -38,6 +47,9 @@
             <label for="telephone">Téléphone :</label>
             <div class="field">
                 <input type="text" id="telephone" th:field="*{telephone}" />
+                <ul style="color:red">
+                    <li th:each="erreur: ${#fields.errors('telephone')}" th:text="${erreur}"></li>
+                </ul>
                 <span class="error-msg">Rentrez un numéro de téléphone valide</span>
             </div>
         </div>
@@ -46,6 +58,9 @@
             <label for="email">Email :</label>
             <div class="field">
                 <input type="email" id="email" th:field="*{email}" />
+                <ul style="color:red">
+                    <li th:each="erreur: ${#fields.errors('email')}" th:text="${erreur}"></li>
+                </ul>
                 <span class="error-msg">Rentrez un email valide.</span>
             </div>
         </div>
@@ -54,6 +69,9 @@
             <label for="rue">Rue :</label>
             <div class="field">
                 <input type="text" id="rue" th:field="*{rue}" />
+                <ul style="color:red">
+                    <li th:each="erreur: ${#fields.errors('rue')}" th:text="${erreur}"></li>
+                </ul>
                 <span class="error-msg">Choisissez une rue contenant au moins 2 caractères.</span>
             </div>
         </div>
@@ -62,6 +80,9 @@
             <label for="codePostal">Code postal :</label>
             <div class="field">
                 <input type="text" id="codePostal" th:field="*{codePostal}" />
+                <ul style="color:red">
+                    <li th:each="erreur: ${#fields.errors('codePostal')}" th:text="${erreur}"></li>
+                </ul>
                 <span class="error-msg">Choisissez un code postal valide.</span>
             </div>
         </div>
@@ -70,6 +91,9 @@
             <label for="ville">Ville :</label>
             <div class="field">
                 <input type="text" id="ville" th:field="*{ville}" />
+                <ul style="color:red">
+                    <li th:each="erreur: ${#fields.errors('ville')}" th:text="${erreur}"></li>
+                </ul>
                 <span class="error-msg">Choisissez une ville contenant au moins 2 caractères.</span>
             </div>
         </div>
@@ -79,6 +103,9 @@
 
             <div class="field">
                 <input type="password" id="motDePasse" th:field="*{motDePasse}" />
+                <ul style="color:red">
+                    <li th:each="erreur: ${#fields.errors('motDePasse')}" th:text="${erreur}"></li>
+                </ul>
                 <span class="error-msg">Merci de rentrer un mot de passe valide.</span>
             </div>
         </div>
@@ -87,6 +114,9 @@
             <label for="confirmationMotDePasse">Confirmation :</label>
             <div class="field">
                 <input type="password" id="confirmationMotDePasse" th:field="*{confirmationMotDePasse}" />
+                <ul style="color:red">
+                    <li th:each="erreur: ${#fields.errors('confirmationMotDePasse')}" th:text="${erreur}"></li>
+                </ul>
                 <span class="error-msg">Les mots de passe doivent être identiques.</span>
             </div>
         </div>
