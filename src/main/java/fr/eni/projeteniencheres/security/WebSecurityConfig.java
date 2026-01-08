@@ -19,7 +19,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http, UserDetailsService userDetailsService) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/", "/encheres", "/inscription", "/connexion", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/", "/encheres", "/inscription", "/connexion", "/css/**", "/js/**", "/images/**", "/ventes/**").permitAll()
                         .requestMatchers("/profil/*", "/vente/creer", "/vente/*").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
                 )
