@@ -42,5 +42,6 @@ public interface ArticleVenduRepository {
 //    public Enchere placerEnchere(Enchere enchere);
 
     List<ArticleVendu> findAllByAcheteur(long no_utilisateur);
+    List<ArticleVendu> findAllByAcquereur(long no_utilisateur);
 
 }

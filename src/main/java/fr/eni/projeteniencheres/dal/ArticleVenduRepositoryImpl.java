@@ -43,13 +43,30 @@ public class ArticleVenduRepositoryImpl implements ArticleVenduRepository {
     }
 
     @Override
-    public List<ArticleVendu> findAllByAcheteur(long no_utilisateur) {
+    public List<ArticleVendu> findAllByAcheteur(long no_utilisateur_acheteur) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("noAcheteur", no_utilisateur);
+        params.addValue("noAcheteur", no_utilisateur_acheteur);
         String sql = "select distinct v.*, u.pseudo " +
                 "from ArticlesVendus v " +
                 "inner join (select no_utilisateur, pseudo from Utilisateurs where deleted_at IS NULL) u on v.no_utilisateur=u.no_utilisateur " +
-                "inner join Encheres as e on e.no_article=v.no_article and e.no_utilisateur= :no_utilisateur_acheteur ";
+                "inner join Encheres as e on e.no_article=v.no_article and e.no_utilisateur= :noAcheteur ";
+        ;
+        return jdbcTemplate.query(sql, params, venteRowMapperLazyLoading);
+    }
+
+    @Override
+    public List<ArticleVendu> findAllByAcquereur(long no_utilisateur_acquereurr) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("noAcquereur", no_utilisateur_acquereurr);
+        String sql = "select distinct v.*, u.pseudo " +
+                "from ArticlesVendus v " +
+                "inner join (select no_utilisateur, pseudo from Utilisateurs where deleted_at IS NULL) u on v.no_utilisateur=u.no_utilisateur " +
+                "inner join Encheres as e on e.no_article=v.no_article and e.no_utilisateur= :noAcquereur " +
+                "WHERE e.montant_enchere = ( " +
+                "    SELECT MAX(montant_enchere) " +
+                "    FROM Encheres e2 " +
+                "    WHERE e2.no_article = v.no_article " +
+                ") and v.etat_vente = 'Terminée' ";
         ;
         return jdbcTemplate.query(sql, params, venteRowMapperLazyLoading);
     }
