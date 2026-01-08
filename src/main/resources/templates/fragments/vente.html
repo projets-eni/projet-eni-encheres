@@ -82,7 +82,7 @@
 <div th:fragment="vente-card (article)" th:classappend="${article.etatVente == 'Non commencée' || article.etatVente == 'Terminée' || article.etatVente == 'Annulée'} ? 'card h-100 opacity-50 bg-light' : 'card h-100'"
      th:style="${article.etatVente == 'Non commencée' && !#strings.equals(article.vendeur.pseudo, #authentication.name)} ? 'pointer-events: none; cursor: not-allowed' : ''">
     <a th:href="@{/vente/{id}(id=${article.noArticle})}" class="text-decoration-none text-dark">
-        <img th:src="@{/images/{image}(image=${article.idImage})}"
+        <img th:src="@{${article.idImage}}"
              class="card-img-top img-fluid"
              style="height: 180px; object-fit: cover;"
              th:alt="${article.nomArticle}">

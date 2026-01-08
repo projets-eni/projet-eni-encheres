@@ -2,7 +2,18 @@ package fr.eni.projeteniencheres.dto;
 
 import jakarta.validation.constraints.*;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.ResourceUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -24,6 +35,7 @@ public class NouvelleVenteDto {
 
 //    @NotBlank(message = "L'image est obligatoire")
     private String idImage ;
+    private MultipartFile imageFile;
 
     @NotNull(message = "Le prix initial est obligatoire")
     @Min(value = 1, message = "Le prix doit être positif")
@@ -57,18 +69,21 @@ public class NouvelleVenteDto {
 
     public NouvelleVenteDto() {
     }
-    public NouvelleVenteDto(String nomArticle, String description, int noCategorie, String libelle, String idImage, int prixInitial, LocalDateTime dateDebutEncheres, LocalDateTime dateFinEncheres, String rue, String codePostal, String ville) {
+    public NouvelleVenteDto(String nomArticle, String description, int noCategorie, String libelle, String idImage, MultipartFile imageFile, int prixInitial, LocalDateTime dateDebutEncheres, LocalDateTime dateFinEncheres, String rue, String codePostal, String ville) {
         this.nomArticle = nomArticle;
         this.description = description;
         this.noCategorie = noCategorie;
         this.libelle = libelle;
-        this.idImage = idImage;
+        //this.idImage = idImage;
         this.prixInitial = prixInitial;
         this.dateDebutEncheres = dateDebutEncheres;
         this.dateFinEncheres = dateFinEncheres;
         this.rue = rue;
         this.codePostal = codePostal;
         this.ville = ville;
+
+        this.setImageFile(imageFile);
+
     }
 
     public String getLibelle() {
@@ -101,6 +116,14 @@ public class NouvelleVenteDto {
     public void setIdImage(String idImage) {
         this.idImage = idImage;
     }
+    public void setImageFile(MultipartFile imageFile) {
+        this.imageFile = imageFile;
+    }
+
+    public MultipartFile getImageFile() {
+        return this.imageFile;
+    }
+
     public int getPrixInitial() {
         return prixInitial;
     }

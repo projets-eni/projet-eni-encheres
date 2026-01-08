@@ -72,7 +72,7 @@ CREATE TABLE ArticlesVendus
     no_utilisateur      INTEGER                NOT NULL,
     no_categorie        INTEGER                NOT NULL,
 
-    image_filename      VARCHAR(30),
+    image_filename      VARCHAR(100),
 
     CONSTRAINT CK_ArticlesVendus_DateFinEnchere CHECK (date_fin_encheres >= date_debut_encheres),
     CONSTRAINT CK_ArticlesVendus_prixVente CHECK (prix_vente >= prix_initial)
