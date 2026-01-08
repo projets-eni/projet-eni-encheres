@@ -29,8 +29,7 @@ public class ArticleVenduServiceImpl implements ArticleVenduService {
     private final ArticleVenduRepository articleVenduRepository;
     private final RetraitService retraitService;
     private final UtilisateurService utilisateurService;
-    private final EnchereService enchereService;
-    private EnchereRepository enchereRepository;
+    private final EnchereRepository enchereRepository;
 
     private Logger logger = LoggerFactory.getLogger(ArticleVenduServiceImpl.class);
 
@@ -39,7 +38,6 @@ public class ArticleVenduServiceImpl implements ArticleVenduService {
         this.retraitService = retraitService;
         this.enchereRepository = enchereRepository;
         this.utilisateurService = utilisateurService;
-        this.enchereService = enchereService;
     }
 
     @Override
@@ -175,14 +173,14 @@ public class ArticleVenduServiceImpl implements ArticleVenduService {
 
                 // Filtre sur MES ENCHERES REMPORTEES = articles dont je suis dans l'acquéreur
                 List<ArticleVendu> listeMesEncheresRemportees = new ArrayList<ArticleVendu>();
-//                if (dto.getMesEncheresRemportees()) {
-//                    listeMesEncheresRemportees = articles.stream().filter(article -> {
-//                                if (article.getEncheres() == null) return false;
-//                                Optional<Enchere> meilleureEnchere = article.getEncheres().stream().max(Comparator.comparingInt(Enchere::getMontantEnchere));
-//                                return meilleureEnchere.isPresent() && meilleureEnchere.get().getAcheteur().getPseudo().equals(pseudo);
-//                            })
-//                            .toList();
-//                }
+                if (dto.getMesEncheresRemportees()) {
+                    listeMesEncheresRemportees = myArticles.stream().filter(article -> {
+                                if (article.getEncheres() == null) return false;
+                                Optional<Enchere> meilleureEnchere = article.getEncheres().stream().max(Comparator.comparingInt(Enchere::getMontantEnchere));
+                                return meilleureEnchere.isPresent() && meilleureEnchere.get().getAcheteur().getPseudo().equals(pseudo);
+                            })
+                            .toList();
+                }
 
                 articles = Stream.of(listeEncheresOuvertes, listeMesEncheres, listeMesEncheresRemportees)
                         .flatMap(List::stream)
