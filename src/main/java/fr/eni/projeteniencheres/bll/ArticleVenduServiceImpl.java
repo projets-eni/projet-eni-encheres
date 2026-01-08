@@ -1,7 +1,9 @@
 package fr.eni.projeteniencheres.bll;
 
 import fr.eni.projeteniencheres.bll.interfaces.ArticleVenduService;
+import fr.eni.projeteniencheres.bll.interfaces.EnchereService;
 import fr.eni.projeteniencheres.bll.interfaces.RetraitService;
+import fr.eni.projeteniencheres.bll.interfaces.UtilisateurService;
 import fr.eni.projeteniencheres.bo.*;
 import fr.eni.projeteniencheres.dal.ArticleVenduRepositoryImpl;
 import fr.eni.projeteniencheres.dal.interfaces.ArticleVenduRepository;
@@ -26,14 +28,14 @@ public class ArticleVenduServiceImpl implements ArticleVenduService {
 
     private final ArticleVenduRepository articleVenduRepository;
     private final RetraitService retraitService;
-    private EnchereRepository enchereRepository;
+    private final UtilisateurService utilisateurService;
 
     private Logger logger = LoggerFactory.getLogger(ArticleVenduServiceImpl.class);
 
-    public ArticleVenduServiceImpl(ArticleVenduRepository articleVenduRepository, RetraitService retraitService, EnchereRepository enchereRepository) {
+    public ArticleVenduServiceImpl(ArticleVenduRepository articleVenduRepository, RetraitService retraitService, EnchereRepository enchereRepository, UtilisateurService utilisateurService) {
         this.articleVenduRepository = articleVenduRepository;
         this.retraitService = retraitService;
-        this.enchereRepository = enchereRepository;
+        this.utilisateurService = utilisateurService;
     }
 
     @Override
@@ -142,13 +144,17 @@ public class ArticleVenduServiceImpl implements ArticleVenduService {
 
     @Override
     public List<ArticleVendu> rechercher(RechercheDto dto, String pseudo) {
-
         List<ArticleVendu> articles = articleVenduRepository.findAll();
         List<ArticleVendu> result =  new ArrayList<ArticleVendu>();
 
         if (!pseudo.isEmpty() && dto.getAchatOuVente() != null) {
 
             if (dto.getAchatOuVente() == 1) {
+
+                Utilisateur user = utilisateurService.findUtilisateurByPseudo(pseudo);
+                long noUser = user.getNoUtilisateur();
+                List<ArticleVendu> myArticles = articleVenduRepository.findAllByAcheteur(noUser);
+                List<ArticleVendu> myArticlesRemportes = articleVenduRepository.findAllByAcquereur(noUser);
 
                 // Filtre sur les ENCHERES OUVERTES = articles dont je ne suis pas le vendeur ET statut = En cours
                 List<ArticleVendu> listeEncheresOuvertes = new ArrayList<ArticleVendu>();
@@ -160,19 +166,24 @@ public class ArticleVenduServiceImpl implements ArticleVenduService {
                 // Filtre sur MES ENCHERES = articles dont je suis dans la liste des acheteurs potentiels
                 List<ArticleVendu> listeMesEncheres = new ArrayList<ArticleVendu>();
                 if (dto.getMesEncheres()) {
-                    listeMesEncheres = articles.stream().filter(article ->
-                            article.getEncheres() != null &&
-                                    article.getEncheres().stream().anyMatch(enchere -> enchere.getAcheteur().getPseudo().equals(pseudo))).toList();
+                    List<ArticleVendu> listeEncheresOuvertesTemp = new ArrayList<ArticleVendu>();
+                    listeEncheresOuvertesTemp = articles.stream().filter(article ->
+                            article.getEtatVente().equals("En cours") && !article.getVendeur().getPseudo().equals(pseudo)).toList();
+                    listeMesEncheres = listeEncheresOuvertesTemp.stream()
+                                        .filter(myArticles::contains)
+                                        .distinct()
+                                        .toList();
                 }
 
                 // Filtre sur MES ENCHERES REMPORTEES = articles dont je suis dans l'acquéreur
                 List<ArticleVendu> listeMesEncheresRemportees = new ArrayList<ArticleVendu>();
                 if (dto.getMesEncheresRemportees()) {
-                    listeMesEncheresRemportees = articles.stream().filter(article -> {
-                                if (article.getEncheres() == null) return false;
-                                Optional<Enchere> meilleureEnchere = article.getEncheres().stream().max(Comparator.comparingInt(Enchere::getMontantEnchere));
-                                return meilleureEnchere.isPresent() && meilleureEnchere.get().getAcheteur().getPseudo().equals(pseudo);
-                            })
+                    List<ArticleVendu> listeEncheresTermineesTemp = new ArrayList<ArticleVendu>();
+                    listeEncheresTermineesTemp = articles.stream().filter(article ->
+                            article.getEtatVente().equals("Terminée") && !article.getVendeur().getPseudo().equals(pseudo)).toList();
+                    listeMesEncheresRemportees = listeEncheresTermineesTemp.stream()
+                            .filter(myArticlesRemportes::contains)
+                            .distinct()
                             .toList();
                 }
 
