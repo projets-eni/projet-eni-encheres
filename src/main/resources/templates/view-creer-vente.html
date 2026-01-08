@@ -26,7 +26,8 @@
             <form th:action="${noArticle == null} ? @{/vente/creer}
                                                   : @{/vente/{noArticle}/modifier(noArticle=${noArticle})}"
                   method="POST"
-                  th:object="${nouvelleVente}">
+                  th:object="${nouvelleVente}"
+                  enctype="multipart/form-data">
 
                 <ul class="flex-outer">
 <!--                        <li>-->
