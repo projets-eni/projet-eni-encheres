@@ -247,4 +247,13 @@ th {
     .connexion-container input, .connexion-container label {
         width: 100%;
     }
+    .tableau-afficher-profil table,
+    .tableau-afficher-profil thead,
+    .tableau-afficher-profil tbody,
+    .tableau-afficher-profil th,
+    .tableau-afficher-profil td,
+    .tableau-afficher-profil tr {
+        display: block;
+        width: 100%;
+    }
 }
