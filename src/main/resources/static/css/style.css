@@ -1,16 +1,16 @@
 /********** FONTS **********/
 @font-face {
-    font-family: 'Quicksand';
+    font-family: 'Quicksand', sans-serif;
     src:
-            url('/static/fonts/quicksand/Quicksand-VariableFont_wght.woff2') format('woff2'),
-            url('/static/fonts/quicksand/Quicksand-VariableFont_wght.ttf') format('truetype');
+            url('/fonts/quicksand/Quicksand-VariableFont_wght.woff2') format('woff2'),
+            url('/fonts/quicksand/Quicksand-VariableFont_wght.ttf') format('truetype');
 }
 
 /********** VARIABLES **********/
 :root {
 
     /* Fonts */
-    --font-family-titre: 'Quicksand', sans-serif;
+    --font-family-titre: 'Quicksand';
     --font-family-text: 'Georgia', 'Times New Roman', 'Times';
 
     /* Font-size */
@@ -70,17 +70,21 @@ body {
 
 /*je créée un flex grid pour centrer toutes les sections sur la hauteur du viewport*/
 section {
-    font-family: var(--font-family-text);
+    font-family: var(--font-family-text), sans-serif;
     display: grid;
     place-items: center;
 }
 header, footer {
-    font-family: var(--font-family-titre);
+    font-family: var(--font-family-titre), sans-serif;
     align-content: center;
     height: 8rem;
     background-color: var(--bg-green);
     border: 2px solid var(--bg-border);
     /*background-color: #b47377;*/
+}
+footer {
+    font-size: var(--fs-main-items);
+    font-weight: 500;
 }
 /********** STRUCTURE DE LA PAGE (header - content - footer) **********/
 
@@ -90,6 +94,10 @@ header, footer {
     gap: 4rem;
 }
 
+.page-layout h2 {
+    font-size: var(--fs-body);
+    text-align: end;
+}
 /********** NAVIGATION **********/
 
 nav  {
@@ -112,6 +120,7 @@ nav  {
     gap: 12px;
     text-decoration: none;
     color: black;
+    font-weight: 500;
 }
 
 .navbar-logo {
@@ -119,13 +128,13 @@ nav  {
     width: auto;
 }
 
-
 nav ul {
     list-style-type: none;
     display: flex;
     justify-content: end;
     gap: 1.875rem;
 }
+
 nav ul a {
     color: black;
     text-decoration: none;
@@ -133,6 +142,29 @@ nav ul a {
     font-weight: 500;
     cursor: pointer;
 }
+
+.logout-form .logout-btn {
+    background-color: var(--bg-green);
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-family-titre), sans-serif;
+    font-size: var(--fs-main-items);
+    color: black;
+    font-weight: 500;
+    height: 3rem;
+}
+
+div.recherche.card {
+    width: 90%;
+}
+
+div.recherche.card div.form-check {
+    width: 80%;
+}
+div.row.g-3 {
+    justify-content: center;
+}
+
 
 /********** FOOTER **********/
 

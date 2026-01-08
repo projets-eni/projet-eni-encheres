@@ -193,6 +193,20 @@ th {
     width: 40%;;
 }
 
+.tableau-afficher-profil .btn-modifierInsciption {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem
+}
+
+.tableau-afficher-profil .btn {
+    height: 5rem;
+}
+
+.tableau-afficher-profil .btn a {
+    padding-top: 25px;
+}
+
 /****************************************
               MEDIA-QUERIES
 *****************************************/
