@@ -24,19 +24,19 @@ SET IDENTITY_INSERT Categories OFF;
 -- 3. UTILISATEURS (5 utilisateurs)
 DBCC CHECKIDENT('Utilisateurs', RESEED, 0);
 INSERT INTO Utilisateurs (pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur) VALUES
--- Admin
-('admin', 'Dupont', 'Paul', 'admin@eni.fr', '0123456789', '12 Rue Admin', '75001', 'Paris', '{bcrypt}$2a$10$6D4p4PrBW5h8h2RsmU1ZGeamWNC1REl3nHYbdLjiiLB40GNvFDu6S', 500, 1),
+-- Admin Azerty123&
+('admin', 'Dupont', 'Paul', 'admin@eni.fr', '0123456789', '12 Rue Admin', '75001', 'Paris', '{bcrypt}$2a$10$0PwWFIs9hlDi91rZ0QccA.4ND7pLNkjhZ2JgmfUfzCStl./y9iCrO', 1000, 1),
 
--- Vendeurs
-('vendeur1', 'Martin', 'Sophie', 'sophie.martin@eni.fr', '0987654321', '45 Av. Vente', '69001', 'Lyon', '{bcrypt}$2a$10$6D4p4PrBW5h8h2RsmU1ZGeamWNC1REl3nHYbdLjiiLB40GNvFDu6S', 200, 0),
-('vendeur2', 'Bernard', 'Lucas', 'lucas.bernard@eni.fr', '0112233445', '78 Rue Enchères', '33000', 'Bordeaux', '{bcrypt}$2a$10$6D4p4PrBW5h8h2RsmU1ZGeamWNC1REl3nHYbdLjiiLB40GNvFDu6S', 150, 0),
+-- Vendeurs Azerty123&
+('vendeur1', 'Martin', 'Sophie', 'sophie.martin@eni.fr', '0987654321', '45 Av. Vente', '69001', 'Lyon', '{bcrypt}$2a$10$0PwWFIs9hlDi91rZ0QccA.4ND7pLNkjhZ2JgmfUfzCStl./y9iCrO', 1000, 0),
+('vendeur2', 'Bernard', 'Lucas', 'lucas.bernard@eni.fr', '0112233445', '78 Rue Enchères', '33000', 'Bordeaux', '{bcrypt}$2a$10$0PwWFIs9hlDi91rZ0QccA.4ND7pLNkjhZ2JgmfUfzCStl./y9iCrO', 1000, 0),
 
--- Acheteurs
-('acheteur1', 'Dubois', 'Marie', 'marie.dubois@eni.fr', '0555666777', '23 Rue Client', '31000', 'Toulouse', '{bcrypt}$2a$10$6D4p4PrBW5h8h2RsmU1ZGeamWNC1REl3nHYbdLjiiLB40GNvFDu6S', 300, 0),
-('acheteur2', 'Roux', 'Thomas', 'thomas.roux@eni.fr', '0888999000', '56 Bd Acheteur', '13001', 'Marseille', '{bcrypt}$2a$10$6D4p4PrBW5h8h2RsmU1ZGeamWNC1REl3nHYbdLjiiLB40GNvFDu6S', 250, 0),
+-- Acheteurs Azerty123&
+('acheteur1', 'Dubois', 'Marie', 'marie.dubois@eni.fr', '0555666777', '23 Rue Client', '31000', 'Toulouse', '{bcrypt}$2a$10$0PwWFIs9hlDi91rZ0QccA.4ND7pLNkjhZ2JgmfUfzCStl./y9iCrO', 1000, 0),
+('acheteur2', 'Roux', 'Thomas', 'thomas.roux@eni.fr', '0888999000', '56 Bd Acheteur', '13001', 'Marseille', '{bcrypt}$2a$10$0PwWFIs9hlDi91rZ0QccA.4ND7pLNkjhZ2JgmfUfzCStl./y9iCrO', 1000, 0),
 
--- NOUVEL UTILISATEUR : Hybride Vendeur/Acheteur
-('hybrid1', 'Leroy', 'Julie', 'julie.leroy@eni.fr', '0666777888', '15 Rue Hybride', '35000', 'Rennes', 'hybrid123', 180, 0);
+-- NOUVEL UTILISATEUR : Hybride Vendeur/Acheteur Azerty123&
+('hybrid1', 'Leroy', 'Julie', 'julie.leroy@eni.fr', '0666777888', '15 Rue Hybride', '35000', 'Rennes', '{bcrypt}$2a$10$0PwWFIs9hlDi91rZ0QccA.4ND7pLNkjhZ2JgmfUfzCStl./y9iCrO', 1000, 0);
 GO
 
 ALTER TABLE ArticlesVendus
@@ -47,13 +47,13 @@ GO
 DBCC CHECKIDENT('ArticlesVendus', RESEED, 0);
 INSERT INTO ArticlesVendus (nom_article, description, date_debut_encheres, date_fin_encheres, prix_initial, prix_vente, etat_vente, no_utilisateur, no_categorie, image_filename) VALUES
 -- NON COMMENCÉES (futures)
-('PC Gamer RTX 4090', 'Ordinateur gaming haut de gamme', '2025-12-25 10:00:00', '2025-12-28 20:00:00', 1500, NULL, 'Non commencée', 2, 1, 'pc_gamer.jpg'),
+('PC Gamer RTX 4090', 'Ordinateur gaming haut de gamme', '2026-12-25 10:00:00', '2026-12-28 20:00:00', 1500, NULL, 'Non commencée', 2, 1, 'pc_gamer.jpg'),
 
-('Canapé cuir 3 places', 'Canapé cuir italien comme neuf', '2025-12-26 14:00:00', '2025-12-30 18:00:00', 800, NULL, 'Non commencée', 3, 2, 'canape.jpg'),
+('Canapé cuir 3 places', 'Canapé cuir italien comme neuf', '2026-12-26 14:00:00', '2026-12-30 18:00:00', 800, NULL, 'Non commencée', 3, 2, 'canape.jpg'),
 
 -- EN COURS
-('iPhone 15 Pro Max', 'Smartphone Apple 256Go état neuf', '2025-12-20 09:00:00', '2025-12-24 22:00:00', 900, NULL, 'En cours', 2, 1, 'iphone.jpg'),
-('Vélo électrique', 'VTT électrique 500W autonomie 80km', '2025-12-22 11:00:00', '2025-12-26 19:00:00', 1200, NULL, 'En cours', 3, 4, 'velo.jpg'),
+('iPhone 15 Pro Max', 'Smartphone Apple 256Go état neuf', '2025-12-20 09:00:00', '2026-01-30 22:00:00', 900, NULL, 'En cours', 2, 1, 'iphone.jpg'),
+('Vélo électrique', 'VTT électrique 500W autonomie 80km', '2025-12-22 11:00:00', '2026-01-31 19:00:00', 1200, NULL, 'En cours', 3, 4, 'velo.jpg'),
 
 -- TERMINÉES (avec prix de vente)
 ('Ordinateur portable', 'Dell XPS 13 i7 16Go RAM', '2025-12-01 10:00:00', '2025-12-05 20:00:00', 600, 850, 'Terminée', 2, 1, 'laptop.jpg'),
@@ -63,9 +63,9 @@ INSERT INTO ArticlesVendus (nom_article, description, date_debut_encheres, date_
 
 -- 9. NOUVEAUX ARTICLES VENDUS PAR hybrid1 (no_utilisateur = 6)
 -- Non commencée (vendue par hybrid1)
-('Smartwatch Apple Watch', 'Apple Watch Series 9 état neuf', '2025-12-27 09:00:00', '2025-12-30 21:00:00', 350, NULL, 'Non commencée', 6, 1, 'watch.jpg'),
+('Smartwatch Apple Watch', 'Apple Watch Series 9 état neuf', '2026-01-27 09:00:00', '2026-02-27 21:00:00', 350, NULL, 'Non commencée', 6, 1, 'watch.jpg'),
 -- En cours (vendue par hybrid1)
-('Console PS5 Slim', 'Playstation 5 Slim 1To + 2 manettes', '2025-12-21 14:00:00', '2025-12-25 20:00:00', 550, NULL, 'En cours', 6, 1, 'ps5.jpg');
+('Console PS5 Slim', 'Playstation 5 Slim 1To + 2 manettes', '2025-12-21 14:00:00', '2026-02-25 20:00:00', 550, NULL, 'En cours', 6, 1, 'ps5.jpg');
 
 GO
 
@@ -86,15 +86,15 @@ GO
 DBCC CHECKIDENT('Encheres', RESEED, 0);
 INSERT INTO Encheres (date_enchere, montant_enchere, no_article, no_utilisateur) VALUES
 -- iPhone 15 (en cours) - enchères croissantes
-('2025-12-20 10:15:00', 920, 3, 4),
-('2025-12-20 14:30:00', 950, 3, 5),
-('2025-12-21 09:45:00', 980, 3, 4),
-('2025-12-22 16:20:00', 1010, 3, 5),
-('2025-12-23 11:10:00', 1050, 3, 4),  -- Meilleure offre actuelle
+('2026-01-07 10:15:00', 920, 3, 4),
+('2026-01-07 14:30:00', 950, 3, 5),
+('2026-01-07 09:45:00', 980, 3, 4),
+('2026-01-07 16:20:00', 1010, 3, 5),
+('2026-01-07 11:10:00', 1050, 3, 4),  -- Meilleure offre actuelle
 
 -- Vélo électrique (en cours)
-('2025-12-22 12:00:00', 1250, 4, 5),
-('2025-12-23 09:30:00', 1280, 4, 4),
+('2026-01-07 12:00:00', 1250, 4, 5),
+('2026-01-07 09:30:00', 1280, 4, 4),
 
 -- Ordinateur portable (terminé)
 ('2025-12-01 11:00:00', 620, 5, 4),
@@ -123,34 +123,6 @@ INSERT INTO Encheres (date_enchere, montant_enchere, no_article, no_utilisateur)
 
 GO
 
--- =====================================================
--- VÉRIFICATIONS
--- =====================================================
-SELECT 'Categories' as TableName, COUNT(*) as NombreLignes FROM Categories UNION ALL
-SELECT 'Utilisateurs', COUNT(*) FROM Utilisateurs UNION ALL
-SELECT 'ArticlesVendus', COUNT(*) FROM ArticlesVendus UNION ALL
-SELECT 'Retraits', COUNT(*) FROM Retraits UNION ALL
-SELECT 'Encheres', COUNT(*) FROM Encheres;
-GO
-
--- Articles par état
-SELECT etat_vente, COUNT(*) as nombre
-FROM ArticlesVendus
-GROUP BY etat_vente;
-GO
-
--- Meilleure offre par article en cours
-SELECT TOP 5
-    a.nom_article,
-    MAX(e.montant_enchere) as meilleure_offre,
-       u.pseudo as acheteur
-FROM ArticlesVendus a
-         JOIN Encheres e ON a.no_article = e.no_article
-         JOIN Utilisateurs u ON e.no_utilisateur = u.no_utilisateur
-WHERE a.etat_vente = 'En cours'
-GROUP BY a.nom_article, u.pseudo
-ORDER BY a.nom_article;
-GO
 
 /* =========================================================
    ENCHÈRES SUPPLÉMENTAIRES — ARTICLE n°3 (iPhone 15 Pro Max)
@@ -166,11 +138,5 @@ VALUES
     ('2025-12-24 18:35:00', 3000, 4, 6);  -- hybrid1 termine en tête (meilleure offre)
 GO
 
-/* Vérification du résultat */
-SELECT e.no_enchere, e.date_enchere, e.montant_enchere, u.pseudo
-FROM Encheres e JOIN Utilisateurs u ON e.no_utilisateur = u.no_utilisateur
-WHERE e.no_article = 3
-ORDER BY e.date_enchere;
-GO
 
 UPDATE Utilisateurs SET deleted_at = NULL WHERE no_utilisateur = 2;
