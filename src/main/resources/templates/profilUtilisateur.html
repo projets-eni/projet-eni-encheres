@@ -9,53 +9,59 @@
 </head>
 
 <section layout:fragment="content">
-<table class="tableau affichageProfil">
-    <tbody>
-    <tr>
-        <th>Pseudo</th>
-        <td th:text="${utilisateur.pseudo}"></td>
-    </tr>
-    <tr>
-        <th>Nom</th>
-        <td th:text="${utilisateur.nom}"></td>
-    </tr>
-    <tr>
-        <th>Prénom</th>
-        <td th:text="${utilisateur.prenom}"></td>
-    </tr>
-    <tr>
-        <th>Email</th>
-        <td th:text="${utilisateur.email}"></td>
-    </tr>
-    <tr>
-        <th>Téléphone</th>
-        <td th:text="${utilisateur.telephone}"></td>
-    </tr>
-    <tr>
-        <th>Rue</th>
-        <td th:text="${utilisateur.rue}"></td>
-    </tr>
-    <tr>
-        <th>Code Postal</th>
-        <td th:text="${utilisateur.codePostal}"></td>
-    </tr>
-    <tr>
-        <th>Ville</th>
-        <td th:text="${utilisateur.ville}"></td>
-    </tr>
-    </tbody>
-</table>
+    <div class="tableau-afficher-profil">
+        <table class="tableau affichageProfil">
+            <tbody>
+            <tr>
+                <th>Pseudo</th>
+                <td th:text="${utilisateur.pseudo}"></td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td th:text="${utilisateur.nom}"></td>
+            </tr>
+            <tr>
+                <th>Prénom</th>
+                <td th:text="${utilisateur.prenom}"></td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td th:text="${utilisateur.email}"></td>
+            </tr>
+            <tr>
+                <th>Téléphone</th>
+                <td th:text="${utilisateur.telephone}"></td>
+            </tr>
+            <tr>
+                <th>Rue</th>
+                <td th:text="${utilisateur.rue}"></td>
+            </tr>
+            <tr>
+                <th>Code Postal</th>
+                <td th:text="${utilisateur.codePostal}"></td>
+            </tr>
+            <tr>
+                <th>Ville</th>
+                <td th:text="${utilisateur.ville}"></td>
+            </tr>
+            </tbody>
+        </table>
 
-    <div class=" lien-btn btn-modifierInsciption">
-        <a href="/profil/modifier" class="btn">Modifier</a>
+
+        <div class=" btn-group">
+            <div class="lien-btn btn btn-inscription">
+                <a href="/profil/modifier" class="btn">Modifier</a>
+            </div>
+            <div class="btn btn-inscription">
+            <form sec:authorize="hasRole('USER')" th:action="@{/profil/supprimer}" method="POST">
+                <button type="submit" class="btn lien" onclick="return confirm('Voulez-vous vraiment supprimer votre compte ?');">
+                    Supprimer mon compte
+                </button>
+            </form>
+            </div>
+        </div>
+
     </div>
-
-    <form sec:authorize="hasRole('USER')" th:action="@{/profil/supprimer}" method="POST">
-        <button type="submit" class="btn" onclick="return confirm('Voulez-vous vraiment supprimer votre compte ?');">
-            Supprimer mon compte
-        </button>
-    </form>
-
 </section>
 
 </html>

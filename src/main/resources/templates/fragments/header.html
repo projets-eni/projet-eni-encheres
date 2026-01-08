@@ -22,8 +22,10 @@
                     <li sec:authorize="isAuthenticated()"><a th:href="@{/vente/creer}">Vendre un article</a></li>
                     <li sec:authorize="isAuthenticated()"><a th:href="@{/profil}">Mon profil</a></li>
                     <li>
-                        <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
-                            <input type="submit" value="Déconnexion"/>
+                        <form sec:authorize="isAuthenticated()"
+                              th:action="@{/logout}" method="post"
+                              class="logout-form">
+                            <input type="submit" value="Déconnexion" class="logout-btn"/>
                         </form>
                     </li>
                 </ul>
